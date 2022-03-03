@@ -1,0 +1,15 @@
+jwt.secret: DTyst3nWsD255ScDOSpeQg==
+jwt.access.token.validity: 3600000
+jwt.refresh.token.validity: 3600000
+email.name: cuongnh2k@gmail.com
+email.password: lahzzvsjrlzjzqzn
+base.api: /api/v1
+domain: https://anhcuong.org
+spring:
+  profiles:
+    active: local
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
