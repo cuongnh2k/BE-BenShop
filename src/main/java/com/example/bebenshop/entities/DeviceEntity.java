@@ -25,7 +25,7 @@ public class DeviceEntity extends BaseEntity {
     @Column(columnDefinition = "text")
     private String refreshToken;
 
-    @ManyToOne(targetEntity = UserEntity.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(columnDefinition = "user_id")
     private UserEntity user;
 }

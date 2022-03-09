@@ -1,6 +1,7 @@
 package com.example.bebenshop.services;
 
 
+import com.example.bebenshop.dto.produces.UserProduceDto;
 import com.example.bebenshop.entities.UserEntity;
 
 public interface UserService {
@@ -14,4 +15,6 @@ public interface UserService {
     Boolean isRoleAdmin();
 
     UserEntity getCurrentUser();
+
+    UserProduceDto getUserDetail();
 }
