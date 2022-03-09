@@ -36,7 +36,7 @@ public class UserEntity extends BaseEntity {
     @Column(columnDefinition = "text")
     private String avatar;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     private Collection<RoleEntity> roles;
 
     @OneToMany(targetEntity = DeviceEntity.class, mappedBy = "user")

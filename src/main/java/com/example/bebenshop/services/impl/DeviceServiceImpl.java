@@ -1,26 +1,20 @@
 package com.example.bebenshop.services.impl;
 
-import com.example.bebenshop.bases.BaseListProduceDto;
-import com.example.bebenshop.dto.produces.DeviceProduceDto;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.bebenshop.dto.produces.TokenProduceDto;
 import com.example.bebenshop.entities.DeviceEntity;
 import com.example.bebenshop.entities.UserEntity;
 import com.example.bebenshop.exceptions.UnauthorizedException;
-import com.example.bebenshop.mapper.DeviceMapper;
-import com.example.bebenshop.mapper.UserMapper;
 import com.example.bebenshop.repository.DeviceRepository;
 import com.example.bebenshop.repository.UserRepository;
 import com.example.bebenshop.services.DeviceService;
 import com.example.bebenshop.services.UserService;
 import com.example.bebenshop.util.ConvertUtil;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +37,6 @@ public class DeviceServiceImpl implements DeviceService {
     private final DeviceRepository mDeviceRepository;
     private final UserService mUserService;
     private final ConvertUtil mConvertUtil;
-    private final UserMapper mUserMapper;
-    private final DeviceMapper mDeviceMapper;
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
@@ -131,30 +123,5 @@ public class DeviceServiceImpl implements DeviceService {
             }
         });
         mDeviceRepository.deleteAllById(idList);
-    }
-
-    @Override
-    public BaseListProduceDto<DeviceProduceDto> getAllDevice(Pageable pageable) {
-        if (mUserService.isRoleAdmin()) {
-            Page<DeviceEntity> deviceEntityPage = mDeviceRepository.findAll(pageable);
-            return getDeviceProduceDtoBaseListProduceDto(pageable, deviceEntityPage);
-        }
-        Page<DeviceEntity> deviceEntityPage = mDeviceRepository.findByUserId(mUserService.getCurrentUser().getId(),pageable);
-        return getDeviceProduceDtoBaseListProduceDto(pageable, deviceEntityPage);
-    }
-
-    private BaseListProduceDto<DeviceProduceDto> getDeviceProduceDtoBaseListProduceDto(Pageable pageable, Page<DeviceEntity> deviceEntityPage) {
-        List<DeviceProduceDto> deviceProduceDtoList = deviceEntityPage.getContent().stream().map(o -> {
-            DeviceProduceDto deviceProduceDto = mDeviceMapper.toDeviceProduceDto(o);
-            deviceProduceDto.setUser(mUserMapper.toUserProduceDto(o.getUser()));
-            return deviceProduceDto;
-        }).collect(Collectors.toList());
-        return BaseListProduceDto.<DeviceProduceDto>builder()
-                .content(deviceProduceDtoList)
-                .totalElements(deviceEntityPage.getTotalElements())
-                .totalPages(deviceEntityPage.getTotalPages())
-                .page(pageable.getPageNumber())
-                .size(pageable.getPageSize())
-                .build();
     }
 }

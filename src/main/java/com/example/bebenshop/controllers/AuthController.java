@@ -5,12 +5,8 @@ import com.example.bebenshop.bases.BaseResponseDto;
 import com.example.bebenshop.config.TokenConfig;
 import com.example.bebenshop.config.UserDetailServiceConfig;
 import com.example.bebenshop.dto.consumes.LoginConsumeDto;
-import com.example.bebenshop.dto.produces.DeviceProduceDto;
 import com.example.bebenshop.dto.produces.TokenProduceDto;
 import com.example.bebenshop.exceptions.BadRequestException;
-import com.example.bebenshop.mapper.DeviceMapper;
-import com.example.bebenshop.mapper.UserMapper;
-import com.example.bebenshop.repository.DeviceRepository;
 import com.example.bebenshop.services.DeviceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,9 +26,6 @@ public class AuthController extends BaseController {
     private final UserDetailServiceConfig mUserDetailServiceConfig;
     private final TokenConfig mTokenConfig;
     private final DeviceService mDeviceService;
-    private final DeviceRepository mDeviceRepository;
-    private final DeviceMapper mDeviceMapper;
-    private final UserMapper mUserMapper;
 
     @PostMapping("/login")
     public ResponseEntity<BaseResponseDto> login(@RequestBody LoginConsumeDto loginConsumeDto, HttpServletRequest request) {
@@ -55,14 +47,5 @@ public class AuthController extends BaseController {
     @PatchMapping("/refresh-token")
     public ResponseEntity<BaseResponseDto> refreshToken(HttpServletRequest request) {
         return success(mDeviceService.refreshToken(request), "Refresh token successful.");
-    }
-
-    @GetMapping
-    public ResponseEntity<BaseResponseDto> getAllDevice() {
-        return success(mDeviceRepository.findAll().stream().map((o) -> {
-            DeviceProduceDto deviceProduceDto = mDeviceMapper.toDeviceProduceDto(o);
-            deviceProduceDto.setUser(mUserMapper.toUserProduceDto(o.getUser()));
-            return deviceProduceDto;
-        }).collect(Collectors.toList()), "Get data successful.");
     }
 }

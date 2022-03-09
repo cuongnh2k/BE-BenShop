@@ -31,9 +31,8 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 @EnableJpaAuditing
-//@EnableWebSocketMessageBroker
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter implements AuditorAware<String>/*, WebSocketMessageBrokerConfigurer*/ {
+public class SecurityConfig extends WebSecurityConfigurerAdapter implements AuditorAware<String> {
 
     private final UserDetailServiceConfig mUserDetailServiceConfig;
     private final FilterConfig mFilterConfig;
@@ -49,18 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Audi
 
     @Value("${email.password}")
     private String EMAIL_PASSWORD;
-
-//    @Override
-//    public void configureMessageBroker(MessageBrokerRegistry registry) {
-//        registry.enableSimpleBroker("/topic");
-//        registry.setApplicationDestinationPrefixes("/app");
-//    }
-//
-//    @Override
-//    public void registerStompEndpoints(StompEndpointRegistry registry) {
-//        registry.addEndpoint("/chat");
-//        registry.addEndpoint("/chat").withSockJS();
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
