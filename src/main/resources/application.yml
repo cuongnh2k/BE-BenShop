@@ -4,7 +4,7 @@ jwt.refresh.token.validity: 3600000
 email.name: cuongnh2k@gmail.com
 email.password: lahzzvsjrlzjzqzn
 base.api: /api/v1
-domain: https://anhcuong.org
+domain: http://localhost:3000
 spring:
   profiles:
     active: local
