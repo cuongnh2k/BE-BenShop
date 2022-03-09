@@ -8,12 +8,12 @@
         <version>2.6.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>org.anhcuong</groupId>
-    <artifactId>BE-AnhCuong</artifactId>
+    <groupId>com.example</groupId>
+    <artifactId>BE-BenShop</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>BE-AnhCuong</name>
-    <description>BE-AnhCuong</description>
+    <name>BE-BenShop</name>
+    <description>BE-BenShop</description>
     <properties>
         <java.version>11</java.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
