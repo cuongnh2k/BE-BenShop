@@ -8,6 +8,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public abstract class OrderMapper implements CustomMapper{
 
+    @Mapping(target = "orderNotes", ignore = true)
+    @Mapping(target = "orderDetails", ignore = true)
     @Mapping(target = "user", ignore = true)
     public abstract OrderProduceDto toOrderProduceDto(OrderEntity orderEntity);
 }
