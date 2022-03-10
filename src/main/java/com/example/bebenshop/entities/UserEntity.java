@@ -41,4 +41,11 @@ public class UserEntity extends BaseEntity {
 
     @OneToMany(targetEntity = DeviceEntity.class, mappedBy = "user")
     private Collection<DeviceEntity> devices;
+
+    @OneToMany(targetEntity = OrderEntity.class, mappedBy = "user")
+    private Collection<OrderEntity> orders;
+
+    @OneToOne(targetEntity = UserCodeEntity.class, mappedBy = "user")
+    private UserCodeEntity userCodes;
+
 }
