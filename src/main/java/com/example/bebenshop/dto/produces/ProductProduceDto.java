@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
 
 @Setter
 @Getter
@@ -39,11 +40,11 @@ public class ProductProduceDto extends BaseProduceDto<Long> {
     private String size;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Collection<OrderDetailProduceDto> orderDetails;
+    private List<OrderDetailProduceDto> orderDetails;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Collection<ProductImageProduceDto> productImages;
+    private List<ProductImageProduceDto> productImages;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Collection<CategoryProduceDto> categories;
+    private List<CategoryProduceDto> categories;
 }
