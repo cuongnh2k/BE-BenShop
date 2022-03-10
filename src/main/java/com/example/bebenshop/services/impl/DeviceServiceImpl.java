@@ -116,9 +116,7 @@ public class DeviceServiceImpl implements DeviceService {
         List<DeviceEntity> deviceEntityList = mDeviceRepository.findAllById(mConvertUtil.toArray(ids));
         List<Long> idList = new ArrayList<>();
         deviceEntityList.forEach(o -> {
-            if (mUserService.isRoleAdmin()) {
-                idList.add(o.getId());
-            } else if (o.getUser().getUsername().equals(mUserService.getUserName())) {
+            if (o.getUser().getUsername().equals(mUserService.getUserName())) {
                 idList.add(o.getId());
             }
         });
