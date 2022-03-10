@@ -26,9 +26,6 @@ public class OrderDetailEntity extends BaseEntity {
 
     private BigDecimal price;
 
-    @Column(length = 20)
-    private OrderEnum status;
-
     private Integer discount;
 
     @ManyToOne(targetEntity = OrderEntity.class)
