@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.Collection;
+import java.util.List;
 
 @Setter
 @Getter
@@ -31,8 +32,8 @@ public class OrderProduceDto extends BaseProduceDto<Long> {
     private UserProduceDto user;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Collection<OrderDetailProduceDto> orderDetails;
+    private List<OrderDetailProduceDto> orderDetails;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Collection<OrderNoteProduceDto> orderNotes;
+    private List<OrderNoteProduceDto> orderNotes;
 }
