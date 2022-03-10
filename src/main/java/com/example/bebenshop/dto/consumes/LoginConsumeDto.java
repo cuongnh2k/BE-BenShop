@@ -13,4 +13,5 @@ public class LoginConsumeDto implements Serializable {
 
     private String username;
     private String password;
+
 }
