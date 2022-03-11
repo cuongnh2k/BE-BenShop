@@ -12,7 +12,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductImageConsumeDto implements Serializable {
+
     private String path;
+
     private Long productId;
 
     public ProductImageEntity toProductImageEntity(){

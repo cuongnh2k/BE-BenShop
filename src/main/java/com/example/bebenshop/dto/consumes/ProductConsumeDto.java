@@ -1,7 +1,7 @@
 package com.example.bebenshop.dto.consumes;
 
-
 import com.example.bebenshop.entities.ProductEntity;
+import com.example.bebenshop.enums.ProductStatusEnum;
 import lombok.*;
 
 import java.io.Serializable;
@@ -14,19 +14,54 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 
 public class ProductConsumeDto implements Serializable {
-    private String description;
+
+    private String name;
+
     private BigDecimal price;
-    private Integer total;
+
     private Integer discount;
+
     private String style;
+
+    private String gender;
+
+    private String origin;
+
+    private String material;
+
+    private String productionMethod;
+
     private String size;
-    public ProductEntity toProductEntity(){
+
+    private String accessory;
+
+    private String washingMethod;
+
+    private String description;
+
+    private String orderDetails;
+
+    private String productImages;
+
+    private String categories;
+
+    private String productComments;
+
+    public ProductEntity toProductEntity() {
         return ProductEntity.builder()
-                .description(description)
+                .name(name)
                 .price(price)
                 .discount(discount)
+                .status(ProductStatusEnum.STOCKING)
                 .style(style)
+                .gender(gender)
+                .origin(origin)
+                .material(material)
+                .productionMethod(productionMethod)
                 .size(size)
+                .accessory(accessory)
+                .washingMethod(washingMethod)
+                .description(description)
                 .build();
     }
 

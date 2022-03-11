@@ -11,9 +11,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderNoteConsumeDto implements Serializable {
+
     private String content;
-    private Long userId;
-    public OrderNoteEntity toOrderNoteEntity(){
+
+    private Long orderId;
+
+    public OrderNoteEntity toOrderNoteEntity() {
         return OrderNoteEntity.builder()
                 .content(content)
                 .build();
