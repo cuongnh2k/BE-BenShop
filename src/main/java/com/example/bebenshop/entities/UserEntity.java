@@ -55,5 +55,4 @@ public class UserEntity extends BaseEntity {
 
     @OneToOne(targetEntity = UserCodeEntity.class, mappedBy = "user")
     private UserCodeEntity userCodes;
-
 }

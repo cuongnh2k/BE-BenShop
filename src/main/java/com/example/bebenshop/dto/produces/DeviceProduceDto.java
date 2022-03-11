@@ -1,7 +1,6 @@
 package com.example.bebenshop.dto.produces;
 
 import com.example.bebenshop.bases.BaseProduceDto;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +16,9 @@ public class DeviceProduceDto extends BaseProduceDto<Long> {
 
     private String userAgent;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String accessToken;
+
+    private String refreshToken;
+
     private UserProduceDto user;
 }

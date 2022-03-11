@@ -7,22 +7,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.math.BigDecimal;
-
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class OrderDetailProduceDto extends BaseProduceDto<Long> {
+public class ProductCommentProduceDto extends BaseProduceDto<Long> {
 
-    private Integer quantity;
+    private String content;
 
-    private BigDecimal price;
-
-    private Integer discount;
-
-    private OrderProduceDto order;
+    private Long parentId;
 
     private ProductProduceDto product;
+
+    private UserProduceDto user;
 }
