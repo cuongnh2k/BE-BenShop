@@ -1,7 +1,7 @@
 package com.example.bebenshop.dto.consumes;
 
 import com.example.bebenshop.entities.OrderEntity;
-import com.example.bebenshop.enums.OrderEnum;
+import com.example.bebenshop.enums.OrderStatusEnum;
 import lombok.*;
 
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderConsumeDto implements Serializable {
-    private OrderEnum status;
+    private OrderStatusEnum status;
     private Long userId;
 
     public OrderEntity toOrderEntity(){
