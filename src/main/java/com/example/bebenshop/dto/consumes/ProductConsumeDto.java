@@ -26,7 +26,7 @@ public class ProductConsumeDto implements Serializable {
                 .price(price)
                 .total(total)
                 .discount(discount)
-                .style(style)
+
                 .size(size)
                 .build();
     }

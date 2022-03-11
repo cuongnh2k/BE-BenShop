@@ -35,7 +35,7 @@ public class ProductProduceDto extends BaseProduceDto<Long> {
 
     private Integer discount;
 
-    private String style;
+
 
     private String size;
 
