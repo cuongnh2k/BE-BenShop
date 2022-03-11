@@ -33,7 +33,7 @@ public class ProductEntity extends BaseEntity {
 
     private Integer discount;
 
-    private String style;
+
 
     private String size;
 
