@@ -17,8 +17,6 @@ public class CategoryConsumeDto implements Serializable {
 
     private Long parentId;
 
-    private Long productId;
-
     public CategoryEntity toCategoryEntity() {
         return CategoryEntity.builder()
                 .name(name)

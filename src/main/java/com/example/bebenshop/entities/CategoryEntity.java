@@ -22,8 +22,4 @@ public class CategoryEntity extends BaseEntity {
     private String name;
 
     private Long parentId;
-
-    @ManyToOne(targetEntity = ProductEntity.class)
-    @JoinColumn(columnDefinition = "product_id")
-    private ProductEntity product;
 }
