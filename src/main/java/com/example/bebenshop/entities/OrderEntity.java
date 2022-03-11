@@ -19,6 +19,7 @@ import java.util.Collection;
 @SuperBuilder
 public class OrderEntity extends BaseEntity {
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private OrderStatusEnum status;
 
