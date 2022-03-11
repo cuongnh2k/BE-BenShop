@@ -1,6 +1,7 @@
 package com.example.bebenshop.entities;
 
 import com.example.bebenshop.bases.BaseEntity;
+import com.example.bebenshop.enums.GenderEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,10 @@ public class UserEntity extends BaseEntity {
     @Column(columnDefinition = "text")
     private String avatar;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private GenderEnum gender;
+
     @ManyToMany
     private Collection<RoleEntity> roles;
 
@@ -44,6 +49,9 @@ public class UserEntity extends BaseEntity {
 
     @OneToMany(targetEntity = OrderEntity.class, mappedBy = "user")
     private Collection<OrderEntity> orders;
+
+    @OneToMany(targetEntity = ProductCommentEntity.class, mappedBy = "user")
+    private Collection<ProductCommentEntity> productComments;
 
     @OneToOne(targetEntity = UserCodeEntity.class, mappedBy = "user")
     private UserCodeEntity userCodes;
