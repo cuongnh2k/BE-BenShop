@@ -1,7 +1,7 @@
 package com.example.bebenshop.entities;
 
 import com.example.bebenshop.bases.BaseEntity;
-import com.example.bebenshop.enums.OrderEnum;
+import com.example.bebenshop.enums.OrderStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +19,9 @@ import java.util.Collection;
 @SuperBuilder
 public class OrderEntity extends BaseEntity {
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private OrderEnum status;
+    private OrderStatusEnum status;
 
     @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(columnDefinition = "user_id")
