@@ -24,7 +24,6 @@ public class ProductConsumeDto implements Serializable {
         return ProductEntity.builder()
                 .description(description)
                 .price(price)
-                .total(total)
                 .discount(discount)
                 .style(style)
                 .size(size)

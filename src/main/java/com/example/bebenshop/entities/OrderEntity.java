@@ -20,7 +20,7 @@ import java.util.Collection;
 public class OrderEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column(length = 10)
     private OrderStatusEnum status;
 
     @ManyToOne(targetEntity = UserEntity.class)

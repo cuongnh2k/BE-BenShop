@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,13 +18,18 @@ import javax.persistence.ManyToOne;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class CategoryEntity extends BaseEntity {
+public class ProductCommentEntity extends BaseEntity {
 
-    private String name;
+    @Column(columnDefinition = "text")
+    private String content;
 
     private Long parentId;
 
     @ManyToOne(targetEntity = ProductEntity.class)
     @JoinColumn(columnDefinition = "product_id")
     private ProductEntity product;
+
+    @ManyToOne(targetEntity = UserEntity.class)
+    @JoinColumn(columnDefinition = "user_id")
+    private UserEntity user;
 }
