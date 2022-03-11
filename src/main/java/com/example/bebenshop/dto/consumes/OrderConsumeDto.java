@@ -12,12 +12,16 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderConsumeDto implements Serializable {
-    private OrderStatusEnum status;
+
     private Long userId;
 
-    public OrderEntity toOrderEntity(){
+    private String orderDetails;
+
+    private String orderNotes;
+
+    public OrderEntity toOrderEntity() {
         return OrderEntity.builder()
-                .status(status)
+                .status(OrderStatusEnum.PENDING)
                 .build();
     }
 }

@@ -12,10 +12,17 @@ import java.io.Serializable;
 @AllArgsConstructor
 
 public class CategoryConsumeDto implements Serializable {
+
     private String name;
-    public CategoryEntity toCategoryEntity(){
-            return CategoryEntity.builder()
-                    .name(name)
-                    .build();
+
+    private Long parentId;
+
+    private Long productId;
+
+    public CategoryEntity toCategoryEntity() {
+        return CategoryEntity.builder()
+                .name(name)
+                .parentId(parentId)
+                .build();
     }
 }

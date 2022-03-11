@@ -13,8 +13,11 @@ import java.io.Serializable;
 public class DeviceConsumeDto implements Serializable {
 
     private String userAgent;
+
     private String accessToken;
+
     private String refreshToken;
+
     private Long userId;
 
     public DeviceEntity toDeviceEntity() {
