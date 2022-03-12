@@ -9,21 +9,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository mCategoryRepository;
 
     private final CategoryMapper mCategoryMapper;
 
     @Override
-    public List<CategoryProduceDto> getAll(){
+    public List<List<List<CategoryProduceDto>>> getAll(Boolean structure) {
         List<CategoryEntity> categoryEntityList = mCategoryRepository.findAll();
-        return categoryEntityList.stream().map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList());
+        List<List<List<CategoryProduceDto>>> list = new ArrayList<>();
+        if (!structure) {
+            list.add(new ArrayList<>(new ArrayList<>(categoryEntityList.stream().map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList()))));
+            return null;
+        }
+        return null;
     }
 }

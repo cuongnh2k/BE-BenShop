@@ -16,6 +16,4 @@ public class CategoryProduceDto extends BaseProduceDto<Long> {
     private String name;
 
     private Long parentId;
-
-    private List<ProductCategoryProduceDto> productCategories;
 }

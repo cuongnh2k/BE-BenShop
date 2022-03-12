@@ -48,7 +48,7 @@ public class ProductProduceDto extends BaseProduceDto<Long> {
 
     private List<ProductImageProduceDto> productImages;
 
-    private List<ProductCategoryProduceDto> productCategories;
+    private List<CategoryProduceDto> categories;
 
     private List<ProductCommentProduceDto> productComments;
 }

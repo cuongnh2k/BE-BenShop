@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface CategoryService {
 
-    List<CategoryProduceDto> getAll();
+    List<List<List<CategoryProduceDto>>> getAll(Boolean structure);
 }
 

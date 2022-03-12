@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,7 +18,10 @@ public class BasicCategoryController extends BaseController {
     private final CategoryService mCategoryService;
 
     @GetMapping
-    public ResponseEntity<BaseResponseDto>  getAll(){
-        return success(mCategoryService.getAll(), "Get data successful.");
+    public ResponseEntity<BaseResponseDto> getAll(@RequestParam(required = false) Boolean structure) {
+        if (structure == null) {
+            structure = false;
+        }
+        return success(mCategoryService.getAll(structure), "Get data successful.");
     }
 }
