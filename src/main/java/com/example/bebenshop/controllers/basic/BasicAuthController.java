@@ -1,4 +1,4 @@
-package com.example.bebenshop.controllers;
+package com.example.bebenshop.controllers.basic;
 
 import com.example.bebenshop.bases.BaseController;
 import com.example.bebenshop.bases.BaseResponseDto;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${base.api}/basic/auth")
-public class AuthController extends BaseController {
+public class BasicAuthController extends BaseController {
 
     private final AuthenticationManager authenticationManager;
     private final UserDetailServiceConfig mUserDetailServiceConfig;
