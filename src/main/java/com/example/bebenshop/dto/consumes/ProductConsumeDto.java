@@ -20,13 +20,13 @@ public class ProductConsumeDto implements Serializable {
     private Integer discount;
     private String style;
     private String size;
-    public ProductEntity toProductEntity(){
+
+    public ProductEntity toProductEntity() {
         return ProductEntity.builder()
                 .description(description)
                 .price(price)
                 .total(total)
                 .discount(discount)
-
                 .size(size)
                 .build();
     }

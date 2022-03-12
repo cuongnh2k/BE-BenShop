@@ -35,8 +35,6 @@ public class ProductProduceDto extends BaseProduceDto<Long> {
 
     private Integer discount;
 
-
-
     private String size;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

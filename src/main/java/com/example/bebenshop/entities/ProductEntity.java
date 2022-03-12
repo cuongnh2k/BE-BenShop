@@ -33,8 +33,6 @@ public class ProductEntity extends BaseEntity {
 
     private Integer discount;
 
-
-
     private String size;
 
     @OneToMany(targetEntity = OrderDetailEntity.class, mappedBy = "product")
