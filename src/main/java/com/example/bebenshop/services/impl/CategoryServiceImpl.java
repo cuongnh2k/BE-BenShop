@@ -22,12 +22,8 @@ public class CategoryServiceImpl implements CategoryService{
     private final CategoryMapper mCategoryMapper;
 
     @Override
-    public List<CategoryProduceDto> getCategoriesByName(String name){
-        if(name == null || name.isEmpty()){
-            return  mCategoryRepository.findAll()
-                    .stream().map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList());
-        }
-        List<CategoryEntity> categoryEntityList = mCategoryRepository.findByName(name);
+    public List<CategoryProduceDto> getAll(){
+        List<CategoryEntity> categoryEntityList = mCategoryRepository.findAll();
         return categoryEntityList.stream().map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList());
     }
 }

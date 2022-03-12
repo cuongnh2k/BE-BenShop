@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,7 +17,7 @@ public class BasicCategoryController extends BaseController {
     private final CategoryService mCategoryService;
 
     @GetMapping
-    public ResponseEntity<BaseResponseDto>  getCategoriesByName(@RequestParam(required = false) String name){
-        return success(mCategoryService.getCategoriesByName(name), "Get data successful.");
+    public ResponseEntity<BaseResponseDto>  getAll(){
+        return success(mCategoryService.getAll(), "Get data successful.");
     }
 }
