@@ -43,7 +43,7 @@ public class ProductConsumeDto implements Serializable {
 
     private String productImages;
 
-    private String categories;
+    private String productCategories;
 
     private String productComments;
 
