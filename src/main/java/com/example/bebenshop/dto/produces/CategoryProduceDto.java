@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-@Builder
 public class CategoryProduceDto extends BaseProduceDto<Long> {
 
     private String name;
