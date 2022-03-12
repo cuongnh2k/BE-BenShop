@@ -8,5 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public abstract class CategoryMapper implements CustomMapper {
 
+    @Mapping(target = "productCategories", ignore = true)
     public abstract CategoryProduceDto toCategoryProduceDto(CategoryEntity categoryEntity);
 }

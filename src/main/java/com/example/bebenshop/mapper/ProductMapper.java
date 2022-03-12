@@ -10,7 +10,7 @@ public abstract class ProductMapper implements CustomMapper {
 
     @Mapping(target = "orderDetails", ignore = true)
     @Mapping(target = "productImages", ignore = true)
-    @Mapping(target = "categories", ignore = true)
+    @Mapping(target = "productCategories", ignore = true)
     @Mapping(target = "productComments", ignore = true)
     public abstract ProductProduceDto toProductProduceDto(ProductEntity productEntity);
 }

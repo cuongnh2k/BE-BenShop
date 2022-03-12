@@ -10,8 +10,6 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import java.util.Collection;
 
 @Entity
 @Getter
@@ -19,12 +17,13 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class CategoryEntity extends BaseEntity {
+public class ProductCategoryEntity extends BaseEntity {
 
-    private String name;
+    @ManyToOne(targetEntity = ProductEntity.class)
+    @JoinColumn(columnDefinition = "product_id")
+    private ProductEntity product;
 
-    private Long parentId;
-
-    @OneToMany(targetEntity = ProductCategoryEntity.class, mappedBy = "category")
-    private Collection<ProductCategoryEntity> productCategories;
+    @ManyToOne(targetEntity = CategoryEntity.class)
+    @JoinColumn(columnDefinition = "category_id")
+    private CategoryEntity category;
 }

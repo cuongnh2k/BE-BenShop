@@ -57,8 +57,8 @@ public class ProductEntity extends BaseEntity {
     @OneToMany(targetEntity = ProductImageEntity.class, mappedBy = "product")
     private Collection<ProductImageEntity> productImages;
 
-    @ManyToMany
-    private Collection<CategoryEntity> categories;
+    @OneToMany(targetEntity = ProductCategoryEntity.class, mappedBy = "product")
+    private Collection<ProductCategoryEntity> productCategories;
 
     @OneToMany(targetEntity = ProductCommentEntity.class, mappedBy = "product")
     private Collection<ProductCommentEntity> productComments;
