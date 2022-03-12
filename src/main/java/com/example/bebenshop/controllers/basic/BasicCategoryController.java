@@ -1,8 +1,8 @@
-package com.example.bebenshop.controllers;
+package com.example.bebenshop.controllers.basic;
 
 import com.example.bebenshop.bases.BaseController;
 import com.example.bebenshop.bases.BaseResponseDto;
-import com.example.bebenshop.services.UserService;
+import com.example.bebenshop.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${base.api}/user")
-public class UserController extends BaseController {
+@RequestMapping("${base.api}/basic/category")
+public class BasicCategoryController extends BaseController {
 
-    private final UserService mUserService;
+    private final CategoryService mCategoryService;
 
     @GetMapping
-    public ResponseEntity<BaseResponseDto> getUserDetail() {
-        return success(mUserService.getUserDetail(), "Get data successful.");
+    public ResponseEntity<BaseResponseDto>  getAll(){
+        return success(mCategoryService.getAll(), "Get data successful.");
     }
-
 }
