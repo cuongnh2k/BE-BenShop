@@ -12,9 +12,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class ProductCategoryProduceDto extends BaseProduceDto<Long> {
+public class CategoryProduce3Dto extends BaseProduceDto<Long> {
 
-    private ProductProduceDto product;
+    private String name;
 
-    private CategoryProduceDto category;
+    private Long parentId;
 }
