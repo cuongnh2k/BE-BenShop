@@ -7,5 +7,7 @@ import java.util.List;
 public interface CategoryService {
 
     List<CategoryProduce1Dto> getAll(Boolean structure);
+
+    void deleteById(Long id);
 }
 
