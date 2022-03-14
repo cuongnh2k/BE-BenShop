@@ -1,7 +1,6 @@
 package com.example.bebenshop.dto.consumes;
 
 import com.example.bebenshop.entities.ProductEntity;
-import com.example.bebenshop.enums.ProductStatusEnum;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,14 +47,14 @@ public class ProductConsumeDto implements Serializable {
 
     private String productComments;
 
-    private MultipartFile[] fileImages;
+    private String status;
 
     public ProductEntity toProductEntity() {
         return ProductEntity.builder()
                 .name(name)
                 .price(price)
                 .discount(discount)
-                .status(ProductStatusEnum.STOCKING)
+                .status(status)
                 .style(style)
                 .gender(gender)
                 .origin(origin)

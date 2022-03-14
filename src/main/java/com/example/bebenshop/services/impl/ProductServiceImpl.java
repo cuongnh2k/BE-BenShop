@@ -28,11 +28,11 @@ public class ProductServiceImpl implements ProductService {
     public ProductProduceDto createProduct(ProductConsumeDto productConsumeDto) {
         ProductEntity productEntity = productConsumeDto.toProductEntity();
         List<CategoryEntity> categoryEntityList = mCategoryRepository.findAllById(mConvertUtil.toArray(productConsumeDto.getCategories()));
-
+        
         productEntity.setCategories(categoryEntityList);
         mProductRepository.save(productEntity);
-        ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity);
-        return productProduceDto;
+
+        return mProductMapper.toProductProduceDto(productEntity);
 
     }
 
