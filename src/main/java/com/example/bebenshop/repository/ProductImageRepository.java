@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductImageRepository extends JpaRepository<ProductImageEntity, Long> {
+
+   Boolean existsByPath(String path);
 }

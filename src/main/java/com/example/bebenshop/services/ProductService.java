@@ -11,4 +11,6 @@ public interface ProductService {
     ProductProduceDto createProduct(ProductConsumeDto productConsumeDto);
 
     ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException;
+
+    void deleteProductImage(Long id);
 }

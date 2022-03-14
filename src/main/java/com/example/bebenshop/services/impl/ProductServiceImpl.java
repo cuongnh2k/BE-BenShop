@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -80,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException {
-        ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlag(id);
+        ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);
         if (productEntity == null) {
             throw new BadRequestException("no id exists: " + id);
         }
@@ -104,6 +105,9 @@ public class ProductServiceImpl implements ProductService {
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 
+            if (mProductImageRepository.existsByPath(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename())) {
+                throw new BadRequestException("photo already exists");
+            }
             mProductImageRepository.save(ProductImageEntity.builder()
                     .product(productEntity)
                     .path(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename())
@@ -112,6 +116,26 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception ioe) {
             throw new BadRequestException("empty image");
         }
-        return toProductProduceDto(mProductRepository.findByIdAndDeletedFlag(id));
+        return toProductProduceDto(mProductRepository.findByIdAndDeletedFlagFalse(id));
+    }
+
+    @Override
+    public void deleteProductImage(Long id) {
+        ProductImageEntity productImageEntity = mProductImageRepository.findById(id).orElse(null);
+        if (productImageEntity == null) {
+            throw new BadRequestException("no id exists: " + id);
+        }
+        String[] arr = productImageEntity.getPath().split("/");
+        String path = ROOT_DIRECTORY;
+        for (int i = 3; i < arr.length; i++) {
+            path += "/" + arr[i];
+        }
+        try {
+            File file = new File(path);
+            file.delete();
+            mProductImageRepository.deleteById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
