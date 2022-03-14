@@ -86,7 +86,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
         </dependency>
-
     </dependencies>
     <build>
         <finalName>${project.artifactId}</finalName>
