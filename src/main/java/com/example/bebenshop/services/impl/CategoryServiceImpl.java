@@ -8,7 +8,6 @@ import com.example.bebenshop.entities.CategoryEntity;
 import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.mapper.CategoryMapper;
 import com.example.bebenshop.repository.CategoryRepository;
-import com.example.bebenshop.repository.ProductCategoryRepository;
 import com.example.bebenshop.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository mCategoryRepository;
     private final CategoryMapper mCategoryMapper;
-    private final ProductCategoryRepository mProductCategoryRepository;
 
     @Override
     public List<CategoryProduce1Dto> getAll(Boolean structure) {
@@ -77,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (Objects.isNull(categoryEntity)) {
             throw new BadRequestException("Id " + id + " does not exist");
         }
-        mProductCategoryRepository.deleteById(id);
+        mCategoryRepository.deleteProductCategoryById(id);
         mCategoryRepository.deleteById(id);
     }
 }
