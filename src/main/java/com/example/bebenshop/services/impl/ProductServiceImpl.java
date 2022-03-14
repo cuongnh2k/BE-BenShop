@@ -4,7 +4,6 @@ import com.example.bebenshop.dto.consumes.ProductConsumeDto;
 import com.example.bebenshop.dto.produces.ProductProduceDto;
 import com.example.bebenshop.entities.CategoryEntity;
 import com.example.bebenshop.entities.ProductEntity;
-import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.mapper.ProductMapper;
 import com.example.bebenshop.repository.CategoryRepository;
 import com.example.bebenshop.repository.ProductRepository;
@@ -14,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,18 +21,18 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository mProductRepository;
     private final ProductMapper mProductMapper;
-    private  final CategoryRepository mCategoryRepository;
-    private  final ConvertUtil mConvertUtil;
+    private final CategoryRepository mCategoryRepository;
+    private final ConvertUtil mConvertUtil;
 
     @Override
     public ProductProduceDto createProduct(ProductConsumeDto productConsumeDto) {
         ProductEntity productEntity = productConsumeDto.toProductEntity();
         List<CategoryEntity> categoryEntityList = mCategoryRepository.findAllById(mConvertUtil.toArray(productConsumeDto.getCategories()));
 
-                productEntity.setCategories(categoryEntityList);
-                mProductRepository.save(productEntity);
-                ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity);
-                return productProduceDto;
+        productEntity.setCategories(categoryEntityList);
+        mProductRepository.save(productEntity);
+        ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity);
+        return productProduceDto;
 
     }
 
