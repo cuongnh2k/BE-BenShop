@@ -4,6 +4,7 @@ import com.example.bebenshop.dto.consumes.ProductConsumeDto;
 import com.example.bebenshop.dto.produces.ProductProduceDto;
 import com.example.bebenshop.entities.CategoryEntity;
 import com.example.bebenshop.entities.ProductEntity;
+import com.example.bebenshop.enums.ProductStatusEnum;
 import com.example.bebenshop.mapper.ProductMapper;
 import com.example.bebenshop.repository.CategoryRepository;
 import com.example.bebenshop.repository.ProductRepository;
@@ -29,10 +30,11 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = productConsumeDto.toProductEntity();
         List<CategoryEntity> categoryEntityList = mCategoryRepository.findAllById(mConvertUtil.toArray(productConsumeDto.getCategories()));
 
+        productEntity.setStatus(ProductStatusEnum.STOCKING);
         productEntity.setCategories(categoryEntityList);
         mProductRepository.save(productEntity);
-        ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity);
-        return productProduceDto;
+
+        return mProductMapper.toProductProduceDto(productEntity);
 
     }
 
