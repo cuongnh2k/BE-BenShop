@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -77,5 +78,32 @@ public class CategoryServiceImpl implements CategoryService {
         }
         mCategoryRepository.deleteProductCategoryById(id);
         mCategoryRepository.deleteById(id);
+    }
+    @Override
+    public CategoryProduceDto editById(Long id, HashMap<String, Object> map) {
+        CategoryEntity categoryEntity = mCategoryRepository.findById(id).orElse(null);
+        if(categoryEntity == null){
+            throw new BadRequestException("Id " + id + " does not exist");
+        }
+        for(String i : map.keySet()){
+            switch (i){
+                case "name":
+                    String name = map.get(i).toString();
+                    CategoryEntity ca = mCategoryRepository.findByName(name);
+                    if(ca != null && ca.getName().equalsIgnoreCase(name)){
+                        throw new BadRequestException(name + " already used");
+                    }
+                    categoryEntity.setName(name);
+                    break;
+                case "parentId":
+                    Long parentID = Long.parseLong(map.get(i).toString());
+                    if(!mCategoryRepository.existsById(parentID)){
+                        throw new BadRequestException(parentID + " is not exist");
+                    }
+                    categoryEntity.setParentId(parentID);
+                    break;
+            }
+        }
+        return mCategoryMapper.toCategoryProduceDto(mCategoryRepository.save(categoryEntity));
     }
 }

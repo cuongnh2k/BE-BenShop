@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {
 
@@ -13,4 +15,6 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
     @Query(nativeQuery = true
             , value = "DELETE FROM product_entity_categories WHERE categories_id = ?1 ")
     void deleteProductCategoryById(Long id);
+
+    CategoryEntity findByName(String name);
 }

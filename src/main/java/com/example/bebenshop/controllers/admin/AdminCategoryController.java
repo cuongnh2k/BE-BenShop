@@ -5,10 +5,9 @@ import com.example.bebenshop.bases.BaseResponseDto;
 import com.example.bebenshop.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,5 +20,11 @@ public class AdminCategoryController extends BaseController {
     public ResponseEntity<BaseResponseDto> deleteById(@PathVariable Long id) {
         mCategoryService.deleteById(id);
         return success("Delete data successful.");
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<BaseResponseDto> editById(@PathVariable Long id
+            ,@RequestBody HashMap<String, Object> map){
+        return success(mCategoryService.editById(id, map), "Edit successful");
     }
 }

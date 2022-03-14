@@ -1,7 +1,9 @@
 package com.example.bebenshop.services;
 
 import com.example.bebenshop.dto.produces.CategoryProduce1Dto;
+import com.example.bebenshop.dto.produces.CategoryProduceDto;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface CategoryService {
@@ -9,5 +11,7 @@ public interface CategoryService {
     List<CategoryProduce1Dto> getAll(Boolean structure);
 
     void deleteById(Long id);
+
+    CategoryProduceDto editById(Long id, HashMap<String, Object> map);
 }
 
