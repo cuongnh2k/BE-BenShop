@@ -2,13 +2,12 @@ package com.example.bebenshop.controllers.admin;
 
 import com.example.bebenshop.bases.BaseController;
 import com.example.bebenshop.bases.BaseResponseDto;
+import com.example.bebenshop.dto.consumes.CategoryConsumeDto;
+import com.example.bebenshop.dto.produces.CategoryProduceDto;
 import com.example.bebenshop.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,5 +20,11 @@ public class AdminCategoryController extends BaseController {
     public ResponseEntity<BaseResponseDto> deleteById(@PathVariable Long id) {
         mCategoryService.deleteById(id);
         return success("Delete data successful.");
+    }
+
+    @PostMapping("")
+    public ResponseEntity<BaseResponseDto> addCategory(@RequestBody CategoryConsumeDto categoryConsumeDto){
+        return created(mCategoryService.addCategory(categoryConsumeDto),"Create data successful.");
+
     }
 }

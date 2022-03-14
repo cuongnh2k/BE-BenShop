@@ -1,5 +1,6 @@
 package com.example.bebenshop.services.impl;
 
+import com.example.bebenshop.dto.consumes.CategoryConsumeDto;
 import com.example.bebenshop.dto.produces.CategoryProduce1Dto;
 import com.example.bebenshop.dto.produces.CategoryProduce2Dto;
 import com.example.bebenshop.dto.produces.CategoryProduce3Dto;
@@ -77,5 +78,27 @@ public class CategoryServiceImpl implements CategoryService {
         }
         mCategoryRepository.deleteProductCategoryById(id);
         mCategoryRepository.deleteById(id);
+    }
+
+    @Override
+    public CategoryProduceDto addCategory(CategoryConsumeDto categoryConsumeDto) {
+        CategoryEntity categoryEntity = categoryConsumeDto.toCategoryEntity();
+        if (categoryEntity.getParentId() == null) {
+            categoryEntity.setParentId(0L);
+        } else {
+            if (mCategoryRepository.existsById(categoryEntity.getId())) {
+                throw new BadRequestException("Id " + categoryEntity.getId() + " does exist");
+
+            } else {
+                if (mCategoryRepository.existsByName(categoryEntity.getName())) {
+                    throw new BadRequestException("Name " + categoryEntity.getName() + " does  exist");
+                } else {
+                    mCategoryRepository.save(categoryEntity);
+                    CategoryProduceDto categoryProduceDto = mCategoryMapper.toCategoryProduceDto(categoryEntity);
+                    return categoryProduceDto;
+                }
+            }
+        }
+        return null;
     }
 }
