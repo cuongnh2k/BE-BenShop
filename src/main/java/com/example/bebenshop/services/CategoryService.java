@@ -13,5 +13,6 @@ public interface CategoryService {
     void deleteById(Long id);
 
     CategoryProduceDto editById(Long id, HashMap<String, Object> map);
-}
 
+    CategoryProduceDto getById(Long id);
+}
