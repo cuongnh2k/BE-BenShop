@@ -3,6 +3,7 @@ package com.example.bebenshop.dto.consumes;
 import com.example.bebenshop.entities.ProductEntity;
 import com.example.bebenshop.enums.ProductStatusEnum;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -46,6 +47,8 @@ public class ProductConsumeDto implements Serializable {
     private String categories;
 
     private String productComments;
+
+    private MultipartFile[] fileImages;
 
     public ProductEntity toProductEntity() {
         return ProductEntity.builder()

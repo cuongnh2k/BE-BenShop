@@ -5,6 +5,7 @@ email.name: cuongnh2k@gmail.com
 email.password: lahzzvsjrlzjzqzn
 base.api: /api/v1
 domain: http://localhost:3000
+image.produce : C:/image/produce
 spring:
   profiles:
     active: local
