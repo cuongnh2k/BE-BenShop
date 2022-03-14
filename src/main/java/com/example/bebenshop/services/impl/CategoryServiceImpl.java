@@ -106,4 +106,13 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return mCategoryMapper.toCategoryProduceDto(mCategoryRepository.save(categoryEntity));
     }
+
+    @Override
+    public CategoryProduceDto getById(Long id) {
+        CategoryEntity categoryEntity = mCategoryRepository.findById(id).orElse(null);
+        if(Objects.isNull(categoryEntity)){
+            throw new BadRequestException("id "+id+" is not exist");
+        }
+        return mCategoryMapper.toCategoryProduceDto(categoryEntity);
+    }
 }
