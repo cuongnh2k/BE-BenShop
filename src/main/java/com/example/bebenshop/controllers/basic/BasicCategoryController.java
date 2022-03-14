@@ -24,6 +24,6 @@ public class BasicCategoryController extends BaseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponseDto> getById(@PathVariable Long id){
-        return success(mCategoryService.getById(id), "Get successful");
+        return success(mCategoryService.getById(id), "Get data successful");
     }
 }
