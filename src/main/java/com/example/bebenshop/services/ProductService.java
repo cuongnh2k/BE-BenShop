@@ -11,4 +11,6 @@ public interface ProductService {
     ProductProduceDto createProduct(ProductConsumeDto productConsumeDto);
 
     ProductProduceDto editProduct(Long id, HashMap<String, Object> map);
+
+    void deleteProductByID(Long id);
 }

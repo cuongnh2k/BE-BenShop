@@ -31,10 +31,9 @@ public class ProductServiceImpl implements ProductService {
     public ProductProduceDto createProduct(ProductConsumeDto productConsumeDto) {
         ProductEntity productEntity = productConsumeDto.toProductEntity();
         List<CategoryEntity> categoryEntityList = mCategoryRepository.findAllById(mConvertUtil.toArray(productConsumeDto.getCategories()));
-        
+
         productEntity.setCategories(categoryEntityList);
         mProductRepository.save(productEntity);
-
         return mProductMapper.toProductProduceDto(productEntity);
 
     }
@@ -43,64 +42,57 @@ public class ProductServiceImpl implements ProductService {
     public ProductProduceDto editProduct(Long id, HashMap<String, Object> map) {
 
         ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
-        if(productEntity == null){
-            throw new BadRequestException("ID"+id+" does not exist");
+        if (productEntity == null) {
+            throw new BadRequestException("ID" + id + " does not exist");
         }
         List<ProductEntity> productEntityList = mProductRepository.findAll();
-        for(String i: map.keySet()){
-            switch (i){
+        for (String i : map.keySet()) {
+            switch (i) {
                 case "name":
-                    String name= map.get(i).toString();
-                    productEntity.setName(name);
+                    productEntity.setName(map.get(i).toString());
                     break;
                 case "price":
-                    BigDecimal price = BigDecimal.valueOf(Long.parseLong(map.get(i).toString()));
-                    productEntity.setPrice(price);
+                    productEntity.setPrice(BigDecimal.valueOf(Long.parseLong(map.get(i).toString())));
                     break;
                 case "discount":
-                    Integer discount = Integer.getInteger((String) map.get(i.toString()));
-                    productEntity.setDiscount(discount);
+                    productEntity.setDiscount(Integer.getInteger((String) map.get(i.toString())));
                     break;
                 case "status":
-                    String status = map.get(i).toString();
-                    productEntity.setStatus(status);
+                    productEntity.setStatus(map.get(i).toString());
                     break;
                 case "style":
-                    String style = map.get(i).toString();
-                    productEntity.setStyle(style);
+                    productEntity.setStyle(map.get(i).toString());
                     break;
                 case "gender":
-                    String gender = map.get(i).toString();
-                    productEntity.setGender(gender);
+                    productEntity.setGender(map.get(i).toString());
                     break;
                 case "origin":
-                    String origin = map.get(i).toString();
-                    productEntity.setOrigin(origin);
+                    productEntity.setOrigin(map.get(i).toString());
                     break;
                 case "material":
-                    String material = map.get(i).toString();
-                    productEntity.setMaterial(material);
+                    productEntity.setMaterial(map.get(i).toString());
                     break;
                 case "productionMethod":
-                    String productionMethod = map.get(i).toString();
-                    productEntity.setProductionMethod(productionMethod);
+                    productEntity.setProductionMethod(map.get(i).toString());
                     break;
                 case "size":
-                    String size = map.get(i).toString();
-                    productEntity.setSize(size);
+                    productEntity.setSize(map.get(i).toString());
                     break;
                 case "accessory":
-                    String accessory = map.get(i).toString();
-                    productEntity.setAccessory(accessory);
+                    productEntity.setAccessory(map.get(i).toString());
                     break;
                 case "washingMethod":
-                    String washingMethod = map.get(i).toString();
-                    productEntity.setWashingMethod(washingMethod);
+                    productEntity.setWashingMethod(map.get(i).toString());
                     break;
             }
         }
 
         return mProductMapper.toProductProduceDto(mProductRepository.save(productEntity));
+    }
+
+    @Override
+    public void deleteProductByID(Long id) {
+
     }
 
 
