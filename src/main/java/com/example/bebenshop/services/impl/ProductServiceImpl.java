@@ -80,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException {
-        ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
+        ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlag(id);
         if (productEntity == null) {
             throw new BadRequestException("no id exists: " + id);
         }
@@ -112,6 +112,6 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception ioe) {
             throw new BadRequestException("empty image");
         }
-        return toProductProduceDto(mProductRepository.findById(id).orElse(null));
+        return toProductProduceDto(mProductRepository.findByIdAndDeletedFlag(id));
     }
 }
