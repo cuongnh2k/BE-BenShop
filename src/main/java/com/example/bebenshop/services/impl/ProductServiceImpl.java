@@ -9,6 +9,7 @@ import com.example.bebenshop.mapper.ProductMapper;
 import com.example.bebenshop.repository.CategoryRepository;
 import com.example.bebenshop.repository.ProductRepository;
 import com.example.bebenshop.services.ProductService;
+import com.example.bebenshop.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,30 +25,18 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository mProductRepository;
     private final ProductMapper mProductMapper;
     private  final CategoryRepository mCategoryRepository;
-
-    @Override
-    public List<ProductProduceDto> getAll(Boolean structure) {
-        List<ProductProduceDto> productProduceDtoList = mProductRepository.findAll().stream()
-                .map(mProductMapper::toProductProduceDto).collect(Collectors.toList());
-
-        return null;
-    }
+    private  final ConvertUtil mConvertUtil;
 
     @Override
     public ProductProduceDto createProduct(ProductConsumeDto productConsumeDto) {
         ProductEntity productEntity = productConsumeDto.toProductEntity();
-        List<CategoryEntity> categoryEntityList = mCategoryRepository.findAll();
-            if(productEntity.getName() != null || productEntity.getPrice()!= null || productEntity.getDescription() != null){
-                throw  new BadRequestException("Khong duoc de trong");
-            }else if(mProductRepository.existsAllByName(productEntity.getName())){
-                throw  new BadRequestException("Ten"+ productEntity.getName()+"does not exits");
-            }
-            else {
+        List<CategoryEntity> categoryEntityList = mCategoryRepository.findAllById(mConvertUtil.toArray(productConsumeDto.getCategories()));
+
                 productEntity.setCategories(categoryEntityList);
                 mProductRepository.save(productEntity);
                 ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity);
                 return productProduceDto;
-            }
+
     }
 
 
