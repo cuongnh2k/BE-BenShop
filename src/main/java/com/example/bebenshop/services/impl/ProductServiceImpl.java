@@ -37,7 +37,6 @@ public class ProductServiceImpl implements ProductService {
         productEntity.setCategories(categoryEntityList);
         mProductRepository.save(productEntity);
         return mProductMapper.toProductProduceDto(productEntity);
-
     }
 
     @Override
@@ -99,6 +98,6 @@ public class ProductServiceImpl implements ProductService {
             throw new BadRequestException("Id"+id+"does not exist");
         }
         productEntity.setDeletedFlag(true);
+        mProductRepository.save(productEntity);
     }
-
 }
