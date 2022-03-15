@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -92,8 +94,56 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProductByID(Long id) {
-
+        ProductEntity productEntity =mProductRepository.findById(id).orElse(null);
+        if(Objects.isNull(productEntity)){
+            throw new BadRequestException("Id"+id+"does not exist");
+        }
+        mProductRepository.deleteById(id);
     }
 
-
+    @Override
+    public List<ProductProduceDto> getAll(Boolean structure) {
+        List<ProductProduceDto> productProduceDtoList = mProductRepository.findAll().stream()
+                .map(mProductMapper::toProductProduceDto).collect(Collectors.toList());
+        if(!structure){
+            return productProduceDtoList.stream().map(
+                    o -> ProductProduceDto.builder()
+                    .id(o.getId())
+                    .createdDate(o.getCreatedDate())
+                    .updatedDate(o.getUpdatedDate())
+                    .name(o.getName())
+                    .price(o.getPrice())
+                    .discount(o.getDiscount())
+                    .status(o.getStatus())
+                    .style(o.getStyle())
+                    .gender(o.getGender())
+                    .origin(o.getOrigin())
+                    .material(o.getMaterial())
+                    .productionMethod(o.getProductionMethod())
+                    .size(o.getSize())
+                    .accessory(o.getAccessory())
+                    .washingMethod(o.getWashingMethod())
+                    .build()).collect(Collectors.toList());
+        }
+        return productProduceDtoList.stream()
+                .filter(o-> o.getId()==0)
+                .map(o -> ProductProduceDto.builder()
+                        .id(o.getId())
+                        .createdDate(o.getCreatedDate())
+                        .updatedDate(o.getUpdatedDate())
+                        .name(o.getName())
+                        .price(o.getPrice())
+                        .discount(o.getDiscount())
+                        .status(o.getStatus())
+                        .style(o.getStyle())
+                        .gender(o.getGender())
+                        .origin(o.getOrigin())
+                        .material(o.getMaterial())
+                        .productionMethod(o.getProductionMethod())
+                        .size(o.getSize())
+                        .accessory(o.getAccessory())
+                        .washingMethod(o.getWashingMethod())
+                        .build()).collect(Collectors.toList()
+                );
+    }
 }

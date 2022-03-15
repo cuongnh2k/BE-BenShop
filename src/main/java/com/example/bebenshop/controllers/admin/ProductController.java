@@ -27,4 +27,10 @@ public class ProductController extends BaseController {
             ,@RequestBody HashMap<String, Object> map){
        return success(mProductService.editProduct(id , map), "Edit successful");
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BaseResponseDto> deleteProductByID(@PathVariable Long id) {
+        mProductService.deleteProductByID(id);
+        return success("Delete data successful.");
+    }
 }
