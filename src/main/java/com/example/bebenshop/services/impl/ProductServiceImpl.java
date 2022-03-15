@@ -20,13 +20,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,14 +77,73 @@ public class ProductServiceImpl implements ProductService {
 
         productEntity.setCategories(categoryEntityList);
         mProductRepository.save(productEntity);
-
         return mProductMapper.toProductProduceDto(productEntity);
+    }
 
+    @Override
+    public ProductProduceDto editProduct(Long id, HashMap<String, Object> map) {
+
+        ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
+        if (productEntity == null) {
+            throw new BadRequestException("ID" + id + " does not exist");
+        }
+        for (String i : map.keySet()) {
+            switch (i) {
+                case "name":
+                    productEntity.setName(map.get(i).toString());
+                    break;
+                case "price":
+                    productEntity.setPrice(BigDecimal.valueOf(Long.parseLong(map.get(i).toString())));
+                    break;
+                case "discount":
+                    productEntity.setDiscount(Integer.parseInt(map.get(i).toString()));
+                    break;
+                case "status":
+                    productEntity.setStatus(map.get(i).toString());
+                    break;
+                case "style":
+                    productEntity.setStyle(map.get(i).toString());
+                    break;
+                case "gender":
+                    productEntity.setGender(map.get(i).toString());
+                    break;
+                case "origin":
+                    productEntity.setOrigin(map.get(i).toString());
+                    break;
+                case "material":
+                    productEntity.setMaterial(map.get(i).toString());
+                    break;
+                case "productionMethod":
+                    productEntity.setProductionMethod(map.get(i).toString());
+                    break;
+                case "size":
+                    productEntity.setSize(map.get(i).toString());
+                    break;
+                case "accessory":
+                    productEntity.setAccessory(map.get(i).toString());
+                    break;
+                case "washingMethod":
+                    productEntity.setWashingMethod(map.get(i).toString());
+                    break;
+            }
+        }
+
+        return mProductMapper.toProductProduceDto(mProductRepository.save(productEntity));
+    }
+
+    @Override
+    public void deleteProductByID(Long id) {
+        ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
+        if (Objects.isNull(productEntity)) {
+            throw new BadRequestException("Id" + id + "does not exist");
+        }
+        productEntity.setDeletedFlag(true);
+        mProductRepository.save(productEntity);
     }
 
     @Override
     public ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException {
-        ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlag(id);
+        ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);
         if (productEntity == null) {
             throw new BadRequestException("no id exists: " + id);
         }
@@ -104,6 +167,9 @@ public class ProductServiceImpl implements ProductService {
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 
+            if (mProductImageRepository.existsByPath(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename())) {
+                throw new BadRequestException("photo already exists");
+            }
             mProductImageRepository.save(ProductImageEntity.builder()
                     .product(productEntity)
                     .path(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename())
@@ -112,6 +178,35 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception ioe) {
             throw new BadRequestException("empty image");
         }
-        return toProductProduceDto(mProductRepository.findByIdAndDeletedFlag(id));
+        return toProductProduceDto(mProductRepository.findByIdAndDeletedFlagFalse(id));
+    }
+
+    @Override
+    public void deleteProductImage(Long id) {
+        ProductImageEntity productImageEntity = mProductImageRepository.findById(id).orElse(null);
+        if (productImageEntity == null) {
+            throw new BadRequestException("no id exists: " + id);
+        }
+        String[] arr = productImageEntity.getPath().split("/");
+        String path = ROOT_DIRECTORY;
+        for (int i = 3; i < arr.length; i++) {
+            path += "/" + arr[i];
+        }
+        try {
+            File file = new File(path);
+            file.delete();
+            mProductImageRepository.deleteById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public ProductProduceDto getProductById(Long id) {
+        ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);
+        if(productEntity == null){
+            throw  new BadRequestException("Id"+id+"dose not exist");
+        }
+        return toProductProduceDto(productEntity);
     }
 }

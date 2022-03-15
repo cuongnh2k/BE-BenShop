@@ -4,10 +4,12 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.bebenshop.dto.consumes.UserConsumeDto;
 import com.example.bebenshop.dto.produces.UserProduceDto;
 import com.example.bebenshop.entities.RoleEntity;
 import com.example.bebenshop.entities.UserEntity;
 import com.example.bebenshop.enums.RoleEnum;
+import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.mapper.DeviceMapper;
 import com.example.bebenshop.mapper.UserMapper;
 import com.example.bebenshop.repository.RoleRepository;
@@ -85,5 +87,18 @@ public class UserServiceImpl implements UserService {
         userProduceDto.setDevices(userEntity.getDevices().stream()
                 .map(mDeviceMapper::toDeviceProduceDto).collect(Collectors.toList()));
         return userProduceDto;
+    }
+
+    @Override
+    public UserProduceDto createRegister(UserConsumeDto userConsumeDto) {
+        UserEntity userEntity = userConsumeDto.toUserEntity();
+        if(mUserRepository.existsByUsername(userConsumeDto.getUsername())){
+            throw new BadRequestException("User name "+userConsumeDto.getUsername()+" already used");
+        }
+        if (mUserRepository.existsByEmail(userConsumeDto.getEmail())) {
+            throw new BadRequestException("Email "+userConsumeDto.getEmail()+" already used");
+        }
+        userEntity.setPassword(mPasswordEncoder.encode(userEntity.getPassword()));
+        return mUserMapper.toUserProduceDto(mUserRepository.save(userEntity));
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 
 @RestController
@@ -24,8 +25,27 @@ public class AdminProductController extends BaseController {
         return created(mProductService.createProduct(productConsumeDto), "Created data successful.");
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<BaseResponseDto> editProduct(@PathVariable Long id
+            , @RequestBody HashMap<String, Object> map) {
+        return success(mProductService.editProduct(id, map), "Edit successful");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BaseResponseDto> deleteProductByID(@PathVariable Long id) {
+        mProductService.deleteProductByID(id);
+        return success("Delete data successful.");
+    }
+
     @PostMapping("/{id}/image")
-    public ResponseEntity<BaseResponseDto> addProductImage(@PathVariable Long id, @RequestParam MultipartFile image) throws IOException {
+    public ResponseEntity<BaseResponseDto> addProductImage(@PathVariable Long id, @RequestParam MultipartFile image) throws
+            IOException {
         return created(mProductService.addProductImage(id, image), "Created data successful.");
+    }
+
+    @DeleteMapping("/image/{id}")
+    public ResponseEntity<BaseResponseDto> deleteProductImage(@PathVariable Long id) {
+        mProductService.deleteProductImage(id);
+        return success("Delete data successful.");
     }
 }
