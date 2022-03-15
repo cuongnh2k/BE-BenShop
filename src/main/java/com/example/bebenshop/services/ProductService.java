@@ -1,11 +1,11 @@
 package com.example.bebenshop.services;
 
 import com.example.bebenshop.dto.consumes.ProductConsumeDto;
-import com.example.bebenshop.dto.produces.CategoryProduce1Dto;
 import com.example.bebenshop.dto.produces.ProductProduceDto;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 
 
 public interface ProductService {
@@ -16,4 +16,7 @@ public interface ProductService {
 
     void deleteProductByID(Long id);
 
+    ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException;
+
+    void deleteProductImage(Long id);
 }

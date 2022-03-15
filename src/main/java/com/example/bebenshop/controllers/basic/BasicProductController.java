@@ -16,13 +16,4 @@ import org.springframework.web.bind.annotation.RestController;
 public class BasicProductController extends BaseController {
     private final ProductService mProductService;
 
-    @GetMapping
-    public ResponseEntity<BaseResponseDto> getAll(@RequestParam(required = false) Boolean structure) {
-        if (structure == null) {
-            structure = false;
-        }
-        return success(mProductService.getAll(structure), "Get data successful.");
-    }
-
-
 }
