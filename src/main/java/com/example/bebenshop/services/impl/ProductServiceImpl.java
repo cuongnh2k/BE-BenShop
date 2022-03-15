@@ -23,11 +23,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,11 +77,70 @@ public class ProductServiceImpl implements ProductService {
 
         productEntity.setCategories(categoryEntityList);
         mProductRepository.save(productEntity);
-
         return mProductMapper.toProductProduceDto(productEntity);
-
     }
 
+    @Override
+    public ProductProduceDto editProduct(Long id, HashMap<String, Object> map) {
+
+        ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
+        if (productEntity == null) {
+            throw new BadRequestException("ID" + id + " does not exist");
+        }
+        List<ProductEntity> productEntityList = mProductRepository.findAll();
+        for (String i : map.keySet()) {
+            switch (i) {
+                case "name":
+                    productEntity.setName(map.get(i).toString());
+                    break;
+                case "price":
+                    productEntity.setPrice(BigDecimal.valueOf(Long.parseLong(map.get(i).toString())));
+                    break;
+                case "discount":
+                    productEntity.setDiscount(Integer.getInteger((String) map.get(i.toString())));
+                    break;
+                case "status":
+                    productEntity.setStatus(map.get(i).toString());
+                    break;
+                case "style":
+                    productEntity.setStyle(map.get(i).toString());
+                    break;
+                case "gender":
+                    productEntity.setGender(map.get(i).toString());
+                    break;
+                case "origin":
+                    productEntity.setOrigin(map.get(i).toString());
+                    break;
+                case "material":
+                    productEntity.setMaterial(map.get(i).toString());
+                    break;
+                case "productionMethod":
+                    productEntity.setProductionMethod(map.get(i).toString());
+                    break;
+                case "size":
+                    productEntity.setSize(map.get(i).toString());
+                    break;
+                case "accessory":
+                    productEntity.setAccessory(map.get(i).toString());
+                    break;
+                case "washingMethod":
+                    productEntity.setWashingMethod(map.get(i).toString());
+                    break;
+            }
+        }
+
+        return mProductMapper.toProductProduceDto(mProductRepository.save(productEntity));
+    }
+
+    @Override
+    public void deleteProductByID(Long id) {
+        ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
+        if (Objects.isNull(productEntity)) {
+            throw new BadRequestException("Id" + id + "does not exist");
+        }
+        productEntity.setDeletedFlag(true);
+        mProductRepository.save(productEntity);
+    }
     @Override
     public ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException {
         ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);
