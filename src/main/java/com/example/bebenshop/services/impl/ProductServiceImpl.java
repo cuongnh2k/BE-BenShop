@@ -87,7 +87,6 @@ public class ProductServiceImpl implements ProductService {
         if (productEntity == null) {
             throw new BadRequestException("ID" + id + " does not exist");
         }
-        List<ProductEntity> productEntityList = mProductRepository.findAll();
         for (String i : map.keySet()) {
             switch (i) {
                 case "name":
@@ -97,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
                     productEntity.setPrice(BigDecimal.valueOf(Long.parseLong(map.get(i).toString())));
                     break;
                 case "discount":
-                    productEntity.setDiscount(Integer.getInteger((String) map.get(i.toString())));
+                    productEntity.setDiscount(Integer.parseInt(map.get(i).toString()));
                     break;
                 case "status":
                     productEntity.setStatus(map.get(i).toString());
@@ -141,6 +140,7 @@ public class ProductServiceImpl implements ProductService {
         productEntity.setDeletedFlag(true);
         mProductRepository.save(productEntity);
     }
+
     @Override
     public ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException {
         ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);

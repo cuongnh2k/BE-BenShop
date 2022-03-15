@@ -36,15 +36,16 @@ public class AdminProductController extends BaseController {
         mProductService.deleteProductByID(id);
         return success("Delete data successful.");
     }
-        @PostMapping("/{id}/image")
-        public ResponseEntity<BaseResponseDto> addProductImage (@PathVariable Long id, @RequestParam MultipartFile image) throws
-        IOException {
-            return created(mProductService.addProductImage(id, image), "Created data successful.");
-        }
 
-        @DeleteMapping("/image/{id}")
-        public ResponseEntity<BaseResponseDto> deleteProductImage (@PathVariable Long id){
-            mProductService.deleteProductImage(id);
-            return success("Delete data successful.");
-        }
+    @PostMapping("/{id}/image")
+    public ResponseEntity<BaseResponseDto> addProductImage(@PathVariable Long id, @RequestParam MultipartFile image) throws
+            IOException {
+        return created(mProductService.addProductImage(id, image), "Created data successful.");
     }
+
+    @DeleteMapping("/image/{id}")
+    public ResponseEntity<BaseResponseDto> deleteProductImage(@PathVariable Long id) {
+        mProductService.deleteProductImage(id);
+        return success("Delete data successful.");
+    }
+}
