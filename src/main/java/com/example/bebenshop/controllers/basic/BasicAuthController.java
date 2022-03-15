@@ -5,9 +5,11 @@ import com.example.bebenshop.bases.BaseResponseDto;
 import com.example.bebenshop.config.TokenConfig;
 import com.example.bebenshop.config.UserDetailServiceConfig;
 import com.example.bebenshop.dto.consumes.LoginConsumeDto;
+import com.example.bebenshop.dto.consumes.UserConsumeDto;
 import com.example.bebenshop.dto.produces.TokenProduceDto;
 import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.services.DeviceService;
+import com.example.bebenshop.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +28,7 @@ public class BasicAuthController extends BaseController {
     private final UserDetailServiceConfig mUserDetailServiceConfig;
     private final TokenConfig mTokenConfig;
     private final DeviceService mDeviceService;
+    private final UserService mUserService;
 
     @PostMapping("/login")
     public ResponseEntity<BaseResponseDto> login(@RequestBody LoginConsumeDto loginConsumeDto, HttpServletRequest request) {
@@ -47,5 +50,10 @@ public class BasicAuthController extends BaseController {
     @PatchMapping("/refresh-token")
     public ResponseEntity<BaseResponseDto> refreshToken(HttpServletRequest request) {
         return success(mDeviceService.refreshToken(request), "Refresh token successful.");
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<BaseResponseDto> createRegister(@RequestBody UserConsumeDto userConsumeDto){
+        return success(mUserService.createRegister(userConsumeDto),"Create User account successful");
     }
 }

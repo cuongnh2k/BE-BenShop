@@ -2,12 +2,11 @@ package com.example.bebenshop.controllers;
 
 import com.example.bebenshop.bases.BaseController;
 import com.example.bebenshop.bases.BaseResponseDto;
+import com.example.bebenshop.dto.consumes.UserConsumeDto;
 import com.example.bebenshop.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,5 +19,4 @@ public class UserController extends BaseController {
     public ResponseEntity<BaseResponseDto> getUserDetail() {
         return success(mUserService.getUserDetail(), "Get data successful.");
     }
-
 }
