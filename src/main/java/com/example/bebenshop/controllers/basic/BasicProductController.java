@@ -5,10 +5,9 @@ import com.example.bebenshop.bases.BaseResponseDto;
 import com.example.bebenshop.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,4 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class BasicProductController extends BaseController {
     private final ProductService mProductService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<BaseResponseDto> getProductById(@PathVariable Long id) {
+        return success(mProductService.getProductById(id),"Get data successful");
+    }
 }
