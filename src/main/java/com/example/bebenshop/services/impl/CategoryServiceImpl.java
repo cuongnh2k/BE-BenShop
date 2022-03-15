@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -80,25 +81,58 @@ public class CategoryServiceImpl implements CategoryService {
         mCategoryRepository.deleteById(id);
     }
 
+
     @Override
     public CategoryProduceDto addCategory(CategoryConsumeDto categoryConsumeDto) {
-        CategoryEntity categoryEntity = categoryConsumeDto.toCategoryEntity();
-        if (categoryEntity.getParentId() == null) {
-            categoryEntity.setParentId(0L);
-        } else {
-            if (mCategoryRepository.existsById(categoryEntity.getId())) {
-                throw new BadRequestException("Id " + categoryEntity.getId() + " does exist");
 
-            } else {
-                if (mCategoryRepository.existsByName(categoryEntity.getName())) {
-                    throw new BadRequestException("Name " + categoryEntity.getName() + " does  exist");
-                } else {
-                    mCategoryRepository.save(categoryEntity);
-                    CategoryProduceDto categoryProduceDto = mCategoryMapper.toCategoryProduceDto(categoryEntity);
-                    return categoryProduceDto;
-                }
+        CategoryEntity categoryEntity = categoryConsumeDto.toCategoryEntity();
+        if (categoryEntity.getParentId() != null && !mCategoryRepository.existsByParentId(categoryEntity.getParentId())) {
+            throw new BadRequestException(categoryEntity.getParentId() + "does not exist");
+        } else {
+            categoryEntity.setParentId(0L);
+        }
+        if (mCategoryRepository.existsByName(categoryEntity.getName())) {
+            throw new BadRequestException(categoryEntity.getName() + " does exist");
+        }
+        return mCategoryMapper.toCategoryProduceDto(mCategoryRepository.save(categoryEntity));
+    }
+
+    @Override
+    public CategoryProduceDto editById(Long id, HashMap<String, Object> map) {
+        CategoryEntity categoryEntity = mCategoryRepository.findById(id).orElse(null);
+        if (categoryEntity == null) {
+            throw new BadRequestException("Id " + id + " does not exist");
+        }
+        for (String i : map.keySet()) {
+            switch (i) {
+                case "name":
+                    String name = map.get(i).toString();
+                    CategoryEntity ca = mCategoryRepository.findByName(name);
+                    if (ca != null && ca.getName().equalsIgnoreCase(name)) {
+                        throw new BadRequestException(name + " already used");
+                    }
+                    categoryEntity.setName(name);
+                    break;
+                case "parentId":
+                    Long parentID = Long.parseLong(map.get(i).toString());
+                    if (!mCategoryRepository.existsById(parentID)) {
+                        throw new BadRequestException(parentID + " is not exist");
+                    }
+                    categoryEntity.setParentId(parentID);
+                    break;
             }
         }
-        return null;
+        return mCategoryMapper.toCategoryProduceDto(mCategoryRepository.save(categoryEntity));
     }
+
+    @Override
+    public CategoryProduceDto getById(Long id) {
+        CategoryEntity categoryEntity = mCategoryRepository.findById(id).orElse(null);
+        if (Objects.isNull(categoryEntity)) {
+            throw new BadRequestException("id " + id + " is not exist");
+        }
+        return mCategoryMapper.toCategoryProduceDto(categoryEntity);
+
+    }
+
 }

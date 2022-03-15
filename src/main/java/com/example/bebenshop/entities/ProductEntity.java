@@ -1,15 +1,16 @@
 package com.example.bebenshop.entities;
 
 import com.example.bebenshop.bases.BaseEntity;
-import com.example.bebenshop.enums.GenderEnum;
-import com.example.bebenshop.enums.ProductStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.math.BigDecimal;
 import java.util.Collection;
 
@@ -27,9 +28,7 @@ public class ProductEntity extends BaseEntity {
 
     private Integer discount;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 15)
-    private ProductStatusEnum status;
+    private String status;
 
     private String style;
 

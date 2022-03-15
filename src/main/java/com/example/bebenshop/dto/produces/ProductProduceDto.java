@@ -1,7 +1,6 @@
 package com.example.bebenshop.dto.produces;
 
 import com.example.bebenshop.bases.BaseProduceDto;
-import com.example.bebenshop.enums.ProductStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +23,7 @@ public class ProductProduceDto extends BaseProduceDto<Long> {
 
     private Integer discount;
 
-    private ProductStatusEnum status;
+    private String status;
 
     private String style;
 
