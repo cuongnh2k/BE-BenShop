@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,4 +23,6 @@ public class ProductCommentProduceDto extends BaseProduceDto<Long> {
     private ProductProduceDto product;
 
     private UserProduceDto user;
+
+    private List<ProductCommentProduce1Dto> productComment1;
 }
