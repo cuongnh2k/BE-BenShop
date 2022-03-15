@@ -200,4 +200,13 @@ public class ProductServiceImpl implements ProductService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public ProductProduceDto getProductById(Long id) {
+        ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);
+        if(productEntity == null){
+            throw  new BadRequestException("Id"+id+"dose not exist");
+        }
+        return toProductProduceDto(productEntity);
+    }
 }
