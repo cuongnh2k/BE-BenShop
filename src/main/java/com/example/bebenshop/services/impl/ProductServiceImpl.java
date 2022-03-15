@@ -1,5 +1,6 @@
 package com.example.bebenshop.services.impl;
 
+import com.example.bebenshop.bases.BaseListProduceDto;
 import com.example.bebenshop.dto.consumes.ProductConsumeDto;
 import com.example.bebenshop.dto.produces.ProductCommentProduce1Dto;
 import com.example.bebenshop.dto.produces.ProductCommentProduceDto;
@@ -13,6 +14,8 @@ import com.example.bebenshop.repository.ProductRepository;
 import com.example.bebenshop.services.ProductService;
 import com.example.bebenshop.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -147,5 +150,35 @@ public class ProductServiceImpl implements ProductService {
             throw new BadRequestException("Id " + id + " dose not exist");
         }
         return toProductProduceDto(productEntity);
+    }
+
+    @Override
+    public BaseListProduceDto<ProductProduceDto> searchByTitleOrDescription(
+            String search
+            , Long categoryId
+            , BigDecimal priceMin
+            , BigDecimal priceMax
+            , Pageable pageable) {
+        Page<ProductEntity> productEntityPage = mProductRepository.searchByTitleOrDescription(
+                search
+                , categoryId
+                , priceMin
+                , priceMax
+                , pageable);
+        List<ProductProduceDto> productProduceDtoList = productEntityPage.getContent().stream().map(o -> {
+            ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(o);
+            productProduceDto.setProductImages(o.getProductImages().stream()
+                    .map(mProductImageMapper::toProductImageProduceDto).collect(Collectors.toList()));
+            productProduceDto.setCategories(o.getCategories().stream()
+                    .map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList()));
+            return productProduceDto;
+        }).collect(Collectors.toList());
+        return BaseListProduceDto.<ProductProduceDto>builder()
+                .content(productProduceDtoList)
+                .totalElements(productEntityPage.getTotalElements())
+                .totalPages(productEntityPage.getTotalPages())
+                .page(pageable.getPageNumber())
+                .size(pageable.getPageSize())
+                .build();
     }
 }
