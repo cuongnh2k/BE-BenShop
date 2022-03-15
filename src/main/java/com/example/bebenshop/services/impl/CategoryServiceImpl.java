@@ -86,13 +86,14 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryProduceDto addCategory(CategoryConsumeDto categoryConsumeDto) {
 
         CategoryEntity categoryEntity = categoryConsumeDto.toCategoryEntity();
-        if (categoryEntity.getParentId() != null && !mCategoryRepository.existsByParentId(categoryEntity.getParentId())) {
-            throw new BadRequestException(categoryEntity.getParentId() + "does not exist");
-        } else {
+        if (categoryEntity.getParentId() != null && !mCategoryRepository.existsById(categoryEntity.getParentId())) {
+            throw new BadRequestException("parentId"+ categoryEntity.getParentId() + " does not exist");
+        }
+        if(categoryEntity.getParentId() == null) {
             categoryEntity.setParentId(0L);
         }
         if (mCategoryRepository.existsByName(categoryEntity.getName())) {
-            throw new BadRequestException(categoryEntity.getName() + " does exist");
+            throw new BadRequestException("name"+ categoryEntity.getName() + " does exist");
         }
         return mCategoryMapper.toCategoryProduceDto(mCategoryRepository.save(categoryEntity));
     }
