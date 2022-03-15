@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginConsumeDto implements Serializable {
+public class  LoginConsumeDto implements Serializable {
 
     private String username;
 
