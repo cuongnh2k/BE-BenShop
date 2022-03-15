@@ -16,5 +16,4 @@ public interface ProductService {
 
     void deleteProductByID(Long id);
 
-    List<ProductProduceDto> getAll(Boolean structure);
 }
