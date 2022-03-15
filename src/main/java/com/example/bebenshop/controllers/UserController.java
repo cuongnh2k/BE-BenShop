@@ -2,11 +2,12 @@ package com.example.bebenshop.controllers;
 
 import com.example.bebenshop.bases.BaseController;
 import com.example.bebenshop.bases.BaseResponseDto;
-import com.example.bebenshop.dto.consumes.UserConsumeDto;
 import com.example.bebenshop.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
