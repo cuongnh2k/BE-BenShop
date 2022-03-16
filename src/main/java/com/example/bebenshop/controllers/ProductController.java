@@ -1,4 +1,4 @@
-package com.example.bebenshop.controllers.product;
+package com.example.bebenshop.controllers;
 
 import com.example.bebenshop.bases.BaseController;
 import com.example.bebenshop.bases.BaseResponseDto;
