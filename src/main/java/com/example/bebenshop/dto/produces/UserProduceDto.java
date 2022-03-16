@@ -35,6 +35,4 @@ public class UserProduceDto extends BaseProduceDto<Long> {
     private List<RoleProduceDto> roles;
 
     private List<ProductCommentProduceDto> productComments;
-
-    private UserCodeProduceDto userCodes;
 }

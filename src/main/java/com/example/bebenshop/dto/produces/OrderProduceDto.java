@@ -25,6 +25,4 @@ public class OrderProduceDto extends BaseProduceDto<Long> {
     private List<OrderDetailProduceDto> orderDetails;
 
     private List<OrderNoteProduceDto> orderNotes;
-
-    private BigDecimal totalMoney;
 }
