@@ -14,5 +14,10 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
             , value = "DELETE FROM product_entity_categories WHERE categories_id = ?1 ")
     void deleteProductCategoryById(Long id);
 
+
+    Boolean existsByName(String name);
+
     CategoryEntity findByName(String name);
+
+    boolean existsById(Long parentId);
 }

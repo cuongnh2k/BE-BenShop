@@ -7,14 +7,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class CategoryProduce3Dto extends BaseProduceDto<Long> {
+public class ProductCommentProduce1Dto extends BaseProduceDto<Long> {
 
-    private String name;
+    private String content;
 
     private Long parentId;
+
+    private ProductProduceDto product;
+
+    private UserProduceDto user;
 }

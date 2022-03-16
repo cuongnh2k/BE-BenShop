@@ -1,8 +1,8 @@
 package com.example.bebenshop.services.impl;
 
+import com.example.bebenshop.dto.consumes.CategoryConsumeDto;
 import com.example.bebenshop.dto.produces.CategoryProduce1Dto;
 import com.example.bebenshop.dto.produces.CategoryProduce2Dto;
-import com.example.bebenshop.dto.produces.CategoryProduce3Dto;
 import com.example.bebenshop.dto.produces.CategoryProduceDto;
 import com.example.bebenshop.entities.CategoryEntity;
 import com.example.bebenshop.exceptions.BadRequestException;
@@ -27,39 +27,32 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper mCategoryMapper;
 
     @Override
-    public List<CategoryProduce1Dto> getAll(Boolean structure) {
+    public List<CategoryProduceDto> getAll(Boolean structure) {
         List<CategoryProduceDto> categoryProduceDtoList = mCategoryRepository.findAll().stream()
                 .map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList());
         if (!structure) {
-            return categoryProduceDtoList.stream().map(o ->
-                    CategoryProduce1Dto.builder()
-                            .id(o.getId())
-                            .createdDate(o.getCreatedDate())
-                            .updatedDate(o.getUpdatedDate())
-                            .name(o.getName())
-                            .parentId(o.getParentId())
-                            .build()).collect(Collectors.toList());
+            return categoryProduceDtoList;
         }
         return categoryProduceDtoList.stream()
                 .filter(o -> o.getParentId() == 0)
                 .map(o ->
-                        CategoryProduce1Dto.builder()
+                        CategoryProduceDto.builder()
                                 .id(o.getId())
                                 .createdDate(o.getCreatedDate())
                                 .updatedDate(o.getUpdatedDate())
                                 .name(o.getName())
                                 .parentId(o.getParentId())
-                                .categories2(categoryProduceDtoList.stream()
+                                .categories1(categoryProduceDtoList.stream()
                                         .filter(oo -> o.getId() == oo.getParentId())
-                                        .map(oo -> CategoryProduce2Dto.builder()
+                                        .map(oo -> CategoryProduce1Dto.builder()
                                                 .id(oo.getId())
                                                 .createdDate(oo.getCreatedDate())
                                                 .updatedDate(oo.getUpdatedDate())
                                                 .name(oo.getName())
                                                 .parentId(oo.getParentId())
-                                                .categories3(categoryProduceDtoList.stream()
+                                                .categories2(categoryProduceDtoList.stream()
                                                         .filter(ooo -> oo.getId() == ooo.getParentId())
-                                                        .map(ooo -> CategoryProduce3Dto.builder()
+                                                        .map(ooo -> CategoryProduce2Dto.builder()
                                                                 .id(ooo.getId())
                                                                 .createdDate(ooo.getCreatedDate())
                                                                 .updatedDate(ooo.getUpdatedDate())
@@ -79,25 +72,42 @@ public class CategoryServiceImpl implements CategoryService {
         mCategoryRepository.deleteProductCategoryById(id);
         mCategoryRepository.deleteById(id);
     }
+
+    @Override
+    public CategoryProduceDto addCategory(CategoryConsumeDto categoryConsumeDto) {
+
+        CategoryEntity categoryEntity = categoryConsumeDto.toCategoryEntity();
+        if (categoryEntity.getParentId() != null && !mCategoryRepository.existsById(categoryEntity.getParentId())) {
+            throw new BadRequestException("parentId" + categoryEntity.getParentId() + " does not exist");
+        }
+        if (categoryEntity.getParentId() == null) {
+            categoryEntity.setParentId(0L);
+        }
+        if (mCategoryRepository.existsByName(categoryEntity.getName())) {
+            throw new BadRequestException("name " + categoryEntity.getName() + " does exist");
+        }
+        return mCategoryMapper.toCategoryProduceDto(mCategoryRepository.save(categoryEntity));
+    }
+
     @Override
     public CategoryProduceDto editById(Long id, HashMap<String, Object> map) {
         CategoryEntity categoryEntity = mCategoryRepository.findById(id).orElse(null);
-        if(categoryEntity == null){
+        if (categoryEntity == null) {
             throw new BadRequestException("Id " + id + " does not exist");
         }
-        for(String i : map.keySet()){
-            switch (i){
+        for (String i : map.keySet()) {
+            switch (i) {
                 case "name":
                     String name = map.get(i).toString();
                     CategoryEntity ca = mCategoryRepository.findByName(name);
-                    if(ca != null && ca.getName().equalsIgnoreCase(name)){
+                    if (ca != null && ca.getName().equalsIgnoreCase(name)) {
                         throw new BadRequestException(name + " already used");
                     }
                     categoryEntity.setName(name);
                     break;
                 case "parentId":
                     Long parentID = Long.parseLong(map.get(i).toString());
-                    if(!mCategoryRepository.existsById(parentID)){
+                    if (!mCategoryRepository.existsById(parentID)) {
                         throw new BadRequestException(parentID + " is not exist");
                     }
                     categoryEntity.setParentId(parentID);
@@ -110,8 +120,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryProduceDto getById(Long id) {
         CategoryEntity categoryEntity = mCategoryRepository.findById(id).orElse(null);
-        if(Objects.isNull(categoryEntity)){
-            throw new BadRequestException("id "+id+" is not exist");
+        if (Objects.isNull(categoryEntity)) {
+            throw new BadRequestException("id " + id + " is not exist");
         }
         return mCategoryMapper.toCategoryProduceDto(categoryEntity);
     }
