@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("${base.api}/")
 public class
-ProductCommentController extends BaseController {
+ProductController extends BaseController {
     private final ProductCommentService mProductCommentService;
 
     @PostMapping("{id}/comment")
