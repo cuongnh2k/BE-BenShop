@@ -2,7 +2,9 @@ package com.example.bebenshop.controllers.admin;
 
 import com.example.bebenshop.bases.BaseController;
 import com.example.bebenshop.bases.BaseResponseDto;
+import com.example.bebenshop.dto.consumes.ProductCommentConsumeDto;
 import com.example.bebenshop.dto.consumes.ProductConsumeDto;
+import com.example.bebenshop.services.ProductCommentService;
 import com.example.bebenshop.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 public class AdminProductController extends BaseController {
 
     private final ProductService mProductService;
+
 
     @PostMapping
     public ResponseEntity<BaseResponseDto> createProduct(@RequestBody ProductConsumeDto productConsumeDto) {
@@ -48,4 +51,6 @@ public class AdminProductController extends BaseController {
         mProductService.deleteProductImage(id);
         return success("Delete data successful.");
     }
+
+
 }

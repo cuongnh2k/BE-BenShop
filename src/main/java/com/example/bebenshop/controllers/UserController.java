@@ -20,4 +20,5 @@ public class UserController extends BaseController {
     public ResponseEntity<BaseResponseDto> getUserDetail() {
         return success(mUserService.getUserDetail(), "Get data successful.");
     }
+
 }
