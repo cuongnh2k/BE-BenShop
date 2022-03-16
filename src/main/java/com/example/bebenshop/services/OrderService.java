@@ -1,9 +1,9 @@
 package com.example.bebenshop.services;
 
 import com.example.bebenshop.dto.consumes.OrderDetailConsumeDto;
-import com.example.bebenshop.dto.produces.OrderProduceDto;
+import com.example.bebenshop.dto.produces.OrderDetailProduceDto;
 
 public interface OrderService {
 
-    OrderProduceDto addToCart(OrderDetailConsumeDto orderDetailConsumeDto);
+    OrderDetailProduceDto addToCart(OrderDetailConsumeDto orderDetailConsumeDto);
 }

@@ -19,7 +19,7 @@ public class OrderController extends BaseController {
     private final OrderService mOrderService;
 
     @PostMapping("/add-to-cart")
-    public ResponseEntity<BaseResponseDto> getUserDetail(@RequestBody OrderDetailConsumeDto orderDetailConsumeDto) {
-        return created(mOrderService.addToCart(orderDetailConsumeDto), "Get data successful.");
+    public ResponseEntity<BaseResponseDto> addToCart(@RequestBody OrderDetailConsumeDto orderDetailConsumeDto) {
+        return created(mOrderService.addToCart(orderDetailConsumeDto), "Add to cart successful.");
     }
 }
