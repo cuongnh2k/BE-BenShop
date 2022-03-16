@@ -2,12 +2,11 @@ package com.example.bebenshop.services.impl;
 
 import com.example.bebenshop.dto.consumes.ProductCommentConsumeDto;
 import com.example.bebenshop.dto.produces.ProductCommentProduceDto;
-import com.example.bebenshop.dto.produces.ProductProduceDto;
-import com.example.bebenshop.dto.produces.UserProduceDto;
 import com.example.bebenshop.entities.ProductCommentEntity;
 import com.example.bebenshop.entities.ProductEntity;
 import com.example.bebenshop.entities.UserEntity;
 import com.example.bebenshop.exceptions.BadRequestException;
+import com.example.bebenshop.exceptions.ForbiddenException;
 import com.example.bebenshop.mapper.ProductCommentMapper;
 import com.example.bebenshop.mapper.ProductMapper;
 import com.example.bebenshop.mapper.UserMapper;
@@ -51,16 +50,14 @@ public class ProductCommentServiceImpl implements ProductCommentService {
 
     @Override
     public ProductCommentProduceDto editProductComment(ProductCommentConsumeDto productCommentConsumeDto, Long id) {
-        ProductCommentEntity productCommentEntityEdit = mProductCommentrepsitory.findById(id).orElse(null);
-        if (productCommentEntityEdit == null) {
+        ProductCommentEntity productCommentEntity = mProductCommentrepsitory.findById(id).orElse(null);
+        if (productCommentEntity == null) {
             throw new BadRequestException("Id " + id + "not does exists");
         }
-
-        if (mUserService.getCurrentUser().getId() != productCommentEntityEdit.getUser().getId()) {
-            throw new BadRequestException("UserId no does exists");
+        if (mUserService.getCurrentUser().getId() != productCommentEntity.getUser().getId()) {
+            throw new ForbiddenException(" no edit access");
         }
-        ProductCommentEntity productCommentEntity = productCommentConsumeDto.toProductCommentEntity();
-        productCommentEntityEdit.setContent(productCommentEntity.getContent());
-        return mProductCommentMapper.toProductCommentProduceDto(mProductCommentrepsitory.save(productCommentEntityEdit));
+        productCommentEntity.setContent(productCommentConsumeDto.toProductCommentEntity().getContent());
+        return mProductCommentMapper.toProductCommentProduceDto(mProductCommentrepsitory.save(productCommentEntity));
     }
 }
