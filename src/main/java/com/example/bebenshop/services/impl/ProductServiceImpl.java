@@ -128,14 +128,14 @@ public class ProductServiceImpl implements ProductService {
                 case "description":
                     productEntity.setDescription(map.get(i).toString());
                     break;
-               case "categories":
-                   productEntity.setCategories(mCategoryRepository.findAllById(mConvertUtil.toArray(map.get(i).toString())));
-                   break;
+                case "categories":
+                    productEntity.setCategories(mCategoryRepository.findAllById(mConvertUtil.toArray(map.get(i).toString())));
+                    break;
             }
         }
         mProductRepository.save(productEntity);
         ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity);
-        productProduceDto.setCategories(productEntity.getCategories().stream().map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList() ));
+        productProduceDto.setCategories(productEntity.getCategories().stream().map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList()));
         return productProduceDto;
     }
 
