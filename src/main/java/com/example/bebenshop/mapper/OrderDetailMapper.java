@@ -10,6 +10,5 @@ public abstract class OrderDetailMapper implements CustomMapper{
 
     @Mapping(target = "order", ignore = true)
     @Mapping(target = "product", ignore = true)
-    @Mapping(target = "money", ignore = true)
     public abstract OrderDetailProduceDto toOrderDetailProduceDto(OrderDetailEntity orderDetailEntity);
 }

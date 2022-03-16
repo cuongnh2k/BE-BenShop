@@ -8,7 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public abstract class UserMapper implements CustomMapper {
 
-    @Mapping(target = "userCodes", ignore = true)
     @Mapping(target = "orders", ignore = true)
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "devices", ignore = true)
