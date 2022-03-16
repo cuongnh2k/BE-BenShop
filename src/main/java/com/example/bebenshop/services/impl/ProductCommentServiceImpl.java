@@ -48,4 +48,19 @@ public class ProductCommentServiceImpl implements ProductCommentService {
         productCommentEntity.setUser(userEntity);
         return mProductCommentMapper.toProductCommentProduceDto(mProductCommentrepsitory.save(productCommentEntity));
     }
+
+    @Override
+    public ProductCommentProduceDto editProductComment(ProductCommentConsumeDto productCommentConsumeDto, Long id) {
+        ProductCommentEntity productCommentEntityEdit = mProductCommentrepsitory.findById(id).orElse(null);
+        if (productCommentEntityEdit == null) {
+            throw new BadRequestException("Id " + id + "not does exists");
+        }
+
+        if (mUserService.getCurrentUser().getId() != productCommentEntityEdit.getUser().getId()) {
+            throw new BadRequestException("UserId no does exists");
+        }
+        ProductCommentEntity productCommentEntity = productCommentConsumeDto.toProductCommentEntity();
+        productCommentEntityEdit.setContent(productCommentEntity.getContent());
+        return mProductCommentMapper.toProductCommentProduceDto(mProductCommentrepsitory.save(productCommentEntityEdit));
+    }
 }
