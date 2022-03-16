@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Setter
@@ -24,4 +25,6 @@ public class OrderProduceDto extends BaseProduceDto<Long> {
     private List<OrderDetailProduceDto> orderDetails;
 
     private List<OrderNoteProduceDto> orderNotes;
+
+    private BigDecimal totalMoney;
 }
