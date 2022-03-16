@@ -1,6 +1,7 @@
 package com.example.bebenshop.dto.produces;
 
 import com.example.bebenshop.bases.BaseProduceDto;
+import com.example.bebenshop.entities.RoleEntity;
 import com.example.bebenshop.enums.GenderEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,8 @@ public class UserProduceDto extends BaseProduceDto<Long> {
     private List<DeviceProduceDto> devices;
 
     private List<OrderProduceDto> orders;
+
+    private List<RoleProduceDto> roles;
 
     private List<ProductCommentProduceDto> productComments;
 
