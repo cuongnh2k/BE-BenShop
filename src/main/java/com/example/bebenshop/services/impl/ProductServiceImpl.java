@@ -77,7 +77,9 @@ public class ProductServiceImpl implements ProductService {
 
         productEntity.setCategories(categoryEntityList);
         mProductRepository.save(productEntity);
-        return mProductMapper.toProductProduceDto(productEntity);
+        ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity);
+        productProduceDto.setCategories(productEntity.getCategories().stream().map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList()));
+        return productProduceDto;
     }
 
     @Override
