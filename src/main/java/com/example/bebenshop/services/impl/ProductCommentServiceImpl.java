@@ -32,7 +32,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
 
     @Override
     public ProductCommentProduceDto createProductComment(ProductCommentConsumeDto productCommentConsumeDto, Long id) {
-        ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
+        ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);g
         if (productEntity == null) {
             throw new BadRequestException("Id " + id + " not doest exits");
         }
