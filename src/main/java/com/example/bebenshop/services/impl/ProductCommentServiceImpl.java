@@ -31,7 +31,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
     private final UserMapper mUserMapper;
 
     @Override
-    public ProductCommentProduceDto CreateProductComment(ProductCommentConsumeDto productCommentConsumeDto, Long id) {
+    public ProductCommentProduceDto createProductComment(ProductCommentConsumeDto productCommentConsumeDto, Long id) {
         ProductCommentEntity productCommentEntity = productCommentConsumeDto.toProductCommentEntity();
         if (productCommentEntity.getParentId() != null && !mProductCommentrepsitory.existsById(productCommentEntity.getParentId())) {
             throw new BadRequestException("parentId" + productCommentEntity.getParentId() + " not does exits");
@@ -44,6 +44,9 @@ public class ProductCommentServiceImpl implements ProductCommentService {
             UserEntity userEntity = mUserService.getCurrentUser();
             productCommentEntity.setProduct(productEntity);
             productCommentEntity.setUser(userEntity);
+        }
+        else {
+            throw  new BadRequestException("Id "+ productEntity.getId()+" not doest exits");
         }
         return mProductCommentMapper.toProductCommentProduceDto(mProductCommentrepsitory.save(productCommentEntity));
     }
