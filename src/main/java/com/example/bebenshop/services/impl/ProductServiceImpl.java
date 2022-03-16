@@ -1,33 +1,25 @@
 package com.example.bebenshop.services.impl;
 
+import com.example.bebenshop.bases.BaseListProduceDto;
 import com.example.bebenshop.dto.consumes.ProductConsumeDto;
+import com.example.bebenshop.dto.produces.ProductCommentProduce1Dto;
 import com.example.bebenshop.dto.produces.ProductCommentProduceDto;
 import com.example.bebenshop.dto.produces.ProductProduceDto;
 import com.example.bebenshop.entities.CategoryEntity;
 import com.example.bebenshop.entities.ProductEntity;
-import com.example.bebenshop.entities.ProductImageEntity;
 import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.mapper.*;
 import com.example.bebenshop.repository.CategoryRepository;
-import com.example.bebenshop.repository.ProductImageRepository;
 import com.example.bebenshop.repository.ProductRepository;
 import com.example.bebenshop.services.ProductService;
 import com.example.bebenshop.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -45,16 +37,6 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryMapper mCategoryMapper;
     private final ProductCommentMapper mProductCommentMapper;
     private final UserMapper mUserMapper;
-    private final ProductImageRepository mProductImageRepository;
-
-    @Value("${root.directory}")
-    String ROOT_DIRECTORY;
-
-    @Value("${subfolder.product.image}")
-    String SUBFOLDER_PRODUCT_IMAGE;
-
-    @Value("${domain}")
-    String DOMAIN;
 
     public ProductProduceDto toProductProduceDto(ProductEntity productEntity) {
         ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity);
@@ -62,19 +44,41 @@ public class ProductServiceImpl implements ProductService {
                 .map(mProductImageMapper::toProductImageProduceDto).collect(Collectors.toList()));
         productProduceDto.setCategories(productEntity.getCategories().stream()
                 .map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList()));
-        productProduceDto.setProductComments(productEntity.getProductComments().stream().map(o -> {
+
+        List<ProductCommentProduceDto> productCommentProduceDtoList = productEntity.getProductComments().stream().map(o -> {
             ProductCommentProduceDto productCommentProduceDto = mProductCommentMapper.toProductCommentProduceDto(o);
             productCommentProduceDto.setUser(mUserMapper.toUserProduceDto(o.getUser()));
             return productCommentProduceDto;
-        }).collect(Collectors.toList()));
+        }).collect(Collectors.toList());
+
+        productProduceDto.setProductComments(productCommentProduceDtoList.stream()
+                .filter(o -> o.getParentId() == 0)
+                .map(o -> ProductCommentProduceDto.builder()
+                        .id(o.getId())
+                        .createdDate(o.getCreatedDate())
+                        .updatedDate(o.getUpdatedDate())
+                        .content(o.getContent())
+                        .parentId(o.getParentId())
+                        .user(o.getUser())
+                        .productComment1(productCommentProduceDtoList.stream()
+                                .filter(oo -> o.getId() == oo.getParentId())
+                                .map(oo -> ProductCommentProduce1Dto.builder()
+                                        .id(oo.getId())
+                                        .createdDate(oo.getCreatedDate())
+                                        .updatedDate(oo.getUpdatedDate())
+                                        .content(oo.getContent())
+                                        .parentId(oo.getParentId())
+                                        .user(oo.getUser())
+                                        .build()).collect(Collectors.toList()))
+                        .build()).collect(Collectors.toList()));
         return productProduceDto;
     }
 
     @Override
     public ProductProduceDto createProduct(ProductConsumeDto productConsumeDto) {
         ProductEntity productEntity = productConsumeDto.toProductEntity();
-        List<CategoryEntity> categoryEntityList = mCategoryRepository.findAllById(mConvertUtil.toArray(productConsumeDto.getCategories()));
-
+        List<CategoryEntity> categoryEntityList = mCategoryRepository
+                .findAllById(mConvertUtil.toArray(productConsumeDto.getCategories()));
         productEntity.setCategories(categoryEntityList);
         mProductRepository.save(productEntity);
         return mProductMapper.toProductProduceDto(productEntity);
@@ -82,7 +86,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductProduceDto editProduct(Long id, HashMap<String, Object> map) {
-
         ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
         if (productEntity == null) {
             throw new BadRequestException("ID" + id + " does not exist");
@@ -127,7 +130,6 @@ public class ProductServiceImpl implements ProductService {
                     break;
             }
         }
-
         return mProductMapper.toProductProduceDto(mProductRepository.save(productEntity));
     }
 
@@ -142,71 +144,41 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException {
-        ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);
-        if (productEntity == null) {
-            throw new BadRequestException("no id exists: " + id);
-        }
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        {
-            if (fileName.contains(".")) {
-                String[] arr = multipartFile.getOriginalFilename().split("\\.");
-                if (!arr[1].equalsIgnoreCase("JPG") && !arr[1].equalsIgnoreCase("PNG")) {
-                    throw new BadRequestException("image must be in jpg or png format.");
-                }
-            } else {
-                throw new BadRequestException("empty image");
-            }
-        }
-        String uploadDir = ROOT_DIRECTORY + SUBFOLDER_PRODUCT_IMAGE + "/" + id;
-        Path uploadPath = Paths.get(uploadDir);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            Path filePath = uploadPath.resolve(fileName);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-
-            if (mProductImageRepository.existsByPath(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename())) {
-                throw new BadRequestException("photo already exists");
-            }
-            mProductImageRepository.save(ProductImageEntity.builder()
-                    .product(productEntity)
-                    .path(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename())
-                    .build());
-
-        } catch (Exception ioe) {
-            throw new BadRequestException("empty image");
-        }
-        return toProductProduceDto(mProductRepository.findByIdAndDeletedFlagFalse(id));
-    }
-
-    @Override
-    public void deleteProductImage(Long id) {
-        ProductImageEntity productImageEntity = mProductImageRepository.findById(id).orElse(null);
-        if (productImageEntity == null) {
-            throw new BadRequestException("no id exists: " + id);
-        }
-        String[] arr = productImageEntity.getPath().split("/");
-        String path = ROOT_DIRECTORY;
-        for (int i = 3; i < arr.length; i++) {
-            path += "/" + arr[i];
-        }
-        try {
-            File file = new File(path);
-            file.delete();
-            mProductImageRepository.deleteById(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public ProductProduceDto getProductById(Long id) {
         ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);
-        if(productEntity == null){
-            throw  new BadRequestException("Id"+id+"dose not exist");
+        if (productEntity == null) {
+            throw new BadRequestException("Id " + id + " dose not exist");
         }
         return toProductProduceDto(productEntity);
+    }
+
+    @Override
+    public BaseListProduceDto<ProductProduceDto> searchByTitleOrDescription(
+            String search
+            , Long categoryId
+            , BigDecimal priceMin
+            , BigDecimal priceMax
+            , Pageable pageable) {
+        Page<ProductEntity> productEntityPage = mProductRepository.searchByTitleOrDescription(
+                search
+                , categoryId
+                , priceMin
+                , priceMax
+                , pageable);
+        List<ProductProduceDto> productProduceDtoList = productEntityPage.getContent().stream().map(o -> {
+            ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(o);
+            productProduceDto.setProductImages(o.getProductImages().stream()
+                    .map(mProductImageMapper::toProductImageProduceDto).collect(Collectors.toList()));
+            productProduceDto.setCategories(o.getCategories().stream()
+                    .map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList()));
+            return productProduceDto;
+        }).collect(Collectors.toList());
+        return BaseListProduceDto.<ProductProduceDto>builder()
+                .content(productProduceDtoList)
+                .totalElements(productEntityPage.getTotalElements())
+                .totalPages(productEntityPage.getTotalPages())
+                .page(pageable.getPageNumber())
+                .size(pageable.getPageSize())
+                .build();
     }
 }

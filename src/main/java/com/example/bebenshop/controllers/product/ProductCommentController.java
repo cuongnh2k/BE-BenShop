@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${base.api}/")
-public class ProductCommentController extends BaseController {
+public class
+ProductCommentController extends BaseController {
     private final ProductCommentService mProductCommentService;
+
     @PostMapping("{id}/comment")
-    public ResponseEntity<BaseResponseDto> addProductComment(@PathVariable("id") Long id, @RequestBody ProductCommentConsumeDto productCommentConsumeDto){
-        return created(mProductCommentService.CreateProductComment(productCommentConsumeDto,id),"Create data successful.");
+    public ResponseEntity<BaseResponseDto> addProductComment(@PathVariable("id") Long id, @RequestBody ProductCommentConsumeDto productCommentConsumeDto) {
+        return created(mProductCommentService.CreateProductComment(productCommentConsumeDto, id), "Create data successful.");
     }
 }

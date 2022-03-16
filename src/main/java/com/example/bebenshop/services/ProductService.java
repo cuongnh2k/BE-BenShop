@@ -1,10 +1,11 @@
 package com.example.bebenshop.services;
 
+import com.example.bebenshop.bases.BaseListProduceDto;
 import com.example.bebenshop.dto.consumes.ProductConsumeDto;
 import com.example.bebenshop.dto.produces.ProductProduceDto;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Pageable;
 
-import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 
@@ -16,9 +17,12 @@ public interface ProductService {
 
     void deleteProductByID(Long id);
 
-    ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException;
-
-    void deleteProductImage(Long id);
-
     ProductProduceDto getProductById(Long id);
+
+    BaseListProduceDto<ProductProduceDto> searchByTitleOrDescription(
+            String search
+            , Long categoryId
+            , BigDecimal priceMin
+            , BigDecimal priceMax
+            , Pageable pageable);
 }
