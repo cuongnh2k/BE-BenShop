@@ -82,8 +82,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductProduceDto editProduct(Long id, HashMap<String, Object> map) {
-
         ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
+
         if (productEntity == null) {
             throw new BadRequestException("ID" + id + " does not exist");
         }
@@ -125,6 +125,11 @@ public class ProductServiceImpl implements ProductService {
                 case "washingMethod":
                     productEntity.setWashingMethod(map.get(i).toString());
                     break;
+                case "description":
+                    productEntity.setDescription(map.get(i).toString());
+               case "categories":
+                   List<CategoryEntity> categoryEntityList = mCategoryRepository.findAllById(mConvertUtil.toArray(map.get(i).toString()));
+                   productEntity.setCategories(categoryEntityList);
             }
         }
 
