@@ -32,22 +32,20 @@ public class ProductCommentServiceImpl implements ProductCommentService {
 
     @Override
     public ProductCommentProduceDto createProductComment(ProductCommentConsumeDto productCommentConsumeDto, Long id) {
+        ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
+        if (productEntity == null) {
+            throw new BadRequestException("Id " + id + " not doest exits");
+        }
         ProductCommentEntity productCommentEntity = productCommentConsumeDto.toProductCommentEntity();
         if (productCommentEntity.getParentId() != null && !mProductCommentrepsitory.existsById(productCommentEntity.getParentId())) {
-            throw new BadRequestException("parentId" + productCommentEntity.getParentId() + " not does exits");
+            throw new BadRequestException(" parentId  " + productCommentEntity.getParentId() + " not does exits");
         }
         if (productCommentEntity.getParentId() == null) {
             productCommentEntity.setParentId(0L);
         }
-        ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
-        if (productEntity != null) {
-            UserEntity userEntity = mUserService.getCurrentUser();
-            productCommentEntity.setProduct(productEntity);
-            productCommentEntity.setUser(userEntity);
-        }
-        else {
-            throw  new BadRequestException("Id "+ productEntity.getId()+" not doest exits");
-        }
+        UserEntity userEntity = mUserService.getCurrentUser();
+        productCommentEntity.setProduct(productEntity);
+        productCommentEntity.setUser(userEntity);
         return mProductCommentMapper.toProductCommentProduceDto(mProductCommentrepsitory.save(productCommentEntity));
     }
 }
