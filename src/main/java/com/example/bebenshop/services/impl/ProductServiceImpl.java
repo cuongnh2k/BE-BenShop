@@ -81,12 +81,15 @@ public class ProductServiceImpl implements ProductService {
                 .findAllById(mConvertUtil.toArray(productConsumeDto.getCategories()));
         productEntity.setCategories(categoryEntityList);
         mProductRepository.save(productEntity);
-        return mProductMapper.toProductProduceDto(productEntity);
+        ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity);
+        productProduceDto.setCategories(productEntity.getCategories().stream().map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList()));
+        return productProduceDto;
     }
 
     @Override
     public ProductProduceDto editProduct(Long id, HashMap<String, Object> map) {
         ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
+
         if (productEntity == null) {
             throw new BadRequestException("ID" + id + " does not exist");
         }
@@ -128,9 +131,18 @@ public class ProductServiceImpl implements ProductService {
                 case "washingMethod":
                     productEntity.setWashingMethod(map.get(i).toString());
                     break;
+                case "description":
+                    productEntity.setDescription(map.get(i).toString());
+                    break;
+                case "categories":
+                    productEntity.setCategories(mCategoryRepository.findAllById(mConvertUtil.toArray(map.get(i).toString())));
+                    break;
             }
         }
-        return mProductMapper.toProductProduceDto(mProductRepository.save(productEntity));
+        mProductRepository.save(productEntity);
+        ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity);
+        productProduceDto.setCategories(productEntity.getCategories().stream().map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList()));
+        return productProduceDto;
     }
 
     @Override
