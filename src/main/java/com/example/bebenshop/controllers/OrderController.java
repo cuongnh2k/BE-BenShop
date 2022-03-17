@@ -5,6 +5,7 @@ import com.example.bebenshop.bases.BaseResponseDto;
 import com.example.bebenshop.dto.consumes.CodeConsumeDto;
 import com.example.bebenshop.dto.consumes.OrderDetailConsumeDto;
 import com.example.bebenshop.dto.consumes.OrderNoteConsumeDto;
+import com.example.bebenshop.dto.consumes.ProductCommentConsumeDto;
 import com.example.bebenshop.enums.OrderStatusEnum;
 import com.example.bebenshop.services.OrderDetailService;
 import com.example.bebenshop.services.OrderNoteService;
@@ -65,5 +66,9 @@ public class OrderController extends BaseController {
     @PostMapping("/{id}/note")
     public ResponseEntity<BaseResponseDto> addOrderNote(@PathVariable Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
         return created(mOrderNoteService.addOrderNote(id, orderNoteConsumeDto), "Created note successful.");
+    }
+    @PatchMapping("{id}/note")
+    public ResponseEntity<BaseResponseDto> OrderNote(@PathVariable("id") Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
+        return  success(mOrderNoteService.editOrderNote(id,orderNoteConsumeDto),"edit successful");
     }
 }

@@ -44,4 +44,18 @@ public class OrderNoteServiceImpl implements OrderNoteService {
         mOrderNoteRepository.save(orderNoteEntity);
         return mOrderNoteMapper.toOrderNoteProduceDto(orderNoteEntity);
     }
+
+    @Override
+    public OrderNoteProduceDto editOrderNote(Long id, OrderNoteConsumeDto orderNoteConsumeDto) {
+
+        OrderNoteEntity orderNoteEntity = mOrderNoteRepository.findById(id).orElse(null);
+        if (orderNoteEntity == null){
+            throw new BadRequestException("Id " + id + "not does exists");
+        }
+        if(mUserService.getCurrentUser().getId() != orderNoteEntity.getOrder().getId()){
+            throw new ForbiddenException(" no edit access");
+        }
+        orderNoteEntity.setContent(orderNoteConsumeDto.toOrderNoteEntity().getContent());
+    return mOrderNoteMapper.toOrderNoteProduceDto(mOrderNoteRepository.save(orderNoteEntity));
+    }
 }
