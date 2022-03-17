@@ -8,6 +8,7 @@ import com.example.bebenshop.dto.consumes.UserConsumeDto;
 import com.example.bebenshop.dto.produces.UserProduceDto;
 import com.example.bebenshop.entities.RoleEntity;
 import com.example.bebenshop.entities.UserEntity;
+import com.example.bebenshop.enums.GenderEnum;
 import com.example.bebenshop.enums.RoleEnum;
 import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.mapper.DeviceMapper;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,5 +108,35 @@ public class UserServiceImpl implements UserService {
         UserProduceDto userProduceDto = mUserMapper.toUserProduceDto(userEntity);
         userProduceDto.setRoles(userEntity.getRoles().stream().map(roleMapper::toRoleProduceDto).collect(Collectors.toList()));
         return userProduceDto;
+    }
+
+    @Override
+    public UserProduceDto editById(HashMap<String, Object> map) {
+        UserEntity userEntity = getCurrentUser();
+        for(String i : map.keySet()){
+            switch (i){
+                case "password":
+                    userEntity.setPassword(mPasswordEncoder.encode(map.get(i).toString()));
+                    break;
+                case "email":
+                    String email = map.get(i).toString();
+                    UserEntity userEntity2 = mUserRepository.findByEmail(email);
+                    if(userEntity2 != null && userEntity2.getId() != userEntity.getId()){
+                        throw new BadRequestException("Email "+email+" already used");
+                    }
+                    userEntity.setEmail(email);
+                    break;
+                case "firstName":
+                    userEntity.setFirstName(map.get(i).toString());
+                    break;
+                case "lastName":
+                    userEntity.setLastName(map.get(i).toString());
+                    break;
+                case "gender":
+                    userEntity.setGender(GenderEnum.valueOf(map.get(i).toString()));
+                    break;
+            }
+        }
+        return mUserMapper.toUserProduceDto(mUserRepository.save(userEntity));
     }
 }
