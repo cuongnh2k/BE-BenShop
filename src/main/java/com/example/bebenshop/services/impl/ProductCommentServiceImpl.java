@@ -64,9 +64,12 @@ public class ProductCommentServiceImpl implements ProductCommentService {
 
     @Override
     public void deleteProductComment(Long id) {
-        ProductCommentEntity productCommentEntity=mProductCommentrepsitory.findById(id).orElse(null);
-        if(productCommentEntity==null){
-            throw  new BadRequestException("id "+id+" no does exists");
+        ProductCommentEntity productCommentEntity = mProductCommentrepsitory.findById(id).orElse(null);
+        if (productCommentEntity == null) {
+            throw new BadRequestException("id " + id + " no does exists");
+        }
+        if (mUserService.getCurrentUser().getId() != productCommentEntity.getUser().getId()) {
+            throw new ForbiddenException(" no edit access");
         }
         mProductCommentrepsitory.deleteProductComment(id);
     }
