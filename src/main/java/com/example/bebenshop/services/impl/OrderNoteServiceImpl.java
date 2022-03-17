@@ -34,7 +34,7 @@ public class OrderNoteServiceImpl implements OrderNoteService {
             throw new BadRequestException("No order exists: " + id);
         }
         if (mUserService.getCurrentUser().getId() != orderEntity.getUser().getId()
-                && (orderEntity.getStatus().equals(OrderStatusEnum.CANCELED))
+                || (orderEntity.getStatus().equals(OrderStatusEnum.CANCELED))
                 || (orderEntity.getStatus().equals(OrderStatusEnum.COMPLETED))
                 || (orderEntity.getStatus().equals(OrderStatusEnum.RESOLVED))) {
             throw new ForbiddenException("Forbidden");
