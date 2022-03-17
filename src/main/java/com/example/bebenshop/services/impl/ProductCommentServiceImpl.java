@@ -1,5 +1,6 @@
 package com.example.bebenshop.services.impl;
 
+import ch.qos.logback.classic.spi.IThrowableProxy;
 import com.example.bebenshop.dto.consumes.ProductCommentConsumeDto;
 import com.example.bebenshop.dto.produces.ProductCommentProduceDto;
 import com.example.bebenshop.entities.ProductCommentEntity;
@@ -59,5 +60,17 @@ public class ProductCommentServiceImpl implements ProductCommentService {
         }
         productCommentEntity.setContent(productCommentConsumeDto.toProductCommentEntity().getContent());
         return mProductCommentMapper.toProductCommentProduceDto(mProductCommentrepsitory.save(productCommentEntity));
+    }
+
+    @Override
+    public void deleteProductComment(Long id) {
+        ProductCommentEntity productCommentEntity = mProductCommentrepsitory.findById(id).orElse(null);
+        if (productCommentEntity == null) {
+            throw new BadRequestException("id " + id + " no does exists");
+        }
+        if (mUserService.getCurrentUser().getId() != productCommentEntity.getUser().getId()) {
+            throw new ForbiddenException(" no edit access");
+        }
+        mProductCommentrepsitory.deleteProductComment(id);
     }
 }
