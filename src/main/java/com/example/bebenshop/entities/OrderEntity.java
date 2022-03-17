@@ -20,8 +20,11 @@ import java.util.Collection;
 public class OrderEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 10)
+    @Column(length = 20)
     private OrderStatusEnum status;
+
+    @Column(length = 6)
+    private String verificationCode;
 
     @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(columnDefinition = "user_id")

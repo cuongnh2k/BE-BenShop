@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.HashMap;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${base.api}/admin/product")
@@ -21,6 +20,7 @@ public class AdminProductController extends BaseController {
 
     private final ProductService mProductService;
     private final ProductImageService mProductImageService;
+
 
     @PostMapping
     public ResponseEntity<BaseResponseDto> createProduct(@RequestBody ProductConsumeDto productConsumeDto) {
@@ -50,4 +50,6 @@ public class AdminProductController extends BaseController {
         mProductImageService.deleteProductImage(id);
         return success("Delete data successful.");
     }
+
+
 }
