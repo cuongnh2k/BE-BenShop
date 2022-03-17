@@ -20,7 +20,7 @@ ProductController extends BaseController {
         return created(mProductCommentService.createProductComment(productCommentConsumeDto, id), "Create data successful.");
     }
 
-    @PatchMapping("{comment/{id}")
+    @PatchMapping("comment/{id}")
     public ResponseEntity<BaseResponseDto> editProductComment(@PathVariable("id") Long id, @RequestBody ProductCommentConsumeDto productCommentConsumeDto) {
         return success(mProductCommentService.editProductComment(productCommentConsumeDto, id), "edit successful");
     }
