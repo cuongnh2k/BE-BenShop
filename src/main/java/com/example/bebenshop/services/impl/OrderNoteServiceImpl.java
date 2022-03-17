@@ -33,12 +33,10 @@ public class OrderNoteServiceImpl implements OrderNoteService {
         if (orderEntity == null) {
             throw new BadRequestException("No order exists: " + id);
         }
-        if (mUserService.getCurrentUser() != orderEntity.getUser()) {
-            throw new ForbiddenException("Forbidden");
-        }
-        if (orderEntity.getStatus().equals(OrderStatusEnum.CANCELED)
-                && orderEntity.getStatus().equals(OrderStatusEnum.COMPLETED)
-                && orderEntity.getStatus().equals(OrderStatusEnum.RESOLVED)) {
+        if (mUserService.getCurrentUser().getId() != orderEntity.getUser().getId()
+                && (orderEntity.getStatus().equals(OrderStatusEnum.CANCELED))
+                || (orderEntity.getStatus().equals(OrderStatusEnum.COMPLETED))
+                || (orderEntity.getStatus().equals(OrderStatusEnum.RESOLVED))) {
             throw new ForbiddenException("Forbidden");
         }
         OrderNoteEntity orderNoteEntity = orderNoteConsumeDto.toOrderNoteEntity();
