@@ -4,6 +4,7 @@ import com.example.bebenshop.entities.OrderNoteEntity;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
