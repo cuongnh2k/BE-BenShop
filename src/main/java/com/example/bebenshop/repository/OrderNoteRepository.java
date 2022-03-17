@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderNoteRepository extends JpaRepository<OrderNoteEntity, Long> {
+
 }
