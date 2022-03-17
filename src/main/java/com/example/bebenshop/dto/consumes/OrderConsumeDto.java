@@ -17,11 +17,13 @@ public class OrderConsumeDto implements Serializable {
 
     private String orderDetails;
 
+    private OrderStatusEnum status;
+
     private String orderNotes;
 
     public OrderEntity toOrderEntity() {
         return OrderEntity.builder()
-                .status(OrderStatusEnum.PENDING)
+                .status(status)
                 .build();
     }
 }
