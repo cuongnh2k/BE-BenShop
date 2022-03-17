@@ -11,6 +11,7 @@ import com.example.bebenshop.entities.UserEntity;
 import com.example.bebenshop.enums.RoleEnum;
 import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.mapper.DeviceMapper;
+import com.example.bebenshop.mapper.RoleMapper;
 import com.example.bebenshop.mapper.UserMapper;
 import com.example.bebenshop.repository.RoleRepository;
 import com.example.bebenshop.repository.UserRepository;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +41,7 @@ public class UserServiceImpl implements UserService {
     private final HttpServletRequest mHttpServletRequest;
     private final UserMapper mUserMapper;
     private final DeviceMapper mDeviceMapper;
+    private final RoleMapper roleMapper;
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
@@ -98,7 +101,11 @@ public class UserServiceImpl implements UserService {
         if (mUserRepository.existsByEmail(userConsumeDto.getEmail())) {
             throw new BadRequestException("Email "+userConsumeDto.getEmail()+" already used");
         }
+        userEntity.setRoles(mRoleRepository.findByName(RoleEnum.ROLE_USER));
         userEntity.setPassword(mPasswordEncoder.encode(userEntity.getPassword()));
-        return mUserMapper.toUserProduceDto(mUserRepository.save(userEntity));
+        mUserRepository.save(userEntity);
+        UserProduceDto userProduceDto = mUserMapper.toUserProduceDto(userEntity);
+        userProduceDto.setRoles(userEntity.getRoles().stream().map(roleMapper::toRoleProduceDto).collect(Collectors.toList()));
+        return userProduceDto;
     }
 }

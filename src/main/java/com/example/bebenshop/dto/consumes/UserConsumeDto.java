@@ -33,8 +33,6 @@ public class UserConsumeDto implements Serializable {
 
     private String productComments;
 
-    private Long userCodeId;
-
     public UserEntity toUserEntity() {
         return UserEntity.builder()
                 .username(username)
