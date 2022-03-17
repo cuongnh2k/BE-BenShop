@@ -20,8 +20,15 @@ ProductController extends BaseController {
         return created(mProductCommentService.createProductComment(productCommentConsumeDto, id), "Create data successful.");
     }
 
-    @PatchMapping("{id}/comment")
-    public ResponseEntity<BaseResponseDto> editPostComment(@PathVariable("id") Long id, @RequestBody ProductCommentConsumeDto productCommentConsumeDto) {
-        return  success(mProductCommentService.editProductComment(productCommentConsumeDto,id),"edit successful");
+    @PatchMapping("comment/{id}")
+    public ResponseEntity<BaseResponseDto> editProductComment(@PathVariable("id") Long id, @RequestBody ProductCommentConsumeDto productCommentConsumeDto) {
+        return success(mProductCommentService.editProductComment(productCommentConsumeDto, id), "edit successful");
+    }
+
+    @DeleteMapping("comment/{id}")
+    public ResponseEntity<BaseResponseDto> deleteProductComment(@PathVariable("id") Long id) {
+        mProductCommentService.deleteProductComment(id);
+        return success("Delete data successful.");
+
     }
 }

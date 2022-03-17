@@ -164,6 +164,22 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
+    @Override
+    public OrderProduceDto updateStatusAdmin(Long id, OrderStatusEnum orderStatusEnum) {
+        OrderEntity orderEntity = mOrderRepository.findByIdAndDeletedFlagFalse(id);
+        if (orderEntity == null) {
+            throw new BadRequestException("Order does not exist");
+        }
+        if (!orderStatusEnum.name().equalsIgnoreCase(OrderStatusEnum.RESOLVED.name())
+                && !orderStatusEnum.name().equalsIgnoreCase(OrderStatusEnum.COMPLETED.name())
+                && !orderStatusEnum.name().equalsIgnoreCase(OrderStatusEnum.CANCELED.name())) {
+            throw new ForbiddenException("Forbidden");
+        }
+        orderEntity.setStatus(orderStatusEnum);
+        mOrderRepository.save(orderEntity);
+        return getOrderProduceDto(orderEntity);
+    }
+
     private OrderProduceDto getOrderProduceDto(OrderEntity orderEntity) {
         OrderProduceDto orderProduceDto = mOrderMapper.toOrderProduceDto(orderEntity);
         orderProduceDto.setOrderDetails(orderEntity.getOrderDetails().stream().map(o -> {

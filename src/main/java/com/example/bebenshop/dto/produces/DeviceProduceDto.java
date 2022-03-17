@@ -16,9 +16,5 @@ public class DeviceProduceDto extends BaseProduceDto<Long> {
 
     private String userAgent;
 
-    private String accessToken;
-
-    private String refreshToken;
-
     private UserProduceDto user;
 }
