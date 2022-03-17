@@ -52,7 +52,4 @@ public class UserEntity extends BaseEntity {
 
     @OneToMany(targetEntity = ProductCommentEntity.class, mappedBy = "user")
     private Collection<ProductCommentEntity> productComments;
-
-    @OneToOne(targetEntity = UserCodeEntity.class, mappedBy = "user")
-    private UserCodeEntity userCodes;
 }
