@@ -12,6 +12,7 @@ import com.example.bebenshop.mapper.OrderNoteMapper;
 import com.example.bebenshop.repository.OrderNoteRepository;
 import com.example.bebenshop.repository.OrderRepository;
 import com.example.bebenshop.services.OrderNoteService;
+import com.example.bebenshop.services.OrderService;
 import com.example.bebenshop.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class OrderNoteServiceImpl implements OrderNoteService {
     private final OrderRepository mOrderRepository;
     private final OrderNoteMapper mOrderNoteMapper;
     private final UserService mUserService;
+    private  final OrderService mOrderService;
 
     @Override
     public void deleteOderNoteById(Long id) {
@@ -55,5 +57,20 @@ public class OrderNoteServiceImpl implements OrderNoteService {
         mOrderNoteRepository.save(orderNoteEntity);
         return mOrderNoteMapper.toOrderNoteProduceDto(orderNoteEntity);
 
+    }
+
+    @Override
+    public OrderNoteProduceDto editOrderNote(Long id, OrderNoteConsumeDto orderNoteConsumeDto) {
+
+        OrderNoteEntity orderNoteEntity = mOrderNoteRepository.findById(id).orElse(null);
+
+        if (orderNoteEntity == null){
+            throw new BadRequestException("Id " + id + "not does exists");
+        }
+        if(orderNoteEntity.getOrder().getUser().getId() != mUserService.getCurrentUser().getId() ){
+            throw new ForbiddenException(" no edit access");
+        }
+        orderNoteEntity.setContent(orderNoteConsumeDto.toOrderNoteEntity().getContent());
+    return mOrderNoteMapper.toOrderNoteProduceDto(mOrderNoteRepository.save(orderNoteEntity));
     }
 }
