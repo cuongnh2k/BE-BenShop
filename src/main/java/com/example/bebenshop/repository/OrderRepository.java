@@ -10,11 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
+public interface OrderRepository extends JpaRepository<OrderEntity , Long> {
+    OrderEntity findByIdAndDeletedFlagFalse(Long id);
 
     OrderEntity findByStatusAndUserIdAndDeletedFlagFalse(OrderStatusEnum orderStatusEnum, Long userId);
 
-    OrderEntity findByIdAndDeletedFlagFalse(Long id);
 
     @Modifying
     @Query(nativeQuery = true

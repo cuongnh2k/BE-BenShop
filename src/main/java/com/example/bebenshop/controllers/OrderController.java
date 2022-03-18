@@ -4,8 +4,10 @@ import com.example.bebenshop.bases.BaseController;
 import com.example.bebenshop.bases.BaseResponseDto;
 import com.example.bebenshop.dto.consumes.CodeConsumeDto;
 import com.example.bebenshop.dto.consumes.OrderDetailConsumeDto;
+import com.example.bebenshop.dto.consumes.OrderNoteConsumeDto;
 import com.example.bebenshop.enums.OrderStatusEnum;
 import com.example.bebenshop.services.OrderDetailService;
+import com.example.bebenshop.services.OrderNoteService;
 import com.example.bebenshop.services.OrderService;
 import com.example.bebenshop.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class OrderController extends BaseController {
     private final OrderService mOrderService;
     private final OrderDetailService mOrderDetailService;
     private final ConvertUtil mConvertUtil;
+    private final OrderNoteService mOrderNoteService;
 
     @PostMapping("/add-to-cart")
     public ResponseEntity<BaseResponseDto> addToCart(@RequestBody OrderDetailConsumeDto orderDetailConsumeDto) {
@@ -58,5 +61,9 @@ public class OrderController extends BaseController {
             , @RequestParam OrderStatusEnum status) {
         Pageable pageable = mConvertUtil.buildPageable(page, size, sort);
         return success(mOrderService.searchOrder(status, pageable), "Get data successful");
+    }
+    @PostMapping("/{id}/note")
+    public ResponseEntity<BaseResponseDto> addOrderNote(@PathVariable Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
+        return created(mOrderNoteService.addOrderNote(id, orderNoteConsumeDto), "Created note successful.");
     }
 }
