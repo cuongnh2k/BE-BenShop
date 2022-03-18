@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProduceDto getUserDetail() {
-        UserEntity userEntity = mUserRepository.findByUsernameAndDeletedFlagFalse(getUserName());
+        UserEntity userEntity = mUserRepository.findByUsername(getUserName());
         UserProduceDto userProduceDto = mUserMapper.toUserProduceDto(userEntity);
         userProduceDto.setDevices(userEntity.getDevices().stream()
                 .map(mDeviceMapper::toDeviceProduceDto).collect(Collectors.toList()));
