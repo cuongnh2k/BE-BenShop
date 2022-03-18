@@ -1,5 +1,6 @@
 package com.example.bebenshop.services.impl;
 
+import com.example.bebenshop.entities.OrderNoteEntity;
 import com.example.bebenshop.dto.consumes.OrderNoteConsumeDto;
 import com.example.bebenshop.dto.produces.OrderNoteProduceDto;
 import com.example.bebenshop.entities.OrderEntity;
@@ -16,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,6 +27,17 @@ public class OrderNoteServiceImpl implements OrderNoteService {
     private final UserService mUserService;
 
     @Override
+    public void deleteOderNoteById(Long id) {
+        OrderNoteEntity orderNoteEntity = mOrderNoteRepository.findById(id).orElse(null);
+        if (orderNoteEntity == null) {
+            throw new BadRequestException("Id " + id + " not does exits ");
+        }
+        if (orderNoteEntity.getOrder().getUser().getId() != mUserService.getCurrentUser().getId()) {
+            throw new ForbiddenException(" not authorithor delete order note");
+        }
+        mOrderNoteRepository.deleteOrderNoteById(id);
+    }
+
     public OrderNoteProduceDto addOrderNote(Long id, OrderNoteConsumeDto orderNoteConsumeDto) {
 
         OrderEntity orderEntity = mOrderRepository.findByIdAndDeletedFlagFalse(id);
@@ -43,5 +54,6 @@ public class OrderNoteServiceImpl implements OrderNoteService {
         orderNoteEntity.setOrder(orderEntity);
         mOrderNoteRepository.save(orderNoteEntity);
         return mOrderNoteMapper.toOrderNoteProduceDto(orderNoteEntity);
+
     }
 }
