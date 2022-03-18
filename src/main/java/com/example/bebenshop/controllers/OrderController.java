@@ -69,6 +69,11 @@ public class OrderController extends BaseController {
     }
     @PatchMapping("{id}/note")
     public ResponseEntity<BaseResponseDto> OrderNote(@PathVariable("id") Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
-        return  success(mOrderNoteService.editOrderNote(id,orderNoteConsumeDto),"edit successful");
+        return success(mOrderNoteService.editOrderNote(id, orderNoteConsumeDto), "edit successful");
+    }
+    @DeleteMapping("order-note/{id}")
+    public ResponseEntity<BaseResponseDto> deleteOrderNote(@PathVariable("id") Long id) {
+        mOrderNoteService.deleteOderNoteById(id);
+        return success("Delete data successful.");
     }
 }
