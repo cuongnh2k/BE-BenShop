@@ -19,11 +19,11 @@ public class BasicCategoryController extends BaseController {
         if (structure == null) {
             structure = false;
         }
-        return success(mCategoryService.getAll(structure), "Get data successful.");
+        return success(mCategoryService.getAll(structure), "Get data successful");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponseDto> getById(@PathVariable Long id){
+    public ResponseEntity<BaseResponseDto> getById(@PathVariable Long id) {
         return success(mCategoryService.getById(id), "Get data successful");
     }
 }

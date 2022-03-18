@@ -36,24 +36,24 @@ public class BasicAuthController extends BaseController {
         authenticate(userDetails.getUsername(), loginConsumeDto.getPassword());
         TokenProduceDto tokenProduceDto = mTokenConfig.generateToken(userDetails, request);
         mDeviceService.updateToken(request, tokenProduceDto, userDetails.getUsername());
-        return success(tokenProduceDto, "Login successful.");
+        return success(tokenProduceDto, "Login successful");
     }
 
     private void authenticate(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (Exception e) {
-            throw new BadRequestException("Incorrect password.");
+            throw new BadRequestException("Incorrect password");
         }
     }
 
     @PatchMapping("/refresh-token")
     public ResponseEntity<BaseResponseDto> refreshToken(HttpServletRequest request) {
-        return success(mDeviceService.refreshToken(request), "Refresh token successful.");
+        return success(mDeviceService.refreshToken(request), "Refresh token successful");
     }
 
     @PostMapping("/register")
     public ResponseEntity<BaseResponseDto> createRegister(@RequestBody UserConsumeDto userConsumeDto){
-        return created(mUserService.createRegister(userConsumeDto),"Create User account successful");
+        return created(mUserService.createRegister(userConsumeDto),"Create user successful");
     }
 }

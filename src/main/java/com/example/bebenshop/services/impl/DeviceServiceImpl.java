@@ -88,13 +88,13 @@ public class DeviceServiceImpl implements DeviceService {
                     updateAccessToken(request, userEntity.getId(), tokenProduceDto);
                     return tokenProduceDto;
                 } else {
-                    throw new UnauthorizedException("Unauthorized.");
+                    throw new UnauthorizedException("Unauthorized");
                 }
             } catch (Exception exception) {
                 throw new UnauthorizedException(exception.getMessage());
             }
         } else {
-            throw new UnauthorizedException("Unauthorized.");
+            throw new UnauthorizedException("Unauthorized");
         }
     }
 
@@ -107,7 +107,7 @@ public class DeviceServiceImpl implements DeviceService {
             deviceEntity.setAccessToken(tokenProduceDto.getAccessToken());
             mDeviceRepository.save(deviceEntity);
         } else {
-            throw new UnauthorizedException("Unauthorized.");
+            throw new UnauthorizedException("Unauthorized");
         }
     }
 

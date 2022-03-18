@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${base.api}/admin/category")
@@ -21,17 +20,17 @@ public class AdminCategoryController extends BaseController {
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponseDto> deleteById(@PathVariable Long id) {
         mCategoryService.deleteById(id);
-        return success("Delete data successful.");
+        return success("Delete category successful");
     }
 
     @PostMapping
     public ResponseEntity<BaseResponseDto> addCategory(@RequestBody CategoryConsumeDto categoryConsumeDto) {
-        return created(mCategoryService.addCategory(categoryConsumeDto), "Create data successful.");
+        return created(mCategoryService.addCategory(categoryConsumeDto), "Create category successful");
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<BaseResponseDto> editById(@PathVariable Long id
             , @RequestBody HashMap<String, Object> map) {
-        return success(mCategoryService.editById(id, map), "Edit successful");
+        return success(mCategoryService.editById(id, map), "Update category successful");
     }
 }

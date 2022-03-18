@@ -91,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
 
         if (productEntity == null) {
-            throw new BadRequestException("ID" + id + " does not exist");
+            throw new BadRequestException("Product does not exist");
         }
         for (String i : map.keySet()) {
             switch (i) {
@@ -149,7 +149,7 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProductByID(Long id) {
         ProductEntity productEntity = mProductRepository.findById(id).orElse(null);
         if (Objects.isNull(productEntity)) {
-            throw new BadRequestException("Id" + id + "does not exist");
+            throw new BadRequestException("Product does not exist");
         }
         productEntity.setDeletedFlag(true);
         mProductRepository.save(productEntity);
@@ -159,7 +159,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductProduceDto getProductById(Long id) {
         ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);
         if (productEntity == null) {
-            throw new BadRequestException("Id " + id + " dose not exist");
+            throw new BadRequestException("Product does not exist");
         }
         return toProductProduceDto(productEntity);
     }

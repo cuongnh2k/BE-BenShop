@@ -11,8 +11,6 @@ public interface UserService {
 
     void createAdmin(UserEntity userEntity);
 
-    void createUser(UserEntity userEntity);
-
     String getUserName();
 
     Boolean isRoleAdmin();

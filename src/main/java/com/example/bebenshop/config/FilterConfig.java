@@ -76,12 +76,12 @@ public class FilterConfig extends OncePerRequestFilter {
                         } else {
                             new ObjectMapper().writeValue(
                                     response.getOutputStream()
-                                    , BaseResponseDto.error("Unauthorized.", 401));
+                                    , BaseResponseDto.error("Unauthorized", 401));
                         }
                     } else {
                         new ObjectMapper().writeValue(
                                 response.getOutputStream()
-                                , BaseResponseDto.error("Unauthorized.", 401));
+                                , BaseResponseDto.error("Unauthorized", 401));
                     }
                 } catch (Exception exception) {
                     new ObjectMapper().writeValue(
@@ -91,7 +91,7 @@ public class FilterConfig extends OncePerRequestFilter {
             } else {
                 new ObjectMapper().writeValue(
                         response.getOutputStream()
-                        , BaseResponseDto.error("Unauthorized.", 401));
+                        , BaseResponseDto.error("Unauthorized", 401));
             }
         }
     }

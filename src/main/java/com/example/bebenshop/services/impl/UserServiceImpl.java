@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,14 +50,6 @@ public class UserServiceImpl implements UserService {
     public void createAdmin(UserEntity userEntity) {
         userEntity.setPassword(mPasswordEncoder.encode(userEntity.getPassword()));
         List<RoleEntity> roleEntityList = mRoleRepository.findAll();
-        userEntity.setRoles(roleEntityList);
-        mUserRepository.save(userEntity);
-    }
-
-    @Override
-    public void createUser(UserEntity userEntity) {
-        userEntity.setPassword(mPasswordEncoder.encode(userEntity.getPassword()));
-        List<RoleEntity> roleEntityList = mRoleRepository.findAllById(Collections.singleton(2L));
         userEntity.setRoles(roleEntityList);
         mUserRepository.save(userEntity);
     }
@@ -96,11 +87,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserProduceDto createRegister(UserConsumeDto userConsumeDto) {
         UserEntity userEntity = userConsumeDto.toUserEntity();
-        if(mUserRepository.existsByUsername(userConsumeDto.getUsername())){
-            throw new BadRequestException("User name "+userConsumeDto.getUsername()+" already used");
+        if (mUserRepository.existsByUsername(userConsumeDto.getUsername())) {
+            throw new BadRequestException("User name already exist");
         }
         if (mUserRepository.existsByEmail(userConsumeDto.getEmail())) {
-            throw new BadRequestException("Email "+userConsumeDto.getEmail()+" already used");
+            throw new BadRequestException("Email already exist");
         }
         userEntity.setRoles(mRoleRepository.findByName(RoleEnum.ROLE_USER));
         userEntity.setPassword(mPasswordEncoder.encode(userEntity.getPassword()));
@@ -113,16 +104,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserProduceDto editById(HashMap<String, Object> map) {
         UserEntity userEntity = getCurrentUser();
-        for(String i : map.keySet()){
-            switch (i){
+        for (String i : map.keySet()) {
+            switch (i) {
                 case "password":
                     userEntity.setPassword(mPasswordEncoder.encode(map.get(i).toString()));
                     break;
                 case "email":
                     String email = map.get(i).toString();
                     UserEntity userEntity2 = mUserRepository.findByEmail(email);
-                    if(userEntity2 != null && userEntity2.getId() != userEntity.getId()){
-                        throw new BadRequestException("Email "+email+" already used");
+                    if (userEntity2 != null && userEntity2.getId() != userEntity.getId()) {
+                        throw new BadRequestException("Email " + email + " already used");
                     }
                     userEntity.setEmail(email);
                     break;

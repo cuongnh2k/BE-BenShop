@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductCommentrepsitory extends JpaRepository<ProductCommentEntity,Long> {
+public interface ProductCommentRepository extends JpaRepository<ProductCommentEntity,Long> {
     boolean existsById(Long parentId);
 
     @Modifying

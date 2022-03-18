@@ -5,7 +5,6 @@ import com.example.bebenshop.bases.BaseResponseDto;
 import com.example.bebenshop.dto.consumes.CodeConsumeDto;
 import com.example.bebenshop.dto.consumes.OrderDetailConsumeDto;
 import com.example.bebenshop.dto.consumes.OrderNoteConsumeDto;
-import com.example.bebenshop.dto.consumes.ProductCommentConsumeDto;
 import com.example.bebenshop.enums.OrderStatusEnum;
 import com.example.bebenshop.services.OrderDetailService;
 import com.example.bebenshop.services.OrderNoteService;
@@ -63,20 +62,20 @@ public class OrderController extends BaseController {
         Pageable pageable = mConvertUtil.buildPageable(page, size, sort);
         return success(mOrderService.searchOrder(status, pageable), "Get data successful");
     }
+
     @PostMapping("/note/{id}")
     public ResponseEntity<BaseResponseDto> addOrderNote(@PathVariable Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
-        return created(mOrderNoteService.addOrderNote(id, orderNoteConsumeDto), "Created note successful.");
+        return created(mOrderNoteService.addOrderNote(id, orderNoteConsumeDto), "Create order note successful");
     }
 
     @PatchMapping("/note/{id}")
-    public ResponseEntity<BaseResponseDto> OrderNote(@PathVariable("id") Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
-        return success(mOrderNoteService.editOrderNote(id, orderNoteConsumeDto), "edit successful");
+    public ResponseEntity<BaseResponseDto> updateOrderNote(@PathVariable("id") Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
+        return success(mOrderNoteService.editOrderNote(id, orderNoteConsumeDto), "Update order note successful");
     }
 
     @DeleteMapping("/note/{id}")
-
     public ResponseEntity<BaseResponseDto> deleteOrderNote(@PathVariable("id") Long id) {
         mOrderNoteService.deleteOderNoteById(id);
-        return success("Delete data successful.");
+        return success("Delete order note successful");
     }
 }

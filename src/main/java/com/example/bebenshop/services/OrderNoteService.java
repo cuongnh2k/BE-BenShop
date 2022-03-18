@@ -8,6 +8,6 @@ public interface OrderNoteService {
     void deleteOderNoteById(Long id);
 
     OrderNoteProduceDto addOrderNote(Long id, OrderNoteConsumeDto orderNoteConsumeDto);
-    OrderNoteProduceDto editOrderNote(Long id, OrderNoteConsumeDto orderNoteConsumeDto);
 
+    OrderNoteProduceDto editOrderNote(Long id, OrderNoteConsumeDto orderNoteConsumeDto);
 }

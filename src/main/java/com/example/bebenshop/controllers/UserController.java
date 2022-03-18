@@ -18,11 +18,11 @@ public class UserController extends BaseController {
 
     @GetMapping
     public ResponseEntity<BaseResponseDto> getUserDetail() {
-        return success(mUserService.getUserDetail(), "Get data successful.");
+        return success(mUserService.getUserDetail(), "Get data successful");
     }
 
     @PatchMapping
-    public ResponseEntity<BaseResponseDto> editById(@RequestBody HashMap<String, Object> map){
-        return success(mUserService.editById(map), "Edit data successful.");
+    public ResponseEntity<BaseResponseDto> editById(@RequestBody HashMap<String, Object> map) {
+        return success(mUserService.editById(map), "Update user successful");
     }
 }

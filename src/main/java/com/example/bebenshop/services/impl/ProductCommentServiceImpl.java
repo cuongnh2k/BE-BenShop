@@ -1,6 +1,5 @@
 package com.example.bebenshop.services.impl;
 
-import ch.qos.logback.classic.spi.IThrowableProxy;
 import com.example.bebenshop.dto.consumes.ProductCommentConsumeDto;
 import com.example.bebenshop.dto.produces.ProductCommentProduceDto;
 import com.example.bebenshop.entities.ProductCommentEntity;
@@ -9,9 +8,7 @@ import com.example.bebenshop.entities.UserEntity;
 import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.exceptions.ForbiddenException;
 import com.example.bebenshop.mapper.ProductCommentMapper;
-import com.example.bebenshop.mapper.ProductMapper;
-import com.example.bebenshop.mapper.UserMapper;
-import com.example.bebenshop.repository.ProductCommentrepsitory;
+import com.example.bebenshop.repository.ProductCommentRepository;
 import com.example.bebenshop.repository.ProductRepository;
 import com.example.bebenshop.services.ProductCommentService;
 import com.example.bebenshop.services.UserService;
@@ -23,22 +20,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class ProductCommentServiceImpl implements ProductCommentService {
-    private final ProductCommentrepsitory mProductCommentrepsitory;
+    private final ProductCommentRepository mProductCommentRepository;
     private final ProductCommentMapper mProductCommentMapper;
     private final ProductRepository mProductRepository;
     private final UserService mUserService;
-    private final ProductMapper mProductMapper;
-    private final UserMapper mUserMapper;
 
     @Override
     public ProductCommentProduceDto createProductComment(ProductCommentConsumeDto productCommentConsumeDto, Long id) {
         ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);
         if (productEntity == null) {
-            throw new BadRequestException("Id " + id + " not doest exits");
+            throw new BadRequestException("Product does not exist");
         }
         ProductCommentEntity productCommentEntity = productCommentConsumeDto.toProductCommentEntity();
-        if (productCommentEntity.getParentId() != null && !mProductCommentrepsitory.existsById(productCommentEntity.getParentId())) {
-            throw new BadRequestException(" parentId  " + productCommentEntity.getParentId() + " not does exits");
+        if (productCommentEntity.getParentId() != null && !mProductCommentRepository.existsById(productCommentEntity.getParentId())) {
+            throw new BadRequestException("ParentId product comment does not exist");
         }
         if (productCommentEntity.getParentId() == null) {
             productCommentEntity.setParentId(0L);
@@ -46,31 +41,31 @@ public class ProductCommentServiceImpl implements ProductCommentService {
         UserEntity userEntity = mUserService.getCurrentUser();
         productCommentEntity.setProduct(productEntity);
         productCommentEntity.setUser(userEntity);
-        return mProductCommentMapper.toProductCommentProduceDto(mProductCommentrepsitory.save(productCommentEntity));
+        return mProductCommentMapper.toProductCommentProduceDto(mProductCommentRepository.save(productCommentEntity));
     }
 
     @Override
     public ProductCommentProduceDto editProductComment(ProductCommentConsumeDto productCommentConsumeDto, Long id) {
-        ProductCommentEntity productCommentEntity = mProductCommentrepsitory.findById(id).orElse(null);
+        ProductCommentEntity productCommentEntity = mProductCommentRepository.findById(id).orElse(null);
         if (productCommentEntity == null) {
-            throw new BadRequestException("Id " + id + "not does exists");
+            throw new BadRequestException("Product comment does not exist");
         }
-        if (mUserService.getCurrentUser().getId() != productCommentEntity.getUser().getId()) {
-            throw new ForbiddenException(" no edit access");
+        if (productCommentEntity.getCreatedBy().equals(mUserService.getUserName())) {
+            throw new ForbiddenException("Forbidden");
         }
         productCommentEntity.setContent(productCommentConsumeDto.toProductCommentEntity().getContent());
-        return mProductCommentMapper.toProductCommentProduceDto(mProductCommentrepsitory.save(productCommentEntity));
+        return mProductCommentMapper.toProductCommentProduceDto(mProductCommentRepository.save(productCommentEntity));
     }
 
     @Override
     public void deleteProductComment(Long id) {
-        ProductCommentEntity productCommentEntity = mProductCommentrepsitory.findById(id).orElse(null);
+        ProductCommentEntity productCommentEntity = mProductCommentRepository.findById(id).orElse(null);
         if (productCommentEntity == null) {
-            throw new BadRequestException("id " + id + " no does exists");
+            throw new BadRequestException("Product comment does not exist");
         }
-        if (mUserService.getCurrentUser().getId() != productCommentEntity.getUser().getId()) {
-            throw new ForbiddenException(" no edit access");
+        if (productCommentEntity.getCreatedBy().equals(mUserService.getUserName())) {
+            throw new ForbiddenException("Forbidden");
         }
-        mProductCommentrepsitory.deleteProductComment(id);
+        mProductCommentRepository.deleteProductComment(id);
     }
 }
