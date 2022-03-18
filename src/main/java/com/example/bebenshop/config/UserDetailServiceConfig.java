@@ -25,7 +25,7 @@ public class UserDetailServiceConfig implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = mUserRepository.findByUsername(username);
+        UserEntity userEntity = mUserRepository.findByUsernameOrEmail(username, username);
         if (Objects.isNull(userEntity)) {
             throw new BadRequestException(username + " not found in database.");
         } else {
