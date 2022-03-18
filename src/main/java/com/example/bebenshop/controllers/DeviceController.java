@@ -17,6 +17,6 @@ public class DeviceController extends BaseController {
     @DeleteMapping("/logout")
     public ResponseEntity<BaseResponseDto> logout(@RequestParam String ids) {
         mDeviceService.logout(ids);
-        return success("Logout successful.");
+        return success("Logout successful");
     }
 }

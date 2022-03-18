@@ -21,35 +21,32 @@ public class AdminProductController extends BaseController {
     private final ProductService mProductService;
     private final ProductImageService mProductImageService;
 
-
     @PostMapping
     public ResponseEntity<BaseResponseDto> createProduct(@RequestBody ProductConsumeDto productConsumeDto) {
-        return created(mProductService.createProduct(productConsumeDto), "Created data successful.");
+        return created(mProductService.createProduct(productConsumeDto), "Create product successful");
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<BaseResponseDto> editProduct( @PathVariable Long id
+    public ResponseEntity<BaseResponseDto> editProduct(@PathVariable Long id
             , @RequestBody HashMap<String, Object> map) {
-        return success(mProductService.editProduct(id, map), "Edit successful");
+        return success(mProductService.editProduct(id, map), "Update product successful");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponseDto> deleteProductByID(@PathVariable Long id) {
         mProductService.deleteProductByID(id);
-        return success("Delete data successful.");
+        return success("Delete product successful");
     }
 
     @PostMapping("/{id}/image")
     public ResponseEntity<BaseResponseDto> addProductImage(@PathVariable Long id, @RequestParam MultipartFile image) throws
             IOException {
-        return created(mProductImageService.addProductImage(id, image), "Created data successful.");
+        return created(mProductImageService.addProductImage(id, image), "Create product image successful");
     }
 
     @DeleteMapping("/image/{id}")
     public ResponseEntity<BaseResponseDto> deleteProductImage(@PathVariable Long id) {
         mProductImageService.deleteProductImage(id);
-        return success("Delete data successful.");
+        return success("Delete product image successful");
     }
-
-
 }

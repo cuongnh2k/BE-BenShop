@@ -17,6 +17,6 @@ public class AdminOrderController extends BaseController {
 
     @PatchMapping("/{id}/update-status")
     public ResponseEntity<BaseResponseDto> updateStatus(@PathVariable Long id, @RequestBody OrderConsumeDto orderConsumeDto) {
-        return success(mOrderService.updateStatusAdmin(id, orderConsumeDto.getStatus()), "Status update successful");
+        return success(mOrderService.updateStatusAdmin(id, orderConsumeDto.getStatus()), "Update order status successful");
     }
 }

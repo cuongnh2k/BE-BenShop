@@ -64,6 +64,6 @@ public class OrderController extends BaseController {
     }
     @PostMapping("/{id}/note")
     public ResponseEntity<BaseResponseDto> addOrderNote(@PathVariable Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
-        return created(mOrderNoteService.addOrderNote(id, orderNoteConsumeDto), "Created note successful.");
+        return created(mOrderNoteService.addOrderNote(id, orderNoteConsumeDto), "Create order note successful");
     }
 }

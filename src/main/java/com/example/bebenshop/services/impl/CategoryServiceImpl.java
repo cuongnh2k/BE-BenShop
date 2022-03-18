@@ -67,7 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteById(Long id) {
         CategoryEntity categoryEntity = mCategoryRepository.findById(id).orElse(null);
         if (Objects.isNull(categoryEntity)) {
-            throw new BadRequestException("Id " + id + " does not exist");
+            throw new BadRequestException("Category does not exist");
         }
         mCategoryRepository.deleteProductCategoryById(id);
         mCategoryRepository.deleteById(id);
@@ -78,13 +78,13 @@ public class CategoryServiceImpl implements CategoryService {
 
         CategoryEntity categoryEntity = categoryConsumeDto.toCategoryEntity();
         if (categoryEntity.getParentId() != null && !mCategoryRepository.existsById(categoryEntity.getParentId())) {
-            throw new BadRequestException("parentId" + categoryEntity.getParentId() + " does not exist");
+            throw new BadRequestException("Parent category does not exist");
         }
         if (categoryEntity.getParentId() == null) {
             categoryEntity.setParentId(0L);
         }
         if (mCategoryRepository.existsByName(categoryEntity.getName())) {
-            throw new BadRequestException("name " + categoryEntity.getName() + " does exist");
+            throw new BadRequestException("Category already exists");
         }
         return mCategoryMapper.toCategoryProduceDto(mCategoryRepository.save(categoryEntity));
     }
@@ -93,7 +93,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryProduceDto editById(Long id, HashMap<String, Object> map) {
         CategoryEntity categoryEntity = mCategoryRepository.findById(id).orElse(null);
         if (categoryEntity == null) {
-            throw new BadRequestException("Id " + id + " does not exist");
+            throw new BadRequestException("Category does not exist");
         }
         for (String i : map.keySet()) {
             switch (i) {
@@ -101,14 +101,14 @@ public class CategoryServiceImpl implements CategoryService {
                     String name = map.get(i).toString();
                     CategoryEntity ca = mCategoryRepository.findByName(name);
                     if (ca != null && ca.getName().equalsIgnoreCase(name)) {
-                        throw new BadRequestException(name + " already used");
+                        throw new BadRequestException("Category already exists");
                     }
                     categoryEntity.setName(name);
                     break;
                 case "parentId":
                     Long parentID = Long.parseLong(map.get(i).toString());
                     if (!mCategoryRepository.existsById(parentID)) {
-                        throw new BadRequestException(parentID + " is not exist");
+                        throw new BadRequestException("Parent category does not exist");
                     }
                     categoryEntity.setParentId(parentID);
                     break;
@@ -121,7 +121,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryProduceDto getById(Long id) {
         CategoryEntity categoryEntity = mCategoryRepository.findById(id).orElse(null);
         if (Objects.isNull(categoryEntity)) {
-            throw new BadRequestException("id " + id + " is not exist");
+            throw new BadRequestException("Category does not exist");
         }
         return mCategoryMapper.toCategoryProduceDto(categoryEntity);
     }

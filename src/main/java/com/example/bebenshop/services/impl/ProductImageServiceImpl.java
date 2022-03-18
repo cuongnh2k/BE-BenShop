@@ -48,17 +48,17 @@ public class ProductImageServiceImpl implements ProductImageService {
     public ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException {
         ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);
         if (productEntity == null) {
-            throw new BadRequestException("no id exists: " + id);
+            throw new BadRequestException("Product image does not exist");
         }
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         {
             if (fileName.contains(".")) {
                 String[] arr = multipartFile.getOriginalFilename().split("\\.");
                 if (!arr[1].equalsIgnoreCase("JPG") && !arr[1].equalsIgnoreCase("PNG")) {
-                    throw new BadRequestException("image must be in jpg or png format.");
+                    throw new BadRequestException("Image must be in jpg or png format");
                 }
             } else {
-                throw new BadRequestException("empty image");
+                throw new BadRequestException("Empty image");
             }
         }
         String uploadDir = ROOT_DIRECTORY + SUBFOLDER_PRODUCT_IMAGE + "/" + id;
@@ -71,7 +71,7 @@ public class ProductImageServiceImpl implements ProductImageService {
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 
             if (mProductImageRepository.existsByPath(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename())) {
-                throw new BadRequestException("photo already exists");
+                throw new BadRequestException("Product image already exists");
             }
             mProductImageRepository.save(ProductImageEntity.builder()
                     .product(productEntity)
@@ -79,7 +79,7 @@ public class ProductImageServiceImpl implements ProductImageService {
                     .build());
 
         } catch (Exception ioe) {
-            throw new BadRequestException("empty image");
+            throw new BadRequestException("Empty image");
         }
 
         ProductEntity productEntity1 = mProductRepository.findByIdAndDeletedFlagFalse(id);
@@ -93,7 +93,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     public void deleteProductImage(Long id) {
         ProductImageEntity productImageEntity = mProductImageRepository.findById(id).orElse(null);
         if (productImageEntity == null) {
-            throw new BadRequestException("no id exists: " + id);
+            throw new BadRequestException("Product image does not exist");
         }
         String[] arr = productImageEntity.getPath().split("/");
         String path = ROOT_DIRECTORY;
