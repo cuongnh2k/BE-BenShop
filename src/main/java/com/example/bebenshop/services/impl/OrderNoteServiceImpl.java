@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,13 +26,24 @@ public class OrderNoteServiceImpl implements OrderNoteService {
     private final UserService mUserService;
 
     @Override
+    public void deleteOderNoteById(Long id) {
+        OrderNoteEntity orderNoteEntity = mOrderNoteRepository.findById(id).orElse(null);
+        if (orderNoteEntity == null) {
+            throw new BadRequestException("Order note does not  exits");
+        }
+        if (orderNoteEntity.getCreatedBy().equals(mUserService.getUserName())) {
+            throw new ForbiddenException("Forbidden");
+        }
+        mOrderNoteRepository.deleteOrderNoteById(id);
+    }
+
     public OrderNoteProduceDto addOrderNote(Long id, OrderNoteConsumeDto orderNoteConsumeDto) {
 
         OrderEntity orderEntity = mOrderRepository.findByIdAndDeletedFlagFalse(id);
         if (orderEntity == null) {
-            throw new BadRequestException("No order exists: " + id);
+            throw new BadRequestException("Order does not  exits");
         }
-        if (mUserService.getCurrentUser().getId() != orderEntity.getUser().getId()
+        if (mUserService.getUserName().equals(orderEntity.getCreatedBy())
                 || (orderEntity.getStatus().equals(OrderStatusEnum.CANCELED))
                 || (orderEntity.getStatus().equals(OrderStatusEnum.COMPLETED))
                 || (orderEntity.getStatus().equals(OrderStatusEnum.RESOLVED))) {
@@ -43,5 +53,18 @@ public class OrderNoteServiceImpl implements OrderNoteService {
         orderNoteEntity.setOrder(orderEntity);
         mOrderNoteRepository.save(orderNoteEntity);
         return mOrderNoteMapper.toOrderNoteProduceDto(orderNoteEntity);
+    }
+
+    @Override
+    public OrderNoteProduceDto editOrderNote(Long id, OrderNoteConsumeDto orderNoteConsumeDto) {
+        OrderNoteEntity orderNoteEntity = mOrderNoteRepository.findById(id).orElse(null);
+        if (orderNoteEntity == null) {
+            throw new BadRequestException("Order note does not  exits");
+        }
+        if (orderNoteEntity.getCreatedBy().equals(mUserService.getUserName())) {
+            throw new ForbiddenException("Forbidden");
+        }
+        orderNoteEntity.setContent(orderNoteConsumeDto.toOrderNoteEntity().getContent());
+        return mOrderNoteMapper.toOrderNoteProduceDto(mOrderNoteRepository.save(orderNoteEntity));
     }
 }

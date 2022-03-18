@@ -25,7 +25,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         if (orderDetailEntity == null) {
             throw new BadRequestException("Product does not exist");
         }
-        if (orderDetailEntity.getOrder().getUser().getId() != mUserService.getCurrentUser().getId()
+        if (orderDetailEntity.getCreatedBy().equals(mUserService.getUserName())
                 || !orderDetailEntity.getOrder().getStatus().name().equalsIgnoreCase(OrderStatusEnum.IN_CART.name())) {
             throw new ForbiddenException("Forbidden");
         }

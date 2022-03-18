@@ -1,7 +1,6 @@
 package com.example.bebenshop.services.impl;
 
 
-
 import com.example.bebenshop.bases.BaseListProduceDto;
 import com.example.bebenshop.dto.consumes.OrderDetailConsumeDto;
 import com.example.bebenshop.dto.produces.OrderDetailProduceDto;
@@ -91,9 +90,7 @@ public class OrderServiceImpl implements OrderService {
         String code = RandomStringUtils.random(6, "0123456789");
         orderEntity.setVerificationCode(code);
         mOrderRepository.save(orderEntity);
-
         mSentEmailUtil.verificationCode(userEntity.getEmail(), code);
-
         return getOrderProduceDto(orderEntity);
     }
 
@@ -103,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
         if (orderEntity == null) {
             throw new BadRequestException("No order exists");
         }
-        if (orderEntity.getUser().getId() != mUserService.getCurrentUser().getId()) {
+        if (orderEntity.getCreatedBy().equals(mUserService.getUserName())) {
             throw new ForbiddenException("Forbidden");
         }
         if (!orderEntity.getVerificationCode().equals(code)) {
@@ -111,7 +108,6 @@ public class OrderServiceImpl implements OrderService {
         }
         orderEntity.setStatus(OrderStatusEnum.PENDING);
         mOrderRepository.save(orderEntity);
-
         return getOrderProduceDto(orderEntity);
     }
 
@@ -121,7 +117,7 @@ public class OrderServiceImpl implements OrderService {
         if (orderEntity == null) {
             throw new BadRequestException("No order exists");
         }
-        if (orderEntity.getUser().getId() != mUserService.getCurrentUser().getId()
+        if (orderEntity.getCreatedBy().equals(mUserService.getUserName())
                 || (!orderEntity.getStatus().name().equalsIgnoreCase(OrderStatusEnum.PENDING.name())
                 && !orderEntity.getStatus().name().equalsIgnoreCase(OrderStatusEnum.UNCONFIRMED.name()))) {
             throw new ForbiddenException("Forbidden");

@@ -5,6 +5,8 @@ import com.example.bebenshop.dto.consumes.UserConsumeDto;
 import com.example.bebenshop.dto.produces.UserProduceDto;
 import com.example.bebenshop.entities.UserEntity;
 
+import java.util.HashMap;
+
 public interface UserService {
 
     void createAdmin(UserEntity userEntity);
@@ -18,4 +20,6 @@ public interface UserService {
     UserProduceDto getUserDetail();
 
     UserProduceDto createRegister(UserConsumeDto userConsumeDto);
+
+    UserProduceDto editById(HashMap<String, Object> map);
 }

@@ -62,8 +62,20 @@ public class OrderController extends BaseController {
         Pageable pageable = mConvertUtil.buildPageable(page, size, sort);
         return success(mOrderService.searchOrder(status, pageable), "Get data successful");
     }
-    @PostMapping("/{id}/note")
+
+    @PostMapping("/note/{id}")
     public ResponseEntity<BaseResponseDto> addOrderNote(@PathVariable Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
         return created(mOrderNoteService.addOrderNote(id, orderNoteConsumeDto), "Create order note successful");
+    }
+
+    @PatchMapping("/note/{id}")
+    public ResponseEntity<BaseResponseDto> updateOrderNote(@PathVariable("id") Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
+        return success(mOrderNoteService.editOrderNote(id, orderNoteConsumeDto), "Update order note successful");
+    }
+
+    @DeleteMapping("/note/{id}")
+    public ResponseEntity<BaseResponseDto> deleteOrderNote(@PathVariable("id") Long id) {
+        mOrderNoteService.deleteOderNoteById(id);
+        return success("Delete order note successful");
     }
 }

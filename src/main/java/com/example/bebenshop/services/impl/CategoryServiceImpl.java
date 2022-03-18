@@ -100,8 +100,8 @@ public class CategoryServiceImpl implements CategoryService {
                 case "name":
                     String name = map.get(i).toString();
                     CategoryEntity ca = mCategoryRepository.findByName(name);
-                    if (ca != null && ca.getName().equalsIgnoreCase(name)) {
-                        throw new BadRequestException("Category already exists");
+                    if (ca != null && ca.getId() != id) {
+                        throw new BadRequestException(name + "Category already exist");
                     }
                     categoryEntity.setName(name);
                     break;
