@@ -67,7 +67,7 @@ public class OrderController extends BaseController {
     public ResponseEntity<BaseResponseDto> addOrderNote(@PathVariable Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
         return created(mOrderNoteService.addOrderNote(id, orderNoteConsumeDto), "Created note successful.");
     }
-    @PatchMapping("{id}/note")
+    @PatchMapping("order-note/{id}")
     public ResponseEntity<BaseResponseDto> OrderNote(@PathVariable("id") Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
         return success(mOrderNoteService.editOrderNote(id, orderNoteConsumeDto), "edit successful");
     }
