@@ -45,6 +45,10 @@ public class ProductServiceImpl implements ProductService {
         productProduceDto.setCategories(productEntity.getCategories().stream()
                 .map(mCategoryMapper::toCategoryProduceDto).collect(Collectors.toList()));
 
+        productProduceDto.setMoney(productProduceDto.getPrice()
+                .divide(BigDecimal.valueOf(100))
+                .multiply(BigDecimal.valueOf(100 - productProduceDto.getDiscount())));
+
         List<ProductCommentProduceDto> productCommentProduceDtoList = productEntity.getProductComments().stream().map(o -> {
             ProductCommentProduceDto productCommentProduceDto = mProductCommentMapper.toProductCommentProduceDto(o);
             productCommentProduceDto.setUser(mUserMapper.toUserProduceDto(o.getUser()));
@@ -167,18 +171,24 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public BaseListProduceDto<ProductProduceDto> searchByTitleOrDescription(
             String search
-            , Long categoryId
             , BigDecimal priceMin
             , BigDecimal priceMax
+            , String categoryIds
             , Pageable pageable) {
+
         Page<ProductEntity> productEntityPage = mProductRepository.searchByTitleOrDescription(
                 search
-                , categoryId
                 , priceMin
                 , priceMax
+                , categoryIds
+                , !categoryIds.equals("-1") ? mProductRepository.getProductIdByCategoryId(mConvertUtil.toArray(categoryIds)) : null
                 , pageable);
+
         List<ProductProduceDto> productProduceDtoList = productEntityPage.getContent().stream().map(o -> {
             ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(o);
+            productProduceDto.setMoney(productProduceDto.getPrice()
+                    .divide(BigDecimal.valueOf(100))
+                    .multiply(BigDecimal.valueOf(100 - productProduceDto.getDiscount())));
             productProduceDto.setProductImages(o.getProductImages().stream()
                     .map(mProductImageMapper::toProductImageProduceDto).collect(Collectors.toList()));
             productProduceDto.setCategories(o.getCategories().stream()

@@ -29,12 +29,17 @@ public class BasicProductController extends BaseController {
             @RequestParam(defaultValue = "0") Integer page
             , @RequestParam(defaultValue = "10") Integer size
             , @RequestParam(required = false) String sort
-            , @RequestParam(defaultValue = "xyz") String search
-            , @RequestParam(defaultValue = "-1") Long categoryId
+            , @RequestParam(defaultValue = "-1") String search
             , @RequestParam(defaultValue = "-1") BigDecimal priceMin
-            , @RequestParam(defaultValue = "-1") BigDecimal priceMax) {
+            , @RequestParam(defaultValue = "-1") BigDecimal priceMax
+            , @RequestParam(defaultValue = "-1") String categoryId) {
         Pageable pageable = mConvertUtil.buildPageable(page, size, sort);
-        return success(mProductService.searchByTitleOrDescription(search, categoryId, priceMin, priceMax, pageable)
+        return success(mProductService.searchByTitleOrDescription(
+                        search
+                        , priceMin
+                        , priceMax
+                        , categoryId
+                        , pageable)
                 , "Get data successful");
     }
 }

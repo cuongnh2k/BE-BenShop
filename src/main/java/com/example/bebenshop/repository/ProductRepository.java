@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
@@ -16,19 +17,25 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     //    ALTER TABLE product_entity ADD FULLTEXT(`name`,`description`)
     @Query(nativeQuery = true
-            , value = "SELECT p.* FROM product_entity p\n" +
-            "INNER JOIN product_entity_categories pc ON p.id=pc.product_entity_id\n" +
-            "INNER JOIN category_entity c ON pc.categories_id=c.id\n" +
-            "WHERE p.deleted_flag IS FALSE\n" +
-            "AND IF('xyz' != ?1, MATCH(p.`name`, p.`description`) AGAINST(?1), 1)\n" +
-            "AND IF(-1 != ?2, c.id = ?2, 1)\n" +
-            "AND IF(-1 != ?3, p.price >= ?3, 1)\n" +
-            "AND IF(-1 != ?4, p.price <= ?4, 1)\n" +
-            "GROUP BY p.id")
+            , value = "SELECT * FROM product_entity " +
+            "WHERE deleted_flag IS FALSE " +
+            "AND IF(?1 != -1, MATCH(`name`, `description`) AGAINST(?1), ?1) " +
+            "AND IF(?2 != -1, price / 100 * (100 - discount) >= ?2, ?2) " +
+            "AND IF(?3 != -1, price / 100 * (100 - discount) <= ?3, ?3) " +
+            "AND IF(?4 != -1, id IN (?5), ?4) ")
     Page<ProductEntity> searchByTitleOrDescription(
             String search
-            , Long categoryId
             , BigDecimal priceMin
             , BigDecimal priceMax
+            , String categoryIds
+            , List<Long> categoryIdList
             , Pageable pageable);
+
+    @Query(nativeQuery = true
+            , value = "SELECT p.id FROM product_entity p " +
+            "INNER JOIN product_entity_categories pc ON p.id = pc.product_entity_id " +
+            "INNER JOIN category_entity c ON pc.categories_id = c.id " +
+            "WHERE c.id IN (?1) " +
+            "GROUP BY p.id ")
+    List<Long> getProductIdByCategoryId(List<Long> categoryIds);
 }
