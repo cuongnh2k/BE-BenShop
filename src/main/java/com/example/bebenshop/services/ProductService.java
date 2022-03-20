@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 
 
 public interface ProductService {
@@ -21,8 +22,8 @@ public interface ProductService {
 
     BaseListProduceDto<ProductProduceDto> searchByTitleOrDescription(
             String search
-            , Long categoryId
             , BigDecimal priceMin
             , BigDecimal priceMax
+            , String categoryId
             , Pageable pageable);
 }

@@ -43,6 +43,8 @@ public class ProductProduceDto extends BaseProduceDto<Long> {
 
     private String description;
 
+    private BigDecimal money;
+
     private List<OrderDetailProduceDto> orderDetails;
 
     private List<ProductImageProduceDto> productImages;

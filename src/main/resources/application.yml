@@ -1,15 +1,17 @@
-jwt.secret: 'DTyst3nWsD255ScDOSpeQg=='
-jwt.access.token.validity: 86400000
-jwt.refresh.token.validity: 86400000
+jwt.secret: '9AEW57AzDzHiamTadS3Nzal28MP1yo9bkwlqBmeUj27POsBleTfvhb7YzMxA2q+0/xJEsx7RpYRorLUDEUugrQ=='
+jwt.access.token.validity: 36000000
+jwt.refresh.token.validity: 864000000
 email.name: 'cuongnh2k@gmail.com'
 email.password: 'lahzzvsjrlzjzqzn'
 base.api: '/api/v1'
-domain: 'http://localhost:3000'
-root.directory: 'C:'
+domain: 'http://54.179.82.237'
+domain1: 'http://localhost:3000'
+root.directory: 'C:/Users/Administrator/Desktop/apache-tomcat-8.5.77/webapps'
+root.directory1: 'C:'
 subfolder.product.image: '/product/image'
 spring:
   profiles:
-    active: local
+    active: dev
   jpa:
     hibernate:
       ddl-auto: update
