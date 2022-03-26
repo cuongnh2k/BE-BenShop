@@ -7,7 +7,7 @@ public interface OrderDetailNoteService {
 
     void deleteOderNoteById(Long id);
 
-    OrderDetailNoteProduceDto addOrderNote(Long id, OrderDetailNoteConsumeDto orderNoteConsumeDto);
+//    OrderDetailNoteProduceDto addOrderNote(Long id, OrderDetailNoteConsumeDto orderNoteConsumeDto);
 
     OrderDetailNoteProduceDto editOrderNote(Long id, OrderDetailNoteConsumeDto orderNoteConsumeDto);
 }

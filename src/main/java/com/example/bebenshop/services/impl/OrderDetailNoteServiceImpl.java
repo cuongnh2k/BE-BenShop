@@ -37,23 +37,23 @@ public class OrderDetailNoteServiceImpl implements OrderDetailNoteService {
 //        mOrderNoteRepository.deleteOrderNoteById(id);
     }
 
-    public OrderDetailNoteProduceDto addOrderNote(Long id, OrderDetailNoteConsumeDto orderNoteConsumeDto) {
-
-        OrderEntity orderEntity = mOrderRepository.findByIdAndDeletedFlagFalse(id);
-        if (orderEntity == null) {
-            throw new BadRequestException("Order does not  exits");
-        }
-        if (mUserService.getUserName().equals(orderEntity.getCreatedBy())
-                || (orderEntity.getStatus().equals(OrderStatusEnum.CANCELED))
-                || (orderEntity.getStatus().equals(OrderStatusEnum.COMPLETED))
-                || (orderEntity.getStatus().equals(OrderStatusEnum.RESOLVED))) {
-            throw new ForbiddenException("Forbidden");
-        }
-        OrderDetailNoteEntity orderNoteEntity = orderNoteConsumeDto.toOrderNoteEntity();
-        orderNoteEntity.setOrder(orderEntity);
-        mOrderNoteRepository.save(orderNoteEntity);
-        return mOrderNoteMapper.toOrderNoteProduceDto(orderNoteEntity);
-    }
+//    public OrderDetailNoteProduceDto addOrderNote(Long id, OrderDetailNoteConsumeDto orderNoteConsumeDto) {
+//
+//        OrderEntity orderEntity = mOrderRepository.findByIdAndDeletedFlagFalse(id);
+//        if (orderEntity == null) {
+//            throw new BadRequestException("Order does not  exits");
+//        }
+//        if (mUserService.getUserName().equals(orderEntity.getCreatedBy())
+//                || (orderEntity.getStatus().equals(OrderStatusEnum.CANCELED))
+//                || (orderEntity.getStatus().equals(OrderStatusEnum.COMPLETED))
+//                || (orderEntity.getStatus().equals(OrderStatusEnum.RESOLVED))) {
+//            throw new ForbiddenException("Forbidden");
+//        }
+//        OrderDetailNoteEntity orderNoteEntity = orderNoteConsumeDto.toOrderNoteEntity();
+//        orderNoteEntity.setOrder(orderEntity);
+//        mOrderNoteRepository.save(orderNoteEntity);
+//        return mOrderNoteMapper.toOrderNoteProduceDto(orderNoteEntity);
+//    }
 
     @Override
     public OrderDetailNoteProduceDto editOrderNote(Long id, OrderDetailNoteConsumeDto orderNoteConsumeDto) {

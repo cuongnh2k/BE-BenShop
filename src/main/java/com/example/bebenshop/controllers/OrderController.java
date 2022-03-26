@@ -33,20 +33,20 @@ public class OrderController extends BaseController {
         return success(mOrderService.cancelOrder(id), "Canceled order successfully");
     }
 
-    @GetMapping
-    public ResponseEntity<BaseResponseDto> searchOrder(
-            @RequestParam(defaultValue = "0") Integer page
-            , @RequestParam(defaultValue = "10") Integer size
-            , @RequestParam(required = false) String sort
-            , @RequestParam OrderStatusEnum status) {
-        Pageable pageable = mConvertUtil.buildPageable(page, size, sort);
-        return success(mOrderService.searchOrder(status, pageable), "Get data successful");
-    }
+//    @GetMapping
+//    public ResponseEntity<BaseResponseDto> searchOrder(
+//            @RequestParam(defaultValue = "0") Integer page
+//            , @RequestParam(defaultValue = "10") Integer size
+//            , @RequestParam(required = false) String sort
+//            , @RequestParam OrderStatusEnum status) {
+//        Pageable pageable = mConvertUtil.buildPageable(page, size, sort);
+//        return success(mOrderService.searchOrder(status, pageable), "Get data successful");
+//    }
 
-    @PostMapping("/note/{id}")
-    public ResponseEntity<BaseResponseDto> addOrderNote(@PathVariable Long id, @RequestBody OrderDetailNoteConsumeDto orderNoteConsumeDto) {
-        return created(mOrderNoteService.addOrderNote(id, orderNoteConsumeDto), "Create order note successful");
-    }
+//    @PostMapping("/note/{id}")
+//    public ResponseEntity<BaseResponseDto> addOrderNote(@PathVariable Long id, @RequestBody OrderDetailNoteConsumeDto orderNoteConsumeDto) {
+//        return created(mOrderNoteService.addOrderNote(id, orderNoteConsumeDto), "Create order note successful");
+//    }
 
     @PatchMapping("/note/{id}")
     public ResponseEntity<BaseResponseDto> updateOrderNote(@PathVariable("id") Long id, @RequestBody OrderDetailNoteConsumeDto orderNoteConsumeDto) {

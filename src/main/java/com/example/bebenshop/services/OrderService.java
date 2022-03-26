@@ -12,7 +12,7 @@ public interface OrderService {
 
     OrderProduceDto cancelOrder(Long id);
 
-    BaseListProduceDto<OrderProduceDto> searchOrder(OrderStatusEnum orderStatusEnum, Pageable pageable);
+//    BaseListProduceDto<OrderProduceDto> searchOrder(OrderStatusEnum orderStatusEnum, Pageable pageable);
 
     OrderProduceDto updateStatusAdmin(Long id, OrderStatusEnum orderStatusEnum);
 }

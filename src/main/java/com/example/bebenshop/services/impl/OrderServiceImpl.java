@@ -62,38 +62,38 @@ public class OrderServiceImpl implements OrderService {
         return getOrderProduceDto(orderEntity);
     }
 
-    @Override
-    public BaseListProduceDto<OrderProduceDto> searchOrder(OrderStatusEnum orderStatusEnum, Pageable pageable) {
-        Page<OrderEntity> orderEntityPage = mOrderRepository.findByStatusAndUserIdAndDeletedFlagFalse(
-                orderStatusEnum
-                , mUserService.getCurrentUser().getId()
-                , pageable);
-        List<OrderProduceDto> orderProduceDtoList = orderEntityPage.getContent().stream().map(o -> {
-            OrderProduceDto orderProduceDto = mOrderMapper.toOrderProduceDto(o);
-            orderProduceDto.setOrderNotes(o.getOrderNotes().stream()
-                    .map(mOrderNoteMapper::toOrderNoteProduceDto).collect(Collectors.toList()));
-            orderProduceDto.setOrderDetails(o.getOrderDetails().stream().map(oo -> {
-                OrderDetailProduceDto orderDetailProduceDto = mOrderDetailMapper.toOrderDetailProduceDto(oo);
-                orderDetailProduceDto.setMoney(oo.getPrice()
-                        .divide(BigDecimal.valueOf(100))
-                        .multiply(BigDecimal.valueOf(100 - oo.getDiscount()))
-                        .multiply(BigDecimal.valueOf(oo.getQuantity())));
-                ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(oo.getProduct());
-                productProduceDto.setProductImages(oo.getProduct().getProductImages().stream()
-                        .map(mProductImageMapper::toProductImageProduceDto).collect(Collectors.toList()));
-                orderDetailProduceDto.setProduct(productProduceDto);
-                return orderDetailProduceDto;
-            }).collect(Collectors.toList()));
-            return orderProduceDto;
-        }).collect(Collectors.toList());
-        return BaseListProduceDto.<OrderProduceDto>builder()
-                .content(orderProduceDtoList)
-                .totalElements(orderEntityPage.getTotalElements())
-                .totalPages(orderEntityPage.getTotalPages())
-                .page(pageable.getPageNumber())
-                .size(pageable.getPageSize())
-                .build();
-    }
+//    @Override
+//    public BaseListProduceDto<OrderProduceDto> searchOrder(OrderStatusEnum orderStatusEnum, Pageable pageable) {
+//        Page<OrderEntity> orderEntityPage = mOrderRepository.findByStatusAndUserIdAndDeletedFlagFalse(
+//                orderStatusEnum
+//                , mUserService.getCurrentUser().getId()
+//                , pageable);
+//        List<OrderProduceDto> orderProduceDtoList = orderEntityPage.getContent().stream().map(o -> {
+//            OrderProduceDto orderProduceDto = mOrderMapper.toOrderProduceDto(o);
+//            orderProduceDto.setOrderNotes(o.getOrderNotes().stream()
+//                    .map(mOrderNoteMapper::toOrderNoteProduceDto).collect(Collectors.toList()));
+//            orderProduceDto.setOrderDetails(o.getOrderDetails().stream().map(oo -> {
+//                OrderDetailProduceDto orderDetailProduceDto = mOrderDetailMapper.toOrderDetailProduceDto(oo);
+//                orderDetailProduceDto.setMoney(oo.getPrice()
+//                        .divide(BigDecimal.valueOf(100))
+//                        .multiply(BigDecimal.valueOf(100 - oo.getDiscount()))
+//                        .multiply(BigDecimal.valueOf(oo.getQuantity())));
+//                ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(oo.getProduct());
+//                productProduceDto.setProductImages(oo.getProduct().getProductImages().stream()
+//                        .map(mProductImageMapper::toProductImageProduceDto).collect(Collectors.toList()));
+//                orderDetailProduceDto.setProduct(productProduceDto);
+//                return orderDetailProduceDto;
+//            }).collect(Collectors.toList()));
+//            return orderProduceDto;
+//        }).collect(Collectors.toList());
+//        return BaseListProduceDto.<OrderProduceDto>builder()
+//                .content(orderProduceDtoList)
+//                .totalElements(orderEntityPage.getTotalElements())
+//                .totalPages(orderEntityPage.getTotalPages())
+//                .page(pageable.getPageNumber())
+//                .size(pageable.getPageSize())
+//                .build();
+//    }
 
     @Override
     public OrderProduceDto updateStatusAdmin(Long id, OrderStatusEnum orderStatusEnum) {
