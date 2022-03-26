@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderNoteRepository extends JpaRepository<OrderNoteEntity, Long> {
+
     @Modifying
     @Query(nativeQuery = true
             , value = "DELETE FROM order_note_entity WHERE id = ?1 ")

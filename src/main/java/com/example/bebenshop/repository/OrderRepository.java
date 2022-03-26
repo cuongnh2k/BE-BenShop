@@ -13,13 +13,5 @@ import org.springframework.stereotype.Repository;
 public interface OrderRepository extends JpaRepository<OrderEntity , Long> {
     OrderEntity findByIdAndDeletedFlagFalse(Long id);
 
-    OrderEntity findByStatusAndUserIdAndDeletedFlagFalse(OrderStatusEnum orderStatusEnum, Long userId);
-
-
-    @Modifying
-    @Query(nativeQuery = true
-            , value = "UPDATE order_entity SET deleted_flag = 1 WHERE `status` = ?1")
-    void deleteOrder(String status);
-
     Page<OrderEntity> findByStatusAndUserIdAndDeletedFlagFalse(OrderStatusEnum orderStatusEnum, Long userId, Pageable pageable);
 }

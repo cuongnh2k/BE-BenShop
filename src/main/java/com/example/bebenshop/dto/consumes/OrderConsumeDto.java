@@ -13,17 +13,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class OrderConsumeDto implements Serializable {
 
-    private Long userId;
-
-    private String orderDetails;
-
-    private OrderStatusEnum status;
-
-    private String orderNotes;
+    private OrderDetailConsumeDto orderDetails;
 
     public OrderEntity toOrderEntity() {
         return OrderEntity.builder()
-                .status(status)
+                .status(OrderStatusEnum.PENDING)
                 .build();
     }
 }

@@ -2,32 +2,26 @@ package com.example.bebenshop.services.impl;
 
 
 import com.example.bebenshop.bases.BaseListProduceDto;
-import com.example.bebenshop.dto.consumes.OrderDetailConsumeDto;
+import com.example.bebenshop.dto.consumes.OrderConsumeDto;
 import com.example.bebenshop.dto.produces.OrderDetailProduceDto;
 import com.example.bebenshop.dto.produces.OrderProduceDto;
 import com.example.bebenshop.dto.produces.ProductProduceDto;
-import com.example.bebenshop.entities.OrderDetailEntity;
 import com.example.bebenshop.entities.OrderEntity;
-import com.example.bebenshop.entities.ProductEntity;
-import com.example.bebenshop.entities.UserEntity;
 import com.example.bebenshop.enums.OrderStatusEnum;
 import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.exceptions.ForbiddenException;
 import com.example.bebenshop.mapper.*;
 import com.example.bebenshop.repository.OrderDetailRepository;
+import com.example.bebenshop.repository.OrderNoteRepository;
 import com.example.bebenshop.repository.OrderRepository;
-import com.example.bebenshop.repository.ProductRepository;
 import com.example.bebenshop.services.OrderService;
 import com.example.bebenshop.services.UserService;
-import com.example.bebenshop.util.SentEmailUtil;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,78 +31,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private final ProductRepository mProductRepository;
-    private final OrderDetailRepository mOrderDetailRepository;
     private final OrderRepository mOrderRepository;
+    private final OrderNoteRepository mOrderNoteRepository;
+    private final OrderDetailRepository mOrderDetailRepository;
     private final UserService mUserService;
     private final OrderDetailMapper mOrderDetailMapper;
     private final OrderMapper mOrderMapper;
     private final ProductMapper mProductMapper;
     private final ProductImageMapper mProductImageMapper;
-    private final SentEmailUtil mSentEmailUtil;
     private final OrderNoteMapper mOrderNoteMapper;
 
     @Override
-    public OrderDetailProduceDto addToCart(OrderDetailConsumeDto orderDetailConsumeDto) {
-        ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(orderDetailConsumeDto.getProductId());
-        if (productEntity == null) {
-            throw new BadRequestException("Product does not exist");
-        }
-        UserEntity userEntity = mUserService.getCurrentUser();
-        OrderEntity orderEntity = mOrderRepository.findByStatusAndUserIdAndDeletedFlagFalse(
-                OrderStatusEnum.IN_CART
-                , userEntity.getId());
+    public OrderProduceDto createOrder(OrderConsumeDto orderConsumeDto) {
 
-        if (orderEntity == null) {
-            orderEntity = OrderEntity.builder()
-                    .status(OrderStatusEnum.IN_CART)
-                    .user(userEntity)
-                    .build();
-            mOrderRepository.save(orderEntity);
-        }
-
-        OrderDetailEntity orderDetailEntity = mOrderDetailRepository.save(OrderDetailEntity.builder()
-                .quantity(orderDetailConsumeDto.getQuantity())
-                .price(productEntity.getPrice())
-                .discount(productEntity.getDiscount())
-                .order(orderEntity)
-                .product(productEntity)
-                .build());
-        return mOrderDetailMapper.toOrderDetailProduceDto(orderDetailEntity);
-    }
-
-    @Override
-    public OrderProduceDto addOrder() throws MessagingException {
-        UserEntity userEntity = mUserService.getCurrentUser();
-        OrderEntity orderEntity = mOrderRepository.findByStatusAndUserIdAndDeletedFlagFalse(
-                OrderStatusEnum.IN_CART
-                , userEntity.getId());
-        if (orderEntity == null) {
-            throw new BadRequestException("There are no products in the cart");
-        }
-        orderEntity.setStatus(OrderStatusEnum.UNCONFIRMED);
-        String code = RandomStringUtils.random(6, "0123456789");
-        orderEntity.setVerificationCode(code);
-        mOrderRepository.save(orderEntity);
-        mSentEmailUtil.verificationCode(userEntity.getEmail(), code);
-        return getOrderProduceDto(orderEntity);
-    }
-
-    @Override
-    public OrderProduceDto verificationOrder(String code, Long orderId) {
-        OrderEntity orderEntity = mOrderRepository.findByIdAndDeletedFlagFalse(orderId);
-        if (orderEntity == null) {
-            throw new BadRequestException("No order exists");
-        }
-        if (orderEntity.getCreatedBy().equals(mUserService.getUserName())) {
-            throw new ForbiddenException("Forbidden");
-        }
-        if (!orderEntity.getVerificationCode().equals(code)) {
-            throw new BadRequestException("The verification code is incorrect");
-        }
-        orderEntity.setStatus(OrderStatusEnum.PENDING);
-        mOrderRepository.save(orderEntity);
-        return getOrderProduceDto(orderEntity);
+        return null;
     }
 
     @Override
@@ -118,8 +54,7 @@ public class OrderServiceImpl implements OrderService {
             throw new BadRequestException("No order exists");
         }
         if (orderEntity.getCreatedBy().equals(mUserService.getUserName())
-                || (!orderEntity.getStatus().name().equalsIgnoreCase(OrderStatusEnum.PENDING.name())
-                && !orderEntity.getStatus().name().equalsIgnoreCase(OrderStatusEnum.UNCONFIRMED.name()))) {
+                || (!orderEntity.getStatus().name().equalsIgnoreCase(OrderStatusEnum.PENDING.name()))) {
             throw new ForbiddenException("Forbidden");
         }
         orderEntity.setStatus(OrderStatusEnum.CANCELED);

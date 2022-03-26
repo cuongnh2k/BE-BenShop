@@ -23,16 +23,10 @@ public class OrderEntity extends BaseEntity {
     @Column(length = 20)
     private OrderStatusEnum status;
 
-    @Column(length = 6)
-    private String verificationCode;
-
     @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(columnDefinition = "user_id")
     private UserEntity user;
 
     @OneToMany(targetEntity = OrderDetailEntity.class, mappedBy = "order")
     private Collection<OrderDetailEntity> orderDetails;
-
-    @OneToMany(targetEntity = OrderNoteEntity.class, mappedBy = "order")
-    private Collection<OrderNoteEntity> orderNotes;
 }
