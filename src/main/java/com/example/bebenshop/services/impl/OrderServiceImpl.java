@@ -12,7 +12,7 @@ import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.exceptions.ForbiddenException;
 import com.example.bebenshop.mapper.*;
 import com.example.bebenshop.repository.OrderDetailRepository;
-import com.example.bebenshop.repository.OrderNoteRepository;
+import com.example.bebenshop.repository.OrderDetailNoteRepository;
 import com.example.bebenshop.repository.OrderRepository;
 import com.example.bebenshop.services.OrderService;
 import com.example.bebenshop.services.UserService;
@@ -32,14 +32,14 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository mOrderRepository;
-    private final OrderNoteRepository mOrderNoteRepository;
+    private final OrderDetailNoteRepository mOrderNoteRepository;
     private final OrderDetailRepository mOrderDetailRepository;
     private final UserService mUserService;
     private final OrderDetailMapper mOrderDetailMapper;
     private final OrderMapper mOrderMapper;
     private final ProductMapper mProductMapper;
     private final ProductImageMapper mProductImageMapper;
-    private final OrderNoteMapper mOrderNoteMapper;
+    private final OrderDetailNoteMapper mOrderNoteMapper;
 
     @Override
     public OrderProduceDto createOrder(OrderConsumeDto orderConsumeDto) {

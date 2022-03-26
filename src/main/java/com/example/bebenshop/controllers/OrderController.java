@@ -3,10 +3,10 @@ package com.example.bebenshop.controllers;
 import com.example.bebenshop.bases.BaseController;
 import com.example.bebenshop.bases.BaseResponseDto;
 import com.example.bebenshop.dto.consumes.OrderConsumeDto;
-import com.example.bebenshop.dto.consumes.OrderNoteConsumeDto;
+import com.example.bebenshop.dto.consumes.OrderDetailNoteConsumeDto;
 import com.example.bebenshop.dto.produces.OrderProduceDto;
 import com.example.bebenshop.enums.OrderStatusEnum;
-import com.example.bebenshop.services.OrderNoteService;
+import com.example.bebenshop.services.OrderDetailNoteService;
 import com.example.bebenshop.services.OrderService;
 import com.example.bebenshop.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class OrderController extends BaseController {
 
     private final OrderService mOrderService;
     private final ConvertUtil mConvertUtil;
-    private final OrderNoteService mOrderNoteService;
+    private final OrderDetailNoteService mOrderNoteService;
 
     @PostMapping
     public ResponseEntity<OrderProduceDto> createOrder(@RequestBody OrderConsumeDto orderConsumeDto) {
@@ -44,12 +44,12 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/note/{id}")
-    public ResponseEntity<BaseResponseDto> addOrderNote(@PathVariable Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
+    public ResponseEntity<BaseResponseDto> addOrderNote(@PathVariable Long id, @RequestBody OrderDetailNoteConsumeDto orderNoteConsumeDto) {
         return created(mOrderNoteService.addOrderNote(id, orderNoteConsumeDto), "Create order note successful");
     }
 
     @PatchMapping("/note/{id}")
-    public ResponseEntity<BaseResponseDto> updateOrderNote(@PathVariable("id") Long id, @RequestBody OrderNoteConsumeDto orderNoteConsumeDto) {
+    public ResponseEntity<BaseResponseDto> updateOrderNote(@PathVariable("id") Long id, @RequestBody OrderDetailNoteConsumeDto orderNoteConsumeDto) {
         return success(mOrderNoteService.editOrderNote(id, orderNoteConsumeDto), "Update order note successful");
     }
 

@@ -18,12 +18,12 @@ import javax.persistence.ManyToOne;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class OrderNoteEntity extends BaseEntity {
+public class OrderDetailNoteEntity extends BaseEntity {
 
     @Column(columnDefinition = "text")
     private String content;
 
-    @ManyToOne(targetEntity = OrderEntity.class)
-    @JoinColumn(columnDefinition = "order_id")
-    private OrderEntity order;
+    @ManyToOne(targetEntity = OrderDetailEntity.class)
+    @JoinColumn(columnDefinition = "order_detail_id")
+    private OrderDetailEntity orderDetail;
 }

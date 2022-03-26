@@ -36,6 +36,6 @@ public class OrderDetailEntity extends BaseEntity {
     @JoinColumn(columnDefinition = "product_id")
     private ProductEntity product;
 
-    @OneToMany(targetEntity = OrderNoteEntity.class, mappedBy = "order")
-    private Collection<OrderNoteEntity> orderNotes;
+    @OneToMany(targetEntity = OrderDetailNoteEntity.class, mappedBy = "orderDetail")
+    private Collection<OrderDetailNoteEntity> orderDetailNotes;
 }
