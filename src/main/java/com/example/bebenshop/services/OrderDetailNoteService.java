@@ -5,9 +5,5 @@ import com.example.bebenshop.dto.produces.OrderDetailNoteProduceDto;
 
 public interface OrderDetailNoteService {
 
-    void deleteOderNoteById(Long id);
-
-//    OrderDetailNoteProduceDto addOrderNote(Long id, OrderDetailNoteConsumeDto orderNoteConsumeDto);
-
-    OrderDetailNoteProduceDto editOrderNote(Long id, OrderDetailNoteConsumeDto orderNoteConsumeDto);
+    OrderDetailNoteProduceDto editOrderDetailNote(Long id, OrderDetailNoteConsumeDto orderNoteConsumeDto);
 }
