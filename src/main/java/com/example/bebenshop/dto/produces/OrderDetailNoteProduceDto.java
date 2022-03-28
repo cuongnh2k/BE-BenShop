@@ -12,9 +12,11 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class OrderNoteProduceDto extends BaseProduceDto<Long> {
+public class OrderDetailNoteProduceDto extends BaseProduceDto<Long> {
 
     private String content;
 
-    private OrderProduceDto order;
+    private OrderDetailProduceDto orderDetail;
+
+    private String createdBy;
 }

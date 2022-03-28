@@ -5,6 +5,7 @@ import com.example.bebenshop.enums.OrderStatusEnum;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,17 +14,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class OrderConsumeDto implements Serializable {
 
-    private Long userId;
-
-    private String orderDetails;
-
-    private OrderStatusEnum status;
-
-    private String orderNotes;
+    private List<OrderDetailConsumeDto> orderDetails;
 
     public OrderEntity toOrderEntity() {
         return OrderEntity.builder()
-                .status(status)
+                .status(OrderStatusEnum.PENDING)
                 .build();
     }
 }

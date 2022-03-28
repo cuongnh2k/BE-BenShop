@@ -10,7 +10,9 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.math.BigDecimal;
+import java.util.Collection;
 
 @Entity
 @Getter
@@ -33,4 +35,7 @@ public class OrderDetailEntity extends BaseEntity {
     @ManyToOne(targetEntity = ProductEntity.class)
     @JoinColumn(columnDefinition = "product_id")
     private ProductEntity product;
+
+    @OneToMany(targetEntity = OrderDetailNoteEntity.class, mappedBy = "orderDetail")
+    private Collection<OrderDetailNoteEntity> orderDetailNotes;
 }

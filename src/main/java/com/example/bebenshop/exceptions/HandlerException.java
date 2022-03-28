@@ -19,6 +19,6 @@ public class HandlerException {
         if (e instanceof ForbiddenException) {
             return new ResponseEntity<>(BaseResponseDto.error(e.getMessage(), 403), HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(BaseResponseDto.error("server error", 500), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(BaseResponseDto.error(e.getMessage(), 500), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
