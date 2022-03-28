@@ -11,9 +11,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class OrderDetailConsumeDto implements Serializable {
 
-    private Long productId;
+    private Long id;
 
     private Integer quantity;
 
-    private String orderDetailNote;
+    private String description;
 }
