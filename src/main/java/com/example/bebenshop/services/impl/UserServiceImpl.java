@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void resetPassword(String username) throws MessagingException {
-        UserEntity userEntity = mUserRepository.findByUsername(username);
+        UserEntity userEntity = mUserRepository.findByUsernameOrEmail(username, username);
         if (userEntity == null)
             throw new BadRequestException("user account is not exist");
 
