@@ -60,7 +60,7 @@ public class BasicAuthController extends BaseController {
 
     @PostMapping("/reset-password")
     public ResponseEntity<BaseResponseDto> resetPassword(@RequestBody LoginConsumeDto loginConsumeDto) throws MessagingException {
-        mUserService.resetPassword(loginConsumeDto.getUsername(), loginConsumeDto.getEmail());
-        return success("Change password successful");
+        mUserService.resetPassword(loginConsumeDto.getUsername());
+        return success("Reset password successful");
     }
 }

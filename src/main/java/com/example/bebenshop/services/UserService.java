@@ -24,5 +24,5 @@ public interface UserService {
 
     UserProduceDto editById(HashMap<String, Object> map);
 
-    void resetPassword(String username, String email) throws MessagingException;
+    void resetPassword(String username) throws MessagingException;
 }
