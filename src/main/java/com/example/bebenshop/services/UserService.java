@@ -5,6 +5,7 @@ import com.example.bebenshop.dto.consumes.UserConsumeDto;
 import com.example.bebenshop.dto.produces.UserProduceDto;
 import com.example.bebenshop.entities.UserEntity;
 
+import javax.mail.MessagingException;
 import java.util.HashMap;
 
 public interface UserService {
@@ -22,4 +23,6 @@ public interface UserService {
     UserProduceDto createRegister(UserConsumeDto userConsumeDto);
 
     UserProduceDto editById(HashMap<String, Object> map);
+
+    void resetPassword(String username, String email) throws MessagingException;
 }

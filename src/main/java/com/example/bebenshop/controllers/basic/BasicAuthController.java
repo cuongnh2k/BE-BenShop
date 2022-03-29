@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
@@ -55,5 +56,11 @@ public class BasicAuthController extends BaseController {
     @PostMapping("/register")
     public ResponseEntity<BaseResponseDto> createRegister(@RequestBody UserConsumeDto userConsumeDto){
         return created(mUserService.createRegister(userConsumeDto),"Create user successful");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<BaseResponseDto> resetPassword(@RequestBody LoginConsumeDto loginConsumeDto) throws MessagingException {
+        mUserService.resetPassword(loginConsumeDto.getUsername(), loginConsumeDto.getEmail());
+        return success("Change password successful");
     }
 }

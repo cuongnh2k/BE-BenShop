@@ -1,8 +1,8 @@
 jwt.secret: '9AEW57AzDzHiamTadS3Nzal28MP1yo9bkwlqBmeUj27POsBleTfvhb7YzMxA2q+0/xJEsx7RpYRorLUDEUugrQ=='
 jwt.access.token.validity: 360000000
 jwt.refresh.token.validity: 8640000000
-email.name: 'cuongnh2k@gmail.com'
-email.password: 'lahzzvsjrlzjzqzn'
+email.name: 'nmhahalo2000@gmail.com'
+email.password: 'vcgqhgrykgbaqyck'
 base.api: '/api/v1'
 domain: 'http://54.179.82.237'
 domain1: 'http://localhost:3000'
@@ -11,7 +11,7 @@ root.directory1: 'C:'
 subfolder.product.image: '/product/image'
 spring:
   profiles:
-    active: dev
+    active: local
   jpa:
     hibernate:
       ddl-auto: update

@@ -17,12 +17,15 @@ import com.example.bebenshop.mapper.UserMapper;
 import com.example.bebenshop.repository.RoleRepository;
 import com.example.bebenshop.repository.UserRepository;
 import com.example.bebenshop.services.UserService;
+import com.example.bebenshop.util.SentEmailUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +45,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper mUserMapper;
     private final DeviceMapper mDeviceMapper;
     private final RoleMapper roleMapper;
+    private final SentEmailUtil mSentEmailUtil;
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
@@ -129,5 +133,19 @@ public class UserServiceImpl implements UserService {
             }
         }
         return mUserMapper.toUserProduceDto(mUserRepository.save(userEntity));
+    }
+
+    @Override
+    public void resetPassword(String username, String email) throws MessagingException {
+        UserEntity userEntity = mUserRepository.findByUsernameOrEmail(username, email);
+        if (userEntity == null)
+            throw new BadRequestException("user account is not exist");
+
+        String gen = RandomStringUtils.randomAlphanumeric(8);
+        userEntity.setPassword(mPasswordEncoder.encode(gen.toString()));
+
+        mUserRepository.save(userEntity);
+
+        mSentEmailUtil.verificationCode(userEntity.getEmail(), gen.toString());
     }
 }
