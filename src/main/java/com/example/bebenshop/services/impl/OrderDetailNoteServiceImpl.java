@@ -3,6 +3,7 @@ package com.example.bebenshop.services.impl;
 import com.example.bebenshop.dto.consumes.OrderDetailNoteConsumeDto;
 import com.example.bebenshop.dto.produces.OrderDetailNoteProduceDto;
 import com.example.bebenshop.entities.OrderDetailNoteEntity;
+import com.example.bebenshop.enums.OrderStatusEnum;
 import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.exceptions.ForbiddenException;
 import com.example.bebenshop.mapper.OrderDetailNoteMapper;
@@ -28,7 +29,8 @@ public class OrderDetailNoteServiceImpl implements OrderDetailNoteService {
         if (orderDetailNoteEntity == null) {
             throw new BadRequestException("Order note does not  exist");
         }
-        if (!orderDetailNoteEntity.getCreatedBy().equals(mUserService.getUserName())) {
+        if (!orderDetailNoteEntity.getCreatedBy().equals(mUserService.getUserName())
+                || !orderDetailNoteEntity.getOrderDetail().getOrder().getStatus().equals(OrderStatusEnum.PENDING)) {
             throw new ForbiddenException("Forbidden");
         }
         orderDetailNoteEntity.setContent(orderNoteConsumeDto.toOrderNoteEntity().getContent());
