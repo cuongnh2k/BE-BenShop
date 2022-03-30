@@ -28,7 +28,7 @@ public class OrderDetailNoteServiceImpl implements OrderDetailNoteService {
         if (orderDetailNoteEntity == null) {
             throw new BadRequestException("Order note does not  exist");
         }
-        if (orderDetailNoteEntity.getCreatedBy().equals(mUserService.getUserName())) {
+        if (!orderDetailNoteEntity.getCreatedBy().equals(mUserService.getUserName())) {
             throw new ForbiddenException("Forbidden");
         }
         orderDetailNoteEntity.setContent(orderNoteConsumeDto.toOrderNoteEntity().getContent());
