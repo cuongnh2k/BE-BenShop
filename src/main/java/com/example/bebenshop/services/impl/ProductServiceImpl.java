@@ -2,13 +2,13 @@ package com.example.bebenshop.services.impl;
 
 import com.example.bebenshop.bases.BaseListProduceDto;
 import com.example.bebenshop.dto.consumes.ProductConsumeDto;
-import com.example.bebenshop.dto.produces.ProductCommentProduce1Dto;
-import com.example.bebenshop.dto.produces.ProductCommentProduceDto;
 import com.example.bebenshop.dto.produces.ProductProduceDto;
 import com.example.bebenshop.entities.CategoryEntity;
 import com.example.bebenshop.entities.ProductEntity;
 import com.example.bebenshop.exceptions.BadRequestException;
-import com.example.bebenshop.mapper.*;
+import com.example.bebenshop.mapper.CategoryMapper;
+import com.example.bebenshop.mapper.ProductImageMapper;
+import com.example.bebenshop.mapper.ProductMapper;
 import com.example.bebenshop.repository.CategoryRepository;
 import com.example.bebenshop.repository.ProductRepository;
 import com.example.bebenshop.services.ProductService;
@@ -35,8 +35,6 @@ public class ProductServiceImpl implements ProductService {
     private final ConvertUtil mConvertUtil;
     private final ProductImageMapper mProductImageMapper;
     private final CategoryMapper mCategoryMapper;
-    private final ProductCommentMapper mProductCommentMapper;
-    private final UserMapper mUserMapper;
 
     public ProductProduceDto toProductProduceDto(ProductEntity productEntity) {
         ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity);
@@ -48,33 +46,6 @@ public class ProductServiceImpl implements ProductService {
         productProduceDto.setMoney(productProduceDto.getPrice()
                 .divide(BigDecimal.valueOf(100))
                 .multiply(BigDecimal.valueOf(100 - productProduceDto.getDiscount())));
-
-        List<ProductCommentProduceDto> productCommentProduceDtoList = productEntity.getProductComments().stream().map(o -> {
-            ProductCommentProduceDto productCommentProduceDto = mProductCommentMapper.toProductCommentProduceDto(o);
-            productCommentProduceDto.setUser(mUserMapper.toUserProduceDto(o.getUser()));
-            return productCommentProduceDto;
-        }).collect(Collectors.toList());
-
-        productProduceDto.setProductComments(productCommentProduceDtoList.stream()
-                .filter(o -> o.getParentId() == 0)
-                .map(o -> ProductCommentProduceDto.builder()
-                        .id(o.getId())
-                        .createdDate(o.getCreatedDate())
-                        .updatedDate(o.getUpdatedDate())
-                        .content(o.getContent())
-                        .parentId(o.getParentId())
-                        .user(o.getUser())
-                        .productComment1(productCommentProduceDtoList.stream()
-                                .filter(oo -> o.getId() == oo.getParentId())
-                                .map(oo -> ProductCommentProduce1Dto.builder()
-                                        .id(oo.getId())
-                                        .createdDate(oo.getCreatedDate())
-                                        .updatedDate(oo.getUpdatedDate())
-                                        .content(oo.getContent())
-                                        .parentId(oo.getParentId())
-                                        .user(oo.getUser())
-                                        .build()).collect(Collectors.toList()))
-                        .build()).collect(Collectors.toList()));
         return productProduceDto;
     }
 

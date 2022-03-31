@@ -17,6 +17,4 @@ public class OrderDetailNoteProduceDto extends BaseProduceDto<Long> {
     private String content;
 
     private OrderDetailProduceDto orderDetail;
-
-    private String createdBy;
 }

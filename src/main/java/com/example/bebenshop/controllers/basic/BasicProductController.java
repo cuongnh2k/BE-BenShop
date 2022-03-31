@@ -2,6 +2,7 @@ package com.example.bebenshop.controllers.basic;
 
 import com.example.bebenshop.bases.BaseController;
 import com.example.bebenshop.bases.BaseResponseDto;
+import com.example.bebenshop.services.ProductCommentService;
 import com.example.bebenshop.services.ProductService;
 import com.example.bebenshop.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class BasicProductController extends BaseController {
 
     private final ProductService mProductService;
     private final ConvertUtil mConvertUtil;
+    private final ProductCommentService mProductCommentService;
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponseDto> getProductById(@PathVariable Long id) {
@@ -41,6 +43,16 @@ public class BasicProductController extends BaseController {
                         , categoryId
                         , pageable)
                 , "Get data successful");
+    }
+
+    @GetMapping("/{id}/comment")
+    public ResponseEntity<BaseResponseDto> getCommentByProductId(
+            @PathVariable("id") Long id,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false) String sort) {
+        Pageable pageable = mConvertUtil.buildPageable(page, size, sort);
+        return success(mProductCommentService.getCommentByProductId(id, pageable), "Get data successful");
     }
 
     @GetMapping("/category/{id}")
