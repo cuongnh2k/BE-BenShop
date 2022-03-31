@@ -10,5 +10,7 @@ public interface DeviceService {
 
     TokenProduceDto refreshToken(HttpServletRequest request);
 
-    void logout(String ids);
+    void logouts(String ids);
+
+    void logout(HttpServletRequest request);
 }
