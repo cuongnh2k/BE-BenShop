@@ -203,4 +203,18 @@ public class ProductServiceImpl implements ProductService {
                 .size(pageable.getPageSize())
                 .build();
     }
+
+    @Override
+    public BaseListProduceDto<ProductProduceDto> searchProductByProductId(Long id, Pageable pageable) {
+        Page<ProductEntity> productEntityPage = mProductRepository.searchProductByProductId(id, pageable);
+        List<ProductEntity> productEntityList = productEntityPage.getContent();
+        List<ProductProduceDto> productProduceDtoList = productEntityList.stream().map(mProductMapper::toProductProduceDto).collect((Collectors.toList()));
+        return BaseListProduceDto.<ProductProduceDto>builder()
+                .content(productProduceDtoList)
+                .totalElements(productEntityPage.getTotalElements())
+                .totalPages(productEntityPage.getTotalPages())
+                .page(pageable.getPageNumber())
+                .size(pageable.getPageSize())
+                .build();
+    }
 }

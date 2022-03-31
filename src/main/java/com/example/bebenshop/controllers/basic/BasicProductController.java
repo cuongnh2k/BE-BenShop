@@ -45,7 +45,16 @@ public class BasicProductController extends BaseController {
                 , "Get data successful");
     }
     @GetMapping("/{id}/comment")
-    public ResponseEntity<BaseResponseDto> getCommentByProductId(@PathVariable("id") Long id){
+    public ResponseEntity<BaseResponseDto> getCommentByProductId(@PathVariable("id") Long id) {
         return success(mProductCommentService.getCommentByProductId(id), "Get data successful");
+    }
+    @GetMapping("/category/{id}")
+    public ResponseEntity<BaseResponseDto> searchProductByProductId(
+            @RequestParam(defaultValue = "0") Integer page
+            , @RequestParam(required = false) String sort
+            , @RequestParam(defaultValue = "10") Integer size
+            , @PathVariable Long id) {
+        Pageable pageable = mConvertUtil.buildPageable(page, size, sort);
+        return success(mProductService.searchProductByProductId(id, pageable), "Get data successful");
     }
 }

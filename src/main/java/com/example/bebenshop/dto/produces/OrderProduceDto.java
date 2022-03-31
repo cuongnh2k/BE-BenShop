@@ -23,6 +23,4 @@ public class OrderProduceDto extends BaseProduceDto<Long> {
     private UserProduceDto user;
 
     private List<OrderDetailProduceDto> orderDetails;
-
-    private List<OrderNoteProduceDto> orderNotes;
 }

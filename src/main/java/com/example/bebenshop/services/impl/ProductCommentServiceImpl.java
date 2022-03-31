@@ -109,7 +109,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
         if (productEntity == null) {
             throw new BadRequestException("Comment does not exist");
         }
-        ProductCommentEntity productCommentEntity = mProductCommentRepository.getById();
+        ProductCommentEntity productCommentEntity = mProductCommentRepository.findById(id).orElse(null);
 //        List<ProductCommentProduceDto> productCommentProduceDtoList = mProductCommentRepository.findAll().stream()
 //                .map(mProductCommentMapper:: toProductCommentProduceDto).collect(Collectors.toList());
 //        productCommentProduceDtoList.stream().filter(o -> o.getParentId() == 0)

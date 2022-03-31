@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Setter
 @Getter
@@ -27,4 +28,6 @@ public class OrderDetailProduceDto extends BaseProduceDto<Long> {
     private ProductProduceDto product;
 
     private BigDecimal money;
+
+    private List<OrderDetailNoteProduceDto> orderDetailNotes;
 }

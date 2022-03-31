@@ -6,8 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OrderStatusEnum {
-    IN_CART,
-    UNCONFIRMED,
     PENDING,
     RESOLVED,
     COMPLETED,
