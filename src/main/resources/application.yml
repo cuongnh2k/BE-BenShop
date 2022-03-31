@@ -11,7 +11,7 @@ root.directory1: 'C:'
 subfolder.product.image: '/product/image'
 spring:
   profiles:
-    active: dev
+    active: local
   jpa:
     hibernate:
       ddl-auto: update

@@ -10,4 +10,6 @@ public interface ProductCommentService {
     ProductCommentProduceDto editProductComment(ProductCommentConsumeDto productCommentConsumeDto, Long id);
 
     void deleteProductComment(Long id);
+
+    ProductCommentProduceDto getCommentByProductId(Long id);
 }

@@ -4,6 +4,7 @@ import com.example.bebenshop.bases.BaseController;
 import com.example.bebenshop.bases.BaseResponseDto;
 import com.example.bebenshop.dto.consumes.ProductCommentConsumeDto;
 import com.example.bebenshop.services.ProductCommentService;
+import com.example.bebenshop.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,4 +31,6 @@ public class ProductController extends BaseController {
         mProductCommentService.deleteProductComment(id);
         return success("Delete product comment successful");
     }
+
+
 }
