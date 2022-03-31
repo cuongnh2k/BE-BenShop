@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.bebenshop.dto.produces.TokenProduceDto;
 import com.example.bebenshop.entities.DeviceEntity;
 import com.example.bebenshop.entities.UserEntity;
+import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.exceptions.UnauthorizedException;
 import com.example.bebenshop.repository.DeviceRepository;
 import com.example.bebenshop.repository.UserRepository;
@@ -112,7 +113,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void logout(String ids) {
+    public void logouts(String ids) {
         List<DeviceEntity> deviceEntityList = mDeviceRepository.findAllById(mConvertUtil.toArray(ids));
         List<Long> idList = new ArrayList<>();
         deviceEntityList.forEach(o -> {
@@ -121,5 +122,16 @@ public class DeviceServiceImpl implements DeviceService {
             }
         });
         mDeviceRepository.deleteAllById(idList);
+    }
+
+    @Override
+    public void logout(HttpServletRequest request) {
+        DeviceEntity deviceEntity = mDeviceRepository.findByUserAgentAndUserId(
+                request.getHeader(USER_AGENT)
+                , mUserService.getCurrentUser().getId());
+        if (deviceEntity == null) {
+            throw new BadRequestException("Device does not exist");
+        }
+        mDeviceRepository.delete(deviceEntity);
     }
 }

@@ -139,13 +139,13 @@ public class UserServiceImpl implements UserService {
     public void resetPassword(String username) throws MessagingException {
         UserEntity userEntity = mUserRepository.findByUsernameOrEmail(username, username);
         if (userEntity == null)
-            throw new BadRequestException("user account is not exist");
+            throw new BadRequestException("account does not exist");
 
         String gen = RandomStringUtils.randomAlphanumeric(8);
-        userEntity.setPassword(mPasswordEncoder.encode(gen.toString()));
+        userEntity.setPassword(mPasswordEncoder.encode(gen));
 
         mUserRepository.save(userEntity);
 
-        mSentEmailUtil.verificationCode(userEntity.getEmail(), gen.toString());
+        mSentEmailUtil.senPasswordNew(userEntity.getEmail(), gen);
     }
 }

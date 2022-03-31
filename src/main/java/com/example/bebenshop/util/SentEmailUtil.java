@@ -14,7 +14,7 @@ public class SentEmailUtil {
 
     private final JavaMailSender mJavaMailSender;
 
-    public void verificationCode(String email, String code) throws MessagingException {
+    public void senPasswordNew(String email, String code) throws MessagingException {
         MimeMessage message = mJavaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
         message.setContent("<!DOCTYPE html>\n" +
@@ -40,7 +40,7 @@ public class SentEmailUtil {
                 "\n" +
                 "</html>", "text/html; charset=UTF-8");
         helper.setTo(email);
-        helper.setSubject("Test send HTML email");
+        helper.setSubject("Ben Shop");
         this.mJavaMailSender.send(message);
     }
 }
