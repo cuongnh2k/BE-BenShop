@@ -19,7 +19,7 @@ public class BasicProductController extends BaseController {
 
     private final ProductService mProductService;
     private final ConvertUtil mConvertUtil;
-    private  final ProductCommentService mProductCommentService;
+    private final ProductCommentService mProductCommentService;
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponseDto> getProductById(@PathVariable Long id) {
@@ -44,10 +44,17 @@ public class BasicProductController extends BaseController {
                         , pageable)
                 , "Get data successful");
     }
+
     @GetMapping("/{id}/comment")
-    public ResponseEntity<BaseResponseDto> getCommentByProductId(@PathVariable("id") Long id) {
-        return success(mProductCommentService.getCommentByProductId(id), "Get data successful");
+    public ResponseEntity<BaseResponseDto> getCommentByProductId(
+            @PathVariable("id") Long id,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false) String sort) {
+        Pageable pageable = mConvertUtil.buildPageable(page, size, sort);
+        return success(mProductCommentService.getCommentByProductId(id, pageable), "Get data successful");
     }
+
     @GetMapping("/category/{id}")
     public ResponseEntity<BaseResponseDto> searchProductByProductId(
             @RequestParam(defaultValue = "0") Integer page

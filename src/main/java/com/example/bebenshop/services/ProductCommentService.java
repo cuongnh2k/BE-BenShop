@@ -1,7 +1,9 @@
 package com.example.bebenshop.services;
 
+import com.example.bebenshop.bases.BaseListProduceDto;
 import com.example.bebenshop.dto.consumes.ProductCommentConsumeDto;
 import com.example.bebenshop.dto.produces.ProductCommentProduceDto;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductCommentService {
 
@@ -11,5 +13,5 @@ public interface ProductCommentService {
 
     void deleteProductComment(Long id);
 
-    ProductCommentProduceDto getCommentByProductId(Long id);
+    BaseListProduceDto<ProductCommentProduceDto> getCommentByProductId(Long id, Pageable pageable);
 }
