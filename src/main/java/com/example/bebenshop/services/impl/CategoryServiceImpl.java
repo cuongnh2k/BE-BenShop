@@ -1,5 +1,6 @@
 package com.example.bebenshop.services.impl;
 
+import com.example.bebenshop.bases.BaseEntity;
 import com.example.bebenshop.dto.consumes.CategoryConsumeDto;
 import com.example.bebenshop.dto.produces.CategoryProduce1Dto;
 import com.example.bebenshop.dto.produces.CategoryProduce2Dto;
@@ -69,8 +70,11 @@ public class CategoryServiceImpl implements CategoryService {
         if (Objects.isNull(categoryEntity)) {
             throw new BadRequestException("Category does not exist");
         }
-        mCategoryRepository.deleteProductCategoryById(id);
-        mCategoryRepository.deleteById(id);
+        List<CategoryEntity> categoryEntityList = mCategoryRepository.findByParentId(id);
+        List<Long> list = categoryEntityList.stream().map(BaseEntity::getId).collect(Collectors.toList());
+        list.add(id);
+        mCategoryRepository.deleteProductCategoryById(list);
+        mCategoryRepository.deleteAllById(list);
     }
 
     @Override
