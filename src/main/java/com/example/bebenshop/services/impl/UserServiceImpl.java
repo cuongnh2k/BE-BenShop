@@ -21,6 +21,8 @@ import com.example.bebenshop.util.SentEmailUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +48,7 @@ public class UserServiceImpl implements UserService {
     private final DeviceMapper mDeviceMapper;
     private final RoleMapper roleMapper;
     private final SentEmailUtil mSentEmailUtil;
+    private final AuthenticationManager authenticationManager;
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
@@ -106,13 +109,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProduceDto editById(HashMap<String, Object> map) {
+    public UserProduceDto editUser(HashMap<String, Object> map) {
         UserEntity userEntity = getCurrentUser();
         for (String i : map.keySet()) {
             switch (i) {
-                case "password":
-                    userEntity.setPassword(mPasswordEncoder.encode(map.get(i).toString()));
-                    break;
                 case "email":
                     String email = map.get(i).toString();
                     UserEntity userEntity2 = mUserRepository.findByEmail(email);
@@ -147,5 +147,18 @@ public class UserServiceImpl implements UserService {
         mUserRepository.save(userEntity);
 
         mSentEmailUtil.senPasswordNew(userEntity.getEmail(), gen);
+    }
+
+    @Override
+    public UserProduceDto editPassword(UserConsumeDto userConsumeDto) {
+        UserEntity userEntity = getCurrentUser();
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(userEntity.getUsername(), userConsumeDto.getPassword()));
+        } catch (Exception e) {
+            throw new BadRequestException("Incorrect password");
+        }
+        userEntity.setPassword(mPasswordEncoder.encode(userConsumeDto.getPasswordLatest()));
+        return mUserMapper.toUserProduceDto(mUserRepository.save(userEntity));
     }
 }

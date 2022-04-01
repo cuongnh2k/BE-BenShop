@@ -63,4 +63,9 @@ public class BasicAuthController extends BaseController {
         mUserService.resetPassword(loginConsumeDto.getUsername());
         return success("Reset password successful");
     }
+
+    @PatchMapping("/edit-password")
+    public ResponseEntity<BaseResponseDto> editPassword(@RequestBody UserConsumeDto userConsumeDto){
+        return success(mUserService.editPassword(userConsumeDto), "Edit password successful");
+    }
 }

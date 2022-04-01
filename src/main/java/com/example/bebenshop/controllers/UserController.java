@@ -22,7 +22,7 @@ public class UserController extends BaseController {
     }
 
     @PatchMapping
-    public ResponseEntity<BaseResponseDto> editById(@RequestBody HashMap<String, Object> map) {
-        return success(mUserService.editById(map), "Update user successful");
+    public ResponseEntity<BaseResponseDto> editUser(@RequestBody HashMap<String, Object> map) {
+        return success(mUserService.editUser(map), "Update user successful");
     }
 }
