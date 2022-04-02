@@ -25,4 +25,9 @@ public class UserController extends BaseController {
     public ResponseEntity<BaseResponseDto> editUser(@RequestBody HashMap<String, Object> map) {
         return success(mUserService.editUser(map), "Update user successful");
     }
+
+    @PatchMapping("/edit-password")
+    public ResponseEntity<BaseResponseDto> editPassword(@RequestBody HashMap<String, Object> map){
+        return success(mUserService.editPassword(map), "Edit password successful");
+    }
 }

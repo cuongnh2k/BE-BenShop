@@ -113,14 +113,6 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = getCurrentUser();
         for (String i : map.keySet()) {
             switch (i) {
-                case "email":
-                    String email = map.get(i).toString();
-                    UserEntity userEntity2 = mUserRepository.findByEmail(email);
-                    if (userEntity2 != null && userEntity2.getId() != userEntity.getId()) {
-                        throw new BadRequestException("Email " + email + " already used");
-                    }
-                    userEntity.setEmail(email);
-                    break;
                 case "firstName":
                     userEntity.setFirstName(map.get(i).toString());
                     break;
@@ -150,15 +142,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProduceDto editPassword(UserConsumeDto userConsumeDto) {
+    public UserProduceDto editPassword(HashMap<String, Object> map) {
         UserEntity userEntity = getCurrentUser();
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userEntity.getUsername(), userConsumeDto.getPassword()));
-        } catch (Exception e) {
-            throw new BadRequestException("Incorrect password");
+        for (String i : map.keySet()) {
+            switch (i) {
+                case "password":
+                    try {
+                        authenticationManager.authenticate(
+                                new UsernamePasswordAuthenticationToken(userEntity.getUsername(),
+                                        map.get(i).toString()));
+                    } catch (Exception e) {
+                        throw new BadRequestException("Incorrect password");
+                    }
+                    break;
+                case "passwordLatest":
+                    userEntity.setPassword(mPasswordEncoder.encode(map.get(i).toString()));
+                    break;
+                case "email":
+                    String email = map.get(i).toString();
+                    UserEntity userEntity2 = mUserRepository.findByEmail(email);
+                    if (userEntity2 != null && userEntity2.getId() != userEntity.getId()) {
+                        throw new BadRequestException("Email " + email + " already used");
+                    }
+                    userEntity.setEmail(email);
+                    break;
+            }
         }
-        userEntity.setPassword(mPasswordEncoder.encode(userConsumeDto.getPasswordLatest()));
         return mUserMapper.toUserProduceDto(mUserRepository.save(userEntity));
     }
 }

@@ -26,5 +26,5 @@ public interface UserService {
 
     void resetPassword(String username) throws MessagingException;
 
-    UserProduceDto editPassword(UserConsumeDto userConsumeDto);
+    UserProduceDto editPassword(HashMap<String, Object> map);
 }
