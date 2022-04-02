@@ -22,7 +22,9 @@ public interface UserService {
 
     UserProduceDto createRegister(UserConsumeDto userConsumeDto);
 
-    UserProduceDto editById(HashMap<String, Object> map);
+    UserProduceDto editUser(HashMap<String, Object> map);
 
     void resetPassword(String username) throws MessagingException;
+
+    UserProduceDto editPasswordOrMail(HashMap<String, Object> map);
 }

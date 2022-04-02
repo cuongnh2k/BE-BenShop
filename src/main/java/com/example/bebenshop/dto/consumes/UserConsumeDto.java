@@ -17,6 +17,8 @@ public class UserConsumeDto implements Serializable {
 
     private String password;
 
+    private String passwordLatest;
+
     private String email;
 
     private String firstName;

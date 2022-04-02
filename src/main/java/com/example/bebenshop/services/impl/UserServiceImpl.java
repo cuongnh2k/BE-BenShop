@@ -21,6 +21,8 @@ import com.example.bebenshop.util.SentEmailUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +48,7 @@ public class UserServiceImpl implements UserService {
     private final DeviceMapper mDeviceMapper;
     private final RoleMapper roleMapper;
     private final SentEmailUtil mSentEmailUtil;
+    private final AuthenticationManager authenticationManager;
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
@@ -106,21 +109,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProduceDto editById(HashMap<String, Object> map) {
+    public UserProduceDto editUser(HashMap<String, Object> map) {
         UserEntity userEntity = getCurrentUser();
         for (String i : map.keySet()) {
             switch (i) {
-                case "password":
-                    userEntity.setPassword(mPasswordEncoder.encode(map.get(i).toString()));
-                    break;
-                case "email":
-                    String email = map.get(i).toString();
-                    UserEntity userEntity2 = mUserRepository.findByEmail(email);
-                    if (userEntity2 != null && userEntity2.getId() != userEntity.getId()) {
-                        throw new BadRequestException("Email " + email + " already used");
-                    }
-                    userEntity.setEmail(email);
-                    break;
                 case "firstName":
                     userEntity.setFirstName(map.get(i).toString());
                     break;
@@ -147,5 +139,35 @@ public class UserServiceImpl implements UserService {
         mUserRepository.save(userEntity);
 
         mSentEmailUtil.senPasswordNew(userEntity.getEmail(), gen);
+    }
+
+    @Override
+    public UserProduceDto editPasswordOrMail(HashMap<String, Object> map) {
+        UserEntity userEntity = getCurrentUser();
+        for (String i : map.keySet()) {
+            switch (i) {
+                case "password":
+                    try {
+                        authenticationManager.authenticate(
+                                new UsernamePasswordAuthenticationToken(userEntity.getUsername(),
+                                        map.get(i).toString()));
+                    } catch (Exception e) {
+                        throw new BadRequestException("Incorrect password");
+                    }
+                    break;
+                case "passwordLatest":
+                    userEntity.setPassword(mPasswordEncoder.encode(map.get(i).toString()));
+                    break;
+                case "email":
+                    String email = map.get(i).toString();
+                    UserEntity userEntity2 = mUserRepository.findByEmail(email);
+                    if (userEntity2 != null && userEntity2.getId() != userEntity.getId()) {
+                        throw new BadRequestException("Email " + email + " already used");
+                    }
+                    userEntity.setEmail(email);
+                    break;
+            }
+        }
+        return mUserMapper.toUserProduceDto(mUserRepository.save(userEntity));
     }
 }
