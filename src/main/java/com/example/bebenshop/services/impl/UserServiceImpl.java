@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProduceDto editPassword(HashMap<String, Object> map) {
+    public UserProduceDto editPasswordOrMail(HashMap<String, Object> map) {
         UserEntity userEntity = getCurrentUser();
         for (String i : map.keySet()) {
             switch (i) {

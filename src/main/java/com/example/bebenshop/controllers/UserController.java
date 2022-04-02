@@ -27,7 +27,7 @@ public class UserController extends BaseController {
     }
 
     @PatchMapping("/edit-password")
-    public ResponseEntity<BaseResponseDto> editPassword(@RequestBody HashMap<String, Object> map){
-        return success(mUserService.editPassword(map), "Edit password successful");
+    public ResponseEntity<BaseResponseDto> editPasswordOrMail(@RequestBody HashMap<String, Object> map){
+        return success(mUserService.editPasswordOrMail(map), "Edit password successful");
     }
 }
