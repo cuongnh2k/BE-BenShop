@@ -32,5 +32,4 @@ public class ProductController extends BaseController {
         return success("Delete product comment successful");
     }
 
-
 }
