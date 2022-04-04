@@ -55,7 +55,7 @@ public class BasicProductController extends BaseController {
         return success(mProductCommentService.getCommentByProductId(id, pageable), "Get data successful");
     }
 
-    @GetMapping("/category/{id}")
+    @GetMapping("/{id}/category")
     public ResponseEntity<BaseResponseDto> searchProductByProductId(
             @RequestParam(defaultValue = "0") Integer page
             , @RequestParam(required = false) String sort
