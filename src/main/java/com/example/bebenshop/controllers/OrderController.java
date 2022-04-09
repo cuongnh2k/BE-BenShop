@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${base.api}/user/order")
@@ -41,12 +43,21 @@ public class OrderController extends BaseController {
             @RequestParam(defaultValue = "0") Integer page
             , @RequestParam(defaultValue = "10") Integer size
             , @RequestParam(required = false) String sort
-            , @RequestParam OrderStatusEnum status) {
-        return success(mOrderService.searchOrder(status, mConvertUtil.buildPageable(page, size, sort)), "Get data successful");
+            , @RequestParam(required = false) Optional<OrderStatusEnum> status
+            , @RequestParam(required = false) Optional<Long> startTime,
+            @RequestParam(required = false) Optional<Long> endTime) {
+        return success(mOrderService.searchOrder(
+                status
+                , startTime
+                , endTime
+                , mConvertUtil.buildPageable(page, size, sort)), "Get data successful");
     }
 
     @PatchMapping("/detail/note/{id}")
-    public ResponseEntity<BaseResponseDto> updateOrderNote(@PathVariable("id") Long id, @RequestBody OrderDetailNoteConsumeDto orderNoteConsumeDto) {
-        return success(mOrderDetailNoteService.editOrderDetailNote(id, orderNoteConsumeDto), "Update order detail note successful");
+    public ResponseEntity<BaseResponseDto> updateOrderNote(
+            @PathVariable("id") Long id
+            , @RequestBody OrderDetailNoteConsumeDto orderNoteConsumeDto) {
+        return success(mOrderDetailNoteService.editOrderDetailNote(id, orderNoteConsumeDto)
+                , "Update order detail note successful");
     }
 }

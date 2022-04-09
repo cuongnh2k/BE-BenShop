@@ -9,5 +9,7 @@ public interface ProductImageService {
 
     ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException;
 
+    void editProductImage(Long id, MultipartFile multipartFile) throws IOException;
+
     void deleteProductImage(Long id);
 }
