@@ -90,6 +90,57 @@ public class ProductImageServiceImpl implements ProductImageService {
     }
 
     @Override
+    public void editProductImage(Long id, MultipartFile multipartFile) throws IOException {
+        ProductImageEntity productImageEntity = mProductImageRepository.findById(id).orElse(null);
+        {
+            if (productImageEntity == null) {
+                throw new BadRequestException("Product image does not exist");
+            }
+            String[] arr = productImageEntity.getPath().split("/");
+            String path = ROOT_DIRECTORY;
+            for (int i = 3; i < arr.length; i++) {
+                path += "/" + arr[i];
+            }
+            try {
+                File file = new File(path);
+                file.delete();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            {
+                if (fileName.contains(".")) {
+                    String[] arr = multipartFile.getOriginalFilename().split("\\.");
+                    if (!arr[1].equalsIgnoreCase("JPG") && !arr[1].equalsIgnoreCase("PNG")) {
+                        throw new BadRequestException("Image must be in jpg or png format");
+                    }
+                } else {
+                    throw new BadRequestException("Empty image");
+                }
+            }
+            String uploadDir = ROOT_DIRECTORY + SUBFOLDER_PRODUCT_IMAGE + "/" + id;
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            try (InputStream inputStream = multipartFile.getInputStream()) {
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                if (mProductImageRepository.existsByPath(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename())) {
+                    throw new BadRequestException("Product image already exists");
+                }
+                productImageEntity.setPath(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename());
+                mProductImageRepository.save(productImageEntity);
+            } catch (Exception ioe) {
+                throw new BadRequestException("Empty image");
+            }
+        }
+    }
+
+    @Override
     public void deleteProductImage(Long id) {
         ProductImageEntity productImageEntity = mProductImageRepository.findById(id).orElse(null);
         if (productImageEntity == null) {

@@ -21,6 +21,7 @@ import com.example.bebenshop.repository.OrderRepository;
 import com.example.bebenshop.repository.ProductRepository;
 import com.example.bebenshop.services.OrderService;
 import com.example.bebenshop.services.UserService;
+import com.example.bebenshop.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -129,11 +132,26 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public BaseListProduceDto<OrderProduceDto> searchOrder(OrderStatusEnum orderStatusEnum, Pageable pageable) {
-        Page<OrderEntity> orderEntityPage = mOrderRepository.findByStatusAndUserId(
-                orderStatusEnum
-                , mUserService.getCurrentUser().getId()
-                , pageable);
+    public BaseListProduceDto<OrderProduceDto> searchOrder(
+            Optional<OrderStatusEnum> orderStatusEnum
+            , Optional<Long> startTime
+            , Optional<Long> endTime
+            , Pageable pageable) {
+        Page<OrderEntity> orderEntityPage;
+        if (mUserService.isRoleAdmin()) {
+            orderEntityPage = mOrderRepository.findByStatusAndUpdatedDateGreaterThanEqualAndUpdatedDateLessThanEqual(
+                    orderStatusEnum.orElse(OrderStatusEnum.PENDING)
+                    , DateUtil.convertToLocalDateTime(startTime.orElse(0L))
+                    , endTime.orElse(null) == null ? LocalDateTime.now() : DateUtil.convertToLocalDateTime(endTime.orElse(null))
+                    , pageable);
+        } else {
+            orderEntityPage = mOrderRepository.findByStatusAndUpdatedDateGreaterThanEqualAndUpdatedDateLessThanEqualAndUserId(
+                    orderStatusEnum.orElse(OrderStatusEnum.PENDING)
+                    , DateUtil.convertToLocalDateTime(startTime.orElse(0L))
+                    , endTime.orElse(null) == null ? LocalDateTime.now() : DateUtil.convertToLocalDateTime(endTime.orElse(null))
+                    , mUserService.getCurrentUser().getId()
+                    , pageable);
+        }
         List<OrderProduceDto> orderProduceDtoList = orderEntityPage.getContent().stream()
                 .map(this::toOrderProduceDto).collect(Collectors.toList());
 
@@ -144,5 +162,24 @@ public class OrderServiceImpl implements OrderService {
                 .page(pageable.getPageNumber())
                 .size(pageable.getPageSize())
                 .build();
+    }
+
+    @Override
+    public Long totalRevenue(Optional<OrderStatusEnum> orderStatusEnum, Optional<Long> startTime, Optional<Long> endTime) {
+
+        return mOrderRepository.totalRevenue(
+                orderStatusEnum.orElse(OrderStatusEnum.PENDING).name()
+                , DateUtil.convertToLocalDateTime(startTime.orElse(0L))
+                , endTime.orElse(null) == null ? LocalDateTime.now() : DateUtil.convertToLocalDateTime(endTime.orElse(null))).orElse(0L);
+    }
+
+    @Override
+    public OrderProduceDto updateStatusAdmin(Long id, OrderStatusEnum orderStatusEnum) {
+        OrderEntity orderEntity = mOrderRepository.findById(id).orElse(null);
+        if (orderEntity == null) {
+            throw new BadRequestException("order does not exist");
+        }
+        orderEntity.setStatus(orderStatusEnum);
+        return toOrderProduceDto(mOrderRepository.save(orderEntity));
     }
 }
