@@ -34,13 +34,15 @@ public class BasicProductController extends BaseController {
             , @RequestParam(defaultValue = "-1") String search
             , @RequestParam(defaultValue = "-1") BigDecimal priceMin
             , @RequestParam(defaultValue = "-1") BigDecimal priceMax
-            , @RequestParam(defaultValue = "-1") String categoryId) {
+            , @RequestParam(defaultValue = "-1") String categoryId
+            , @RequestParam(defaultValue = "-1") Long productId) {
         Pageable pageable = mConvertUtil.buildPageable(page, size, sort);
         return success(mProductService.searchByTitleOrDescription(
                         search
                         , priceMin
                         , priceMax
                         , categoryId
+                        , productId
                         , pageable)
                 , "Get data successful");
     }

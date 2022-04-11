@@ -1,6 +1,6 @@
 package com.example.bebenshop.services.impl;
 
-import com.example.bebenshop.dto.produces.ProductProduceDto;
+import com.example.bebenshop.dto.produces.ProductImageProduceDto;
 import com.example.bebenshop.entities.ProductEntity;
 import com.example.bebenshop.entities.ProductImageEntity;
 import com.example.bebenshop.exceptions.BadRequestException;
@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -45,7 +44,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     String DOMAIN;
 
     @Override
-    public ProductProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException {
+    public ProductImageProduceDto addProductImage(Long id, MultipartFile multipartFile) throws IOException {
         ProductEntity productEntity = mProductRepository.findByIdAndDeletedFlagFalse(id);
         if (productEntity == null) {
             throw new BadRequestException("Product image does not exist");
@@ -73,24 +72,19 @@ public class ProductImageServiceImpl implements ProductImageService {
             if (mProductImageRepository.existsByPath(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename())) {
                 throw new BadRequestException("Product image already exists");
             }
-            mProductImageRepository.save(ProductImageEntity.builder()
+
+            return mProductImageMapper.toProductImageProduceDto(mProductImageRepository.save(ProductImageEntity.builder()
                     .product(productEntity)
                     .path(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename())
-                    .build());
+                    .build()));
 
         } catch (Exception ioe) {
             throw new BadRequestException("Empty image");
         }
-
-        ProductEntity productEntity1 = mProductRepository.findByIdAndDeletedFlagFalse(id);
-        ProductProduceDto productProduceDto = mProductMapper.toProductProduceDto(productEntity1);
-        productProduceDto.setProductImages(productEntity1.getProductImages().stream()
-                .map(mProductImageMapper::toProductImageProduceDto).collect(Collectors.toList()));
-        return productProduceDto;
     }
 
     @Override
-    public void editProductImage(Long id, MultipartFile multipartFile) throws IOException {
+    public ProductImageProduceDto editProductImage(Long id, MultipartFile multipartFile) throws IOException {
         ProductImageEntity productImageEntity = mProductImageRepository.findById(id).orElse(null);
         {
             if (productImageEntity == null) {
@@ -133,7 +127,7 @@ public class ProductImageServiceImpl implements ProductImageService {
                     throw new BadRequestException("Product image already exists");
                 }
                 productImageEntity.setPath(DOMAIN + SUBFOLDER_PRODUCT_IMAGE + "/" + id + "/" + multipartFile.getOriginalFilename());
-                mProductImageRepository.save(productImageEntity);
+                return mProductImageMapper.toProductImageProduceDto(mProductImageRepository.save(productImageEntity));
             } catch (Exception ioe) {
                 throw new BadRequestException("Empty image");
             }

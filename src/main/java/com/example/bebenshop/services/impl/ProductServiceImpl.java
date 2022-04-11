@@ -145,6 +145,7 @@ public class ProductServiceImpl implements ProductService {
             , BigDecimal priceMin
             , BigDecimal priceMax
             , String categoryIds
+            , Long productId
             , Pageable pageable) {
 
         Page<ProductEntity> productEntityPage = mProductRepository.searchByTitleOrDescription(
@@ -153,6 +154,7 @@ public class ProductServiceImpl implements ProductService {
                 , priceMax
                 , categoryIds
                 , !categoryIds.equals("-1") ? mProductRepository.getProductIdByCategoryId(mConvertUtil.toArray(categoryIds)) : null
+                , productId
                 , pageable);
 
         List<ProductProduceDto> productProduceDtoList = productEntityPage.getContent().stream().map(o -> {

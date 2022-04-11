@@ -49,6 +49,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Audi
     @Value("${domain1}")
     private String DOMAIN1;
 
+    @Value("${domain2}")
+    private String DOMAIN2;
+
+    @Value("${domain3}")
+    private String DOMAIN3;
+
+    @Value("${domain4}")
+    private String DOMAIN4;
+
+    @Value("${domain5}")
+    private String DOMAIN5;
+
+    @Value("${domain6}")
+    private String DOMAIN6;
+
     @Value("${email.name}")
     private String EMAIL_NAME;
 
@@ -102,6 +117,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Audi
         List<String> list = new ArrayList<>();
         list.add(DOMAIN);
         list.add(DOMAIN1);
+        list.add(DOMAIN2);
+        list.add(DOMAIN3);
+        list.add(DOMAIN4);
+        list.add(DOMAIN5);
+        list.add(DOMAIN6);
         config.setAllowedOrigins(list);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");

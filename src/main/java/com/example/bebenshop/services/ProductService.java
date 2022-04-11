@@ -25,6 +25,8 @@ public interface ProductService {
             , BigDecimal priceMin
             , BigDecimal priceMax
             , String categoryId
+            , Long productId
             , Pageable pageable);
-    BaseListProduceDto<ProductProduceDto> searchProductByProductId(Long id,Pageable pageable);
+
+    BaseListProduceDto<ProductProduceDto> searchProductByProductId(Long id, Pageable pageable);
 }

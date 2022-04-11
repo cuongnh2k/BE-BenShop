@@ -47,8 +47,7 @@ public class AdminProductController extends BaseController {
     @PatchMapping("/image/{id}")
     public ResponseEntity<BaseResponseDto> editProductImage(@PathVariable Long id, @RequestParam MultipartFile image) throws
             IOException {
-        mProductImageService.editProductImage(id, image);
-        return success("Update product image successful");
+        return success(mProductImageService.editProductImage(id, image),"Update product image successful");
     }
 
     @DeleteMapping("/image/{id}")
