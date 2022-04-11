@@ -46,6 +46,11 @@ public class AdminOrderController extends BaseController {
                 , mConvertUtil.buildPageable(page, size, sort)), "Get data successful");
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<BaseResponseDto> getById(@PathVariable Long id) {
+        return success(mOrderService.getById(id), "Get data successful");
+    }
+
     @GetMapping("/total-revenue")
     public ResponseEntity<BaseResponseDto> totalRevenue(
             @RequestParam(defaultValue = "-1") String status
@@ -59,7 +64,7 @@ public class AdminOrderController extends BaseController {
                 , endTime), "Get data successful");
     }
 
-    @PostMapping("/detail/{id}")
+    @PostMapping("/detail/{id}/note")
     public ResponseEntity<BaseResponseDto> addOrderDetailNote(
             @PathVariable Long id,
             @RequestBody OrderDetailNoteConsumeDto orderDetailNoteConsumeDto) {

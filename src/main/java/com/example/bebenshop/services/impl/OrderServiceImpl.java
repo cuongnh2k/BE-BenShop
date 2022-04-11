@@ -168,6 +168,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderProduceDto getById(Long id) {
+        OrderEntity orderEntity = mOrderRepository.findById(id).orElse(null);
+        if (orderEntity == null) {
+            throw new BadRequestException("order does not exist");
+        }
+        return toOrderProduceDto(orderEntity);
+    }
+
+    @Override
     public Long totalRevenue(
             String orderStatusEnum
             , Long orderId
