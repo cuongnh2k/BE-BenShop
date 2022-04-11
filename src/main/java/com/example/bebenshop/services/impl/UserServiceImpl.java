@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userEntity.getUsername(),
-                            map.get(0).toString()));
+                            map.get("password").toString()));
         } catch (Exception e) {
             throw new BadRequestException("Incorrect password");
         }
