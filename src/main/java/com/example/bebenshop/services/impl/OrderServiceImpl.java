@@ -133,23 +133,26 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public BaseListProduceDto<OrderProduceDto> searchOrder(
-            Optional<OrderStatusEnum> orderStatusEnum
+            String orderStatusEnum
+            , Long orderId
             , Optional<Long> startTime
             , Optional<Long> endTime
             , Pageable pageable) {
         Page<OrderEntity> orderEntityPage;
         if (mUserService.isRoleAdmin()) {
-            orderEntityPage = mOrderRepository.findByStatusAndUpdatedDateGreaterThanEqualAndUpdatedDateLessThanEqual(
-                    orderStatusEnum.orElse(OrderStatusEnum.PENDING)
+            orderEntityPage = mOrderRepository.searchOrderAdmin(
+                    orderStatusEnum
+                    , orderId
                     , DateUtil.convertToLocalDateTime(startTime.orElse(0L))
                     , endTime.orElse(null) == null ? LocalDateTime.now() : DateUtil.convertToLocalDateTime(endTime.orElse(null))
                     , pageable);
         } else {
-            orderEntityPage = mOrderRepository.findByStatusAndUpdatedDateGreaterThanEqualAndUpdatedDateLessThanEqualAndUserId(
-                    orderStatusEnum.orElse(OrderStatusEnum.PENDING)
+            orderEntityPage = mOrderRepository.searchOrderUser(
+                    orderStatusEnum
+                    , orderId
+                    , mUserService.getCurrentUser().getId()
                     , DateUtil.convertToLocalDateTime(startTime.orElse(0L))
                     , endTime.orElse(null) == null ? LocalDateTime.now() : DateUtil.convertToLocalDateTime(endTime.orElse(null))
-                    , mUserService.getCurrentUser().getId()
                     , pageable);
         }
         List<OrderProduceDto> orderProduceDtoList = orderEntityPage.getContent().stream()
@@ -165,10 +168,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Long totalRevenue(Optional<OrderStatusEnum> orderStatusEnum, Optional<Long> startTime, Optional<Long> endTime) {
+    public Long totalRevenue(
+            String orderStatusEnum
+            , Long orderId
+            , Optional<Long> startTime
+            , Optional<Long> endTime) {
 
         return mOrderRepository.totalRevenue(
-                orderStatusEnum.orElse(OrderStatusEnum.PENDING).name()
+                orderStatusEnum
+                , orderId
                 , DateUtil.convertToLocalDateTime(startTime.orElse(0L))
                 , endTime.orElse(null) == null ? LocalDateTime.now() : DateUtil.convertToLocalDateTime(endTime.orElse(null))).orElse(0L);
     }
