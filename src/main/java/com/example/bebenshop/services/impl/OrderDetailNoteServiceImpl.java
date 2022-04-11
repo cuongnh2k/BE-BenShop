@@ -33,7 +33,8 @@ public class OrderDetailNoteServiceImpl implements OrderDetailNoteService {
             throw new BadRequestException("Order note does not  exist");
         }
         if (!orderDetailNoteEntity.getCreatedBy().equals(mUserService.getUserName())
-                || !orderDetailNoteEntity.getOrderDetail().getOrder().getStatus().equals(OrderStatusEnum.PENDING)) {
+                || (!orderDetailNoteEntity.getOrderDetail().getOrder().getStatus().equals(OrderStatusEnum.PENDING)
+                && !mUserService.isRoleAdmin())) {
             throw new ForbiddenException("Forbidden");
         }
         orderDetailNoteEntity.setContent(orderNoteConsumeDto.toOrderNoteEntity().getContent());
@@ -57,6 +58,9 @@ public class OrderDetailNoteServiceImpl implements OrderDetailNoteService {
         OrderDetailNoteEntity orderDetailNoteEntity = mOrderDetailNoteRepository.findById(id).orElse(null);
         if (orderDetailNoteEntity == null) {
             throw new BadRequestException("order detail note does not exist");
+        }
+        if (!orderDetailNoteEntity.getCreatedBy().equals(mUserService.getUserName())) {
+            throw new ForbiddenException("Forbidden");
         }
         mOrderDetailNoteRepository.deleteById(id);
     }

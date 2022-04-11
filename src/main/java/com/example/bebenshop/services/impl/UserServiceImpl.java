@@ -148,11 +148,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserProduceDto editPasswordOrMail(HashMap<String, Object> map, HttpServletRequest request) {
         UserEntity userEntity = getCurrentUser();
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userEntity.getUsername(),
-                            map.get(0).toString()));
-        } catch (Exception e) {
+        boolean check = false;
+        for (String i : map.keySet()) {
+            if (i.equals("password")) {
+                try {
+                    authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(userEntity.getUsername(),
+                                    map.get(i).toString()));
+                } catch (Exception e) {
+                    throw new BadRequestException("Incorrect password");
+                }
+                check = true;
+                break;
+            }
+        }
+        if (!check) {
             throw new BadRequestException("Incorrect password");
         }
         for (String i : map.keySet()) {

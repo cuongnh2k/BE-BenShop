@@ -23,6 +23,8 @@ public interface OrderService {
             , Optional<Long> endTime
             , Pageable pageable);
 
+    OrderProduceDto getById(Long id);
+
     Long totalRevenue(
             String orderStatusEnum
             , Long orderId

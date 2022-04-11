@@ -42,7 +42,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
 
     @Query(nativeQuery = true
-            , value = "SELECT sum(od.price * (100 - od.discount) * od.quantity) totalRevenue FROM order_entity o " +
+            , value = "SELECT sum(od.price / 100 * (100 - od.discount) * od.quantity) totalRevenue FROM order_entity o " +
             "INNER JOIN order_detail_entity od " +
             "ON o.id = od.order_id " +
             "WHERE IF( ?1 != -1, o.status = ?1, ?1) " +
