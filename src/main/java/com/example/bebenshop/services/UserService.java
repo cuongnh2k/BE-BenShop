@@ -6,6 +6,7 @@ import com.example.bebenshop.dto.produces.UserProduceDto;
 import com.example.bebenshop.entities.UserEntity;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
 public interface UserService {
@@ -26,5 +27,5 @@ public interface UserService {
 
     void resetPassword(String username) throws MessagingException;
 
-    UserProduceDto editPasswordOrMail(HashMap<String, Object> map);
+    UserProduceDto editPasswordOrMail(HashMap<String, Object> map, HttpServletRequest request);
 }

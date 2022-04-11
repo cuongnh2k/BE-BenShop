@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.bebenshop.dto.consumes.UserConsumeDto;
 import com.example.bebenshop.dto.produces.UserProduceDto;
+import com.example.bebenshop.entities.DeviceEntity;
 import com.example.bebenshop.entities.RoleEntity;
 import com.example.bebenshop.entities.UserEntity;
 import com.example.bebenshop.enums.GenderEnum;
@@ -14,6 +15,7 @@ import com.example.bebenshop.exceptions.BadRequestException;
 import com.example.bebenshop.mapper.DeviceMapper;
 import com.example.bebenshop.mapper.RoleMapper;
 import com.example.bebenshop.mapper.UserMapper;
+import com.example.bebenshop.repository.DeviceRepository;
 import com.example.bebenshop.repository.RoleRepository;
 import com.example.bebenshop.repository.UserRepository;
 import com.example.bebenshop.services.UserService;
@@ -34,6 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.USER_AGENT;
 
 @Service
 @Transactional
@@ -49,6 +52,7 @@ public class UserServiceImpl implements UserService {
     private final RoleMapper roleMapper;
     private final SentEmailUtil mSentEmailUtil;
     private final AuthenticationManager authenticationManager;
+    private final DeviceRepository mDeviceRepository;
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
@@ -142,19 +146,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProduceDto editPasswordOrMail(HashMap<String, Object> map) {
+    public UserProduceDto editPasswordOrMail(HashMap<String, Object> map, HttpServletRequest request) {
         UserEntity userEntity = getCurrentUser();
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(userEntity.getUsername(),
+                            map.get(0).toString()));
+        } catch (Exception e) {
+            throw new BadRequestException("Incorrect password");
+        }
         for (String i : map.keySet()) {
             switch (i) {
-                case "password":
-                    try {
-                        authenticationManager.authenticate(
-                                new UsernamePasswordAuthenticationToken(userEntity.getUsername(),
-                                        map.get(i).toString()));
-                    } catch (Exception e) {
-                        throw new BadRequestException("Incorrect password");
-                    }
-                    break;
                 case "passwordLatest":
                     userEntity.setPassword(mPasswordEncoder.encode(map.get(i).toString()));
                     break;
@@ -168,6 +170,13 @@ public class UserServiceImpl implements UserService {
                     break;
             }
         }
+        DeviceEntity deviceEntity = mDeviceRepository.findByUserAgentAndUserId(
+                request.getHeader(USER_AGENT)
+                , userEntity.getId());
+        if (deviceEntity == null) {
+            throw new BadRequestException("Device does not exist");
+        }
+        mDeviceRepository.delete(deviceEntity);
         return mUserMapper.toUserProduceDto(mUserRepository.save(userEntity));
     }
 }

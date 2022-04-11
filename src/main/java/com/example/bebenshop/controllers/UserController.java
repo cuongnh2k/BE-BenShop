@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
 @RestController
@@ -27,7 +28,7 @@ public class UserController extends BaseController {
     }
 
     @PatchMapping("/edit-password")
-    public ResponseEntity<BaseResponseDto> editPasswordOrMail(@RequestBody HashMap<String, Object> map){
-        return success(mUserService.editPasswordOrMail(map), "Edit password successful");
+    public ResponseEntity<BaseResponseDto> editPasswordOrMail(@RequestBody HashMap<String, Object> map, HttpServletRequest request){
+        return success(mUserService.editPasswordOrMail(map, request), "Edit password successful");
     }
 }
