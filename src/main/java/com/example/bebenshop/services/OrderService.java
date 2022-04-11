@@ -17,13 +17,15 @@ public interface OrderService {
     OrderProduceDto getOrderById(Long id);
 
     BaseListProduceDto<OrderProduceDto> searchOrder(
-            Optional<OrderStatusEnum> orderStatusEnum
+            String orderStatusEnum
+            , Long orderId
             , Optional<Long> startTime
             , Optional<Long> endTime
             , Pageable pageable);
 
     Long totalRevenue(
-            Optional<OrderStatusEnum> orderStatusEnum
+            String orderStatusEnum
+            , Long orderId
             , Optional<Long> startTime
             , Optional<Long> endTime);
 
