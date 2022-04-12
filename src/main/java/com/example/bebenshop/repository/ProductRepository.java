@@ -43,7 +43,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     @Query(nativeQuery = true
             , value = "SELECT * FROM product_entity p1 " +
-            "WHERE p1.id IN (SELECT p.id FROM product_entity p " +
+            "WHERE deleted_flag = 0 AND p1.id IN (SELECT p.id FROM product_entity p " +
             "INNER JOIN product_entity_categories pc2 ON  p.id = pc2.product_entity_id " +
             "WHERE pc2.categories_id IN (SELECT pc1.categories_id FROM product_entity_categories pc1 " +
             "WHERE pc1.product_entity_id = ?1) " +

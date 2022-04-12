@@ -105,6 +105,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
                             .updatedDate(o.getUpdatedDate())
                             .content(o.getContent())
                             .parentId(o.getParentId())
+                            .createdBy(o.getCreatedBy())
                             .user(o.getUser())
                             .productComment1(productCommentProduceDto.stream().map(oo ->
                                     ProductCommentProduce1Dto.builder()
@@ -114,6 +115,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
                                             .content(oo.getContent())
                                             .parentId(oo.getParentId())
                                             .user(oo.getUser())
+                                            .createdBy(oo.getCreatedBy())
                                             .build()
                             ).collect(Collectors.toList()))
                             .build();

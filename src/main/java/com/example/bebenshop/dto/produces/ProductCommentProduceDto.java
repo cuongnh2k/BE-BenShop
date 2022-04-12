@@ -25,4 +25,6 @@ public class ProductCommentProduceDto extends BaseProduceDto<Long> {
     private UserProduceDto user;
 
     private List<ProductCommentProduce1Dto> productComment1;
+
+    private String createdBy;
 }

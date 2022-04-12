@@ -181,7 +181,7 @@ public class ProductServiceImpl implements ProductService {
     public BaseListProduceDto<ProductProduceDto> searchProductByProductId(Long id, Pageable pageable) {
         Page<ProductEntity> productEntityPage = mProductRepository.searchProductByProductId(id, pageable);
         List<ProductEntity> productEntityList = productEntityPage.getContent();
-        List<ProductProduceDto> productProduceDtoList = productEntityList.stream().map(mProductMapper::toProductProduceDto).collect((Collectors.toList()));
+        List<ProductProduceDto> productProduceDtoList = productEntityList.stream().map(this::toProductProduceDto).collect((Collectors.toList()));
         return BaseListProduceDto.<ProductProduceDto>builder()
                 .content(productProduceDtoList)
                 .totalElements(productEntityPage.getTotalElements())
