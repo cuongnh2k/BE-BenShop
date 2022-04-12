@@ -60,7 +60,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
         if (productCommentEntity == null) {
             throw new BadRequestException("Product comment does not exist");
         }
-        if (productCommentEntity.getCreatedBy().equals(mUserService.getUserName())) {
+        if (!productCommentEntity.getCreatedBy().equals(mUserService.getUserName())) {
             throw new ForbiddenException("Forbidden");
         }
         productCommentEntity.setContent(productCommentConsumeDto.toProductCommentEntity().getContent());
@@ -73,7 +73,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
         if (productCommentEntity == null) {
             throw new BadRequestException("Product comment does not exist");
         }
-        if (productCommentEntity.getCreatedBy().equals(mUserService.getUserName())) {
+        if (!productCommentEntity.getCreatedBy().equals(mUserService.getUserName())) {
             throw new ForbiddenException("Forbidden");
         }
         mProductCommentRepository.deleteProductComment(id);
