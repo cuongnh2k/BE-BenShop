@@ -21,4 +21,6 @@ public class ProductCommentProduce1Dto extends BaseProduceDto<Long> {
     private ProductProduceDto product;
 
     private UserProduceDto user;
+
+    private String createdBy;
 }
