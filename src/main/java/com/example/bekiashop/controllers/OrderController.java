@@ -1,0 +1,64 @@
+package com.example.bekiashop.controllers;
+
+import com.example.bekiashop.bases.BaseController;
+import com.example.bekiashop.bases.BaseResponseDto;
+import com.example.bekiashop.dto.consumes.OrderConsumeDto;
+import com.example.bekiashop.dto.consumes.OrderDetailNoteConsumeDto;
+import com.example.bekiashop.services.OrderDetailNoteService;
+import com.example.bekiashop.services.OrderService;
+import com.example.bekiashop.util.ConvertUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("${base.api}/user/order")
+public class OrderController extends BaseController {
+
+    private final OrderService mOrderService;
+    private final OrderDetailNoteService mOrderDetailNoteService;
+    private final ConvertUtil mConvertUtil;
+
+    @PostMapping
+    public ResponseEntity<BaseResponseDto> createOrder(@RequestBody OrderConsumeDto orderConsumeDto) {
+        return created(mOrderService.createOrder(orderConsumeDto), "Create order successful");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BaseResponseDto> cancelOrder(@PathVariable Long id) {
+        return success(mOrderService.cancelOrder(id), "Cancel order successful");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BaseResponseDto> getOrderById(@PathVariable Long id) {
+        return success(mOrderService.getOrderById(id), "Get data successful");
+    }
+
+    @GetMapping
+    public ResponseEntity<BaseResponseDto> searchOrder(
+            @RequestParam(defaultValue = "0") Integer page
+            , @RequestParam(defaultValue = "10") Integer size
+            , @RequestParam(required = false) String sort
+            , @RequestParam(defaultValue = "-1") String status
+            , @RequestParam(required = false) Optional<Long> startTime
+            , @RequestParam(required = false) Optional<Long> endTime
+            , @RequestParam(defaultValue = "-1") Long orderId) {
+        return success(mOrderService.searchOrder(
+                status
+                , orderId
+                , startTime
+                , endTime
+                , mConvertUtil.buildPageable(page, size, sort)), "Get data successful");
+    }
+
+    @PatchMapping("/detail/note/{id}")
+    public ResponseEntity<BaseResponseDto> updateOrderNote(
+            @PathVariable("id") Long id
+            , @RequestBody OrderDetailNoteConsumeDto orderNoteConsumeDto) {
+        return success(mOrderDetailNoteService.editOrderDetailNote(id, orderNoteConsumeDto)
+                , "Update order detail note successful");
+    }
+}

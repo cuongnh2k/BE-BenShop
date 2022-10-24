@@ -9,11 +9,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>BE-BenShop</artifactId>
+    <artifactId>ROOT</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>BE-BenShop</name>
-    <description>BE-BenShop</description>
+    <name>BE-KIAShop</name>
+    <description>BE-KIAShop</description>
     <properties>
         <java.version>11</java.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>

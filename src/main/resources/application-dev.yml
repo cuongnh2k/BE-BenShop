@@ -1,5 +1,5 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/benshop?createDatabaseIfNotExist=true
-    username: root
-    password: 231020
+    url: 'jdbc:mysql://54.255.243.227:3306/kia_shop?createDatabaseIfNotExist=true'
+    username: 'lan'
+    password: 'Tmd1eWVuIFRoaSBMYW4gMjAwMjIwMDEtQmFjIEdpYW5n'
