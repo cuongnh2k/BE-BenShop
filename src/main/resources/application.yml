@@ -4,7 +4,7 @@ jwt.refresh.token.validity: 8640000000
 email.name: 'nmhahalo2000@gmail.com'
 email.password: 'vcgqhgrykgbaqyck'
 base.api: '/api/v1'
-domain: 'https://54.179.82.237'
+domain: 'http://18.143.74.96'
 domain1: 'http://localhost:3000'
 domain2: 'https://13.213.53.246'
 domain3: 'https://benshop.online'
